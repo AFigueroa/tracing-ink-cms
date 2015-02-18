@@ -249,6 +249,6 @@ app.get('/users/logout', function (req, res) {
 })
 
 
-httpServer.listen(3000, function() {
+httpServer.listen(8080, function() {
   console.log('Express server listening on port 3000');
 });
