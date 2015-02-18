@@ -12,7 +12,7 @@ var session = require('express-session');
 var moment = require('moment');
 
 var collections = ["users"];
-var db = require("mongojs").connect("mongodb://178.62.137.35/figdevelopmentdb", collections);
+var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 var app = express();
 var httpServer = http.createServer(app);
