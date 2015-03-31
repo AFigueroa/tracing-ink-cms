@@ -56,8 +56,8 @@ app.get('/', function (req, res) {
     userId = 0;
   }
   // On success...
-  res.render('index', {
-    title: 'Home',
+  res.render('Login', {
+    title: 'Login',
     logged: req.session.logged,
     userId: userId
   });
@@ -100,7 +100,7 @@ app.get('/users/dashboard', function (req, res) {
 
   } else {
 
-    // User is not looged in, redirect to login page
+    // User is not logged in, redirect to login page
     res.redirect('/users/login');
   }
 });
@@ -249,6 +249,6 @@ app.get('/users/logout', function (req, res) {
 })
 
 
-httpServer.listen(80, function() {
+httpServer.listen(3000, function() {
   console.log('Express server listening on port 3000');
 });
