@@ -1,0 +1,6 @@
+/* Wrapper Styles */
+body{
+/*    width: 100%;*/
+    background-image: url("/img/pattern.png");
+    background-repeat: repeat;
+}
