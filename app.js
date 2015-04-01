@@ -39,31 +39,75 @@ app.use(bodyParser.urlencoded({extended: false}));
 Initial Route
 =================================*/
 
-// Home Route
+// Login Route
 app.get('/', function (req, res) {
-  /*
-  This route will query all posts in the mongo posts collection
-  and load a post with it's corresponding comments
-  */
-  var userId = 0;
-  if (req.session.logged) {
+    if (req.session.logged) {
 
-    var logged = req.session.logged;
-    userId = req.session.userId;
+        var logged = req.session.logged;
+        userId = req.session.userId;
+        
+        if (req.session.logged === 1) {
+            // The user is already logged in...
+            res.redirect('/users/dashboard');
+        }else{
+            // Not logged yet
+            req.session.logged = 0;
+            userId = 0;
 
-  } else {
-    req.session.logged = 0;
-    userId = 0;
-  }
-  // On success...
-  res.render('Login', {
-    title: 'Login',
-    logged: req.session.logged,
-    userId: userId
-  });
+            res.render('register', {
+                title: 'Register',
+                logged: req.session.logged
+            });
+        }
 
+    } else {
+        
+        // Not logged yet
+        req.session.logged = 0;
+        userId = 0;
+        
+        res.render('login', {
+        title: 'Login',
+        logged: req.session.logged
+        });
+    }
 });
 
+// Register Route
+app.get('/register', function (req, res) {
+    if (req.session.logged) {
+
+        var logged = req.session.logged;
+        userId = req.session.userId;
+        
+        if (req.session.logged === 1) {
+            // The user is already logged in...
+            res.redirect('/users/dashboard');
+        }else{
+            // Not logged yet
+            req.session.logged = 0;
+            userId = 0;
+
+            res.render('register', {
+                title: 'Register',
+                logged: req.session.logged
+            });
+        }
+
+    } else {
+        
+        // Not logged yet
+        req.session.logged = 0;
+        userId = 0;
+        
+        res.render('register', {
+            title: 'Register',
+            logged: req.session.logged
+        });
+    }
+  
+    
+});
 
 /*=================================
 User Routes
@@ -105,25 +149,6 @@ app.get('/users/dashboard', function (req, res) {
   }
 });
 
-// Login
-app.get('/users/login', function (req, res) {
-
-  if (req.session.logged === 1) {
-
-    // The user is already logged in...
-    res.redirect('/users/dashboard');
-
-  } else {
-
-    // Not logged yet
-    res.render('login', {
-      title: 'Login',
-      logged: req.session.logged
-    });
-  }
-
-});
-
 // Login Action
 app.post('/users/loginaction', function (req, res) {
 
@@ -159,15 +184,6 @@ app.post('/users/loginaction', function (req, res) {
   });
 });
 
-// Signup
-app.get('/users/signup', function (req, res) {
-
-  // On success...
-  res.render('signup', {
-    title: 'Create Account',
-    logged: req.session.logged
-  });
-});
 
 // Signup Action
 app.post('/users/signupaction', function (req, res) {
