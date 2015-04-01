@@ -1,6 +1,38 @@
 /* Wrapper Styles */
+
 body{
 /*    width: 100%;*/
     background-image: url("/img/pattern.png");
     background-repeat: repeat;
+}
+.row{
+    width: 100%;
+    clear: both;
+    padding: 0;
+    margin: 0;
+}
+
+#login-logo {
+    margin: 0;
+    margin-top: 30px;
+    color: #E5E5E5;
+    text-align: center;
+	font-family: 'Helvetica Neue';
+	font-size: 36px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 200;
+	line-height: 44px;
+}
+
+#login-branding {
+    margin: 0;
+    color: #E5E5E5;
+    text-align: center;
+	font-family: 'Helvetica Neue';
+	font-size: 18px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 100;
+	line-height: 44px;
 }
