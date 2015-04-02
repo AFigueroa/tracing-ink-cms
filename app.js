@@ -35,8 +35,9 @@ app.use(bodyParser.json());
 // This is needed for the forms to work
 app.use(bodyParser.urlencoded({extended: false}));
 
+
 /*=================================
-Initial Route
+    Landing and Login Route
 =================================*/
 
 // Login Route
@@ -48,14 +49,14 @@ app.get('/', function (req, res) {
         
         if (req.session.logged === 1) {
             // The user is already logged in...
-            res.redirect('/users/dashboard');
+            res.redirect('/dashboard');
         }else{
             // Not logged yet
             req.session.logged = 0;
             userId = 0;
 
-            res.render('register', {
-                title: 'Register',
+            res.render('login', {
+                title: 'Login',
                 logged: req.session.logged
             });
         }
@@ -73,6 +74,45 @@ app.get('/', function (req, res) {
     }
 });
 
+// Login Action
+app.post('/loginaction', function (req, res) {
+
+  // Gather the values of the submission
+  var email = req.param('email');
+  var pass = req.param('pass');
+
+  db.users.findOne({email: email}, function (err, user) {
+
+    if (!user) {
+
+      // User was not found redirect...
+      res.redirect('/');
+
+    } else {
+
+      // On success...
+      if (user.pass === pass) {
+
+        req.session.logged = 1;
+        req.session.userId = user._id;
+        req.session.fname = user.fname;
+
+        // Render the dashboard
+        res.redirect('/dashboard');
+
+      } else {
+        // Wrong password
+        res.redirect('/');
+      }
+
+    }
+  });
+});
+
+/*=================================
+        Register Route
+=================================*/
+
 // Register Route
 app.get('/register', function (req, res) {
     if (req.session.logged) {
@@ -82,7 +122,7 @@ app.get('/register', function (req, res) {
         
         if (req.session.logged === 1) {
             // The user is already logged in...
-            res.redirect('/users/dashboard');
+            res.redirect('/dashboard');
         }else{
             // Not logged yet
             req.session.logged = 0;
@@ -109,84 +149,8 @@ app.get('/register', function (req, res) {
     
 });
 
-/*=================================
-User Routes
-=================================*/
-
-// Dashboard
-app.get('/users/dashboard', function (req, res) {
-
-  if (req.session.logged === 1) {
-
-    if (req.session.userId) {
-
-      if (req.session.fname) {
-
-        // Found a unique userId and fname
-        db.users.findOne({_id: req.session.userId}, function (err, user) {
-          //The user is logged in...
-          res.render('dashboard', {
-            title: 'My Dashboard',
-            logged: req.session.logged,
-            fname: req.session.fname,
-            userId: req.session.userId
-          });
-        });
-      } else {
-        // No fname found
-        res.redirect('login');
-      }
-
-    } else {
-      // No userId found
-      res.redirect('login');
-    }
-
-  } else {
-
-    // User is not logged in, redirect to login page
-    res.redirect('/users/login');
-  }
-});
-
-// Login Action
-app.post('/users/loginaction', function (req, res) {
-
-  // Gather the values of the submission
-  var email = req.param('email');
-  var pass = req.param('pass');
-
-  db.users.findOne({email: email}, function (err, user) {
-
-    if (!user) {
-
-      // User was not found redirect...
-      res.redirect('/users/login');
-
-    } else {
-
-      // On success...
-      if (user.pass === pass) {
-
-        req.session.logged = 1;
-        req.session.userId = user._id;
-        req.session.fname = user.fname;
-
-        // Render the dashboard
-        res.redirect('/users/dashboard');
-
-      } else {
-        // Wrong password
-        res.redirect('/users/login');
-      }
-
-    }
-  });
-});
-
-
-// Signup Action
-app.post('/users/signupaction', function (req, res) {
+// Register Action
+app.post('/registeraction', function (req, res) {
 
   // Gather the values of the submission
   var email=req.param('email');
@@ -204,65 +168,100 @@ app.post('/users/signupaction', function (req, res) {
     || repass == ""
     || pass != repass
   ){
-    res.redirect('/users/signup');
+    res.redirect('/register');
   }else{
 
     db.users.findOne({email: email}, function(err, user){
       if (!user){
-        var id = uid.v4();
-        // Proceed to add
-        console.log('An existing user was NOT found. Proceding to INSERT...');
-        // Insert into the db
-        db.users.save
-        (
-        {
-          _id: id,
-          email: email,
-          phone: phone,
-          fname: fname,
-          lname: lname,
-          pass: pass
-        }
-      );
+        
+          var id = uid.v4();
+          
+          // Proceed to add 
+          console.log('An existing user was NOT found. Proceding to INSERT...');
+        
+          // Insert into the db
+          db.users.save({        
+              _id: id,          
+              email: email,           
+              phone: phone,               
+              fname: fname,          
+              lname: lname,          
+              pass: pass
+          });
 
 
-      // Session for logged is TRUE
-      req.session.logged = 1;
-      req.session.userId = id;
-      req.session.fname = fname;
+          // Session for logged is TRUE
+          req.session.logged = 1;
+          req.session.userId = id;
+          req.session.fname = fname;
 
-      // On success...
-      res.render('signupsuccess', {
-        title: 'Success',
-        email: email,
-        userId: id,
-        fname: fname,
-        logged: req.session.logged
-      });
+          // On success...
+          res.render('dashboard', {
+            title: 'Dashboard',
+            email: email,
+            userId: id,
+            fname: fname,
+            logged: req.session.logged
+          });
 
     }else{
       // User found
       req.session.logged = 0;
       console.log(req.session.logged);
       console.log('An existing user WAS found. Proceeding to LOGIN...');
-      res.redirect('/users/login');
+      res.redirect('/');
     }
   });
 }
 });
 
-app.get('/users/logout', function (req, res) {
+// Logout Route 
+app.get('/logout', function (req, res) {
   req.session.logged = 0;
   req.session.userId = null;
   res.redirect('/');
 });
 
-// Logout Action
-app.get('/users/logout', function (req, res) {
-  req.session.logged = 0;
-  req.session.userId = null;
-  res.redirect('/');
-})
+/*=================================
+        Protected Routes
+=================================*/
+
+// Dashboard
+app.get('/dashboard', function (req, res) {
+
+  if (req.session.logged === 1) {
+
+    if (req.session.userId) {
+
+      if (req.session.fname) {
+
+        // Found a unique userId and fname
+        db.users.findOne({_id: req.session.userId}, function (err, user) {
+          
+            //The user is logged in...
+            res.render('dashboard', {
+                title: 'My Dashboard',
+                logged: req.session.logged,
+                fname: req.session.fname,
+                userId: req.session.userId
+            });
+        });
+      } else {
+        // No fname found
+        res.redirect('/');
+      }
+
+    } else {
+      // No userId found
+      res.redirect('/');
+    }
+
+  } else {
+
+    // User is not logged in, redirect to login page
+    res.redirect('/');
+  }
+});
 
 
 httpServer.listen(3000, function() {

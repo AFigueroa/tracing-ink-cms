@@ -20,7 +20,7 @@
         
         <div class="panel-body">
             
-            <form>
+            <form action="/registeraction" method="post">
                 
                 <div class="row">
                     <label for="fname">First Name:</label>
@@ -38,17 +38,22 @@
                 </div>
                 
                 <div class="row">
-                    <label for="password">Password:</label>
-                    <input type="password" name="password">
+                    <label for="phone">Phone:</label>
+                    <input type="phone" name="phone">
                 </div>
                 
                 <div class="row">
-                    <label for="password">Confirm Password:</label>
-                    <input type="password" name="password">
+                    <label for="pass">Password:</label>
+                    <input type="password" name="pass">
                 </div>
                 
                 <div class="row">
-                    <input type="submit" class="submit">
+                    <label for="repass">Confirm Password:</label>
+                    <input type="password" name="repass">
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Register">
                 </div>
                 
                 <div class="row">
