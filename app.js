@@ -1,3 +1,7 @@
+/*=================================
+              Modules
+=================================*/
+
 var bodyParser = require('body-parser');
 var express = require('express');
 var hashids = require('hashids');
@@ -11,12 +15,16 @@ var passport = require('passport'), LocalStrategy = require('passport-local').St
 var session = require('express-session');
 var moment = require('moment');
 
+
+/*=================================
+          Configuration
+=================================*/
+
 var collections = ["users"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 var app = express();
 var httpServer = http.createServer(app);
-
 
 app.use('/views', express.static('/views'));
 app.use(cookieParser());
@@ -37,7 +45,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 /*=================================
-    Landing and Login Route
+            Routes
 =================================*/
 
 // Login Route
@@ -264,6 +272,6 @@ app.get('/dashboard', function (req, res) {
 });
 
 
-httpServer.listen(3000, function() {
+httpServer.listen(80, function() {
   console.log('Express server listening on port 3000');
 });
