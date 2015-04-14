@@ -1,7 +1,6 @@
-<% include header %>
 <!--		
 	====================================
-		 		 Login Form
+		 		 Register Form
 	=====================================
 -->		
 
@@ -16,15 +15,30 @@
     
     <div class="panel">
         
-        <div class="panel-head">Login</div>
+        <div class="panel-head">Register</div>
         
         <div class="panel-body">
             
-            <form action='/loginaction' method="post">
+            <form action="/register" method="post">
+                
+                <div class="row">
+                    <label for="fname">First Name:</label>
+                    <input type="text" name="fname">
+                </div>
+                
+                <div class="row">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" name="lname">
+                </div>
                 
                 <div class="row">
                     <label for="email">Email:</label>
                     <input type="text" name="email">
+                </div>
+                
+                <div class="row">
+                    <label for="phone">Phone:</label>
+                    <input type="phone" name="phone">
                 </div>
                 
                 <div class="row">
@@ -33,15 +47,16 @@
                 </div>
                 
                 <div class="row">
-                    <p class="form-anchor"><a>Forgot your Password?</a></p>
+                    <label for="repass">Confirm Password:</label>
+                    <input type="password" name="repass">
                 </div>
                 
                 <div class="row">
-                    <input type="submit" class="submit" value="Submit">
+                    <input type="submit" class="submit" value="Register">
                 </div>
                 
                 <div class="row">
-                    <p class="form-anchor"><a href="/register">Not a member yet? Register here.</a></p>
+                    <p class="form-anchor"><a href="/#/">Already a member? Log in here.</a></p>
                 </div>
                 
             </form>
@@ -49,5 +64,3 @@
         </div>
     </div>
 </div>
-
-<% include footer %>

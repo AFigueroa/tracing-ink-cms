@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var hashids = require('hashids');
 var http = require('http');
-var ejs = require('ejs');
 var mongo = require('mongojs');
 var uid = require('node-uuid');
 var cookieSession = require('cookie-session');
@@ -26,7 +25,7 @@ var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collectio
 var app = express();
 var httpServer = http.createServer(app);
 
-app.use('/views', express.static('/views'));
+app.use('/public/views', express.static('/public/views'));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -36,7 +35,6 @@ key: 'sid',
 resave: true,
 saveUninitialized: true
 }));
-app.set('view engine', 'ejs');
 
 // If you delete this WW3 will become a reality
 app.use(bodyParser.json());
@@ -57,13 +55,13 @@ app.get('/', function (req, res) {
         
         if (req.session.logged === 1) {
             // The user is already logged in...
-            res.redirect('/dashboard');
+            res.redirect('/#/dashboard');
         }else{
             // Not logged yet
             req.session.logged = 0;
             userId = 0;
 
-            res.render('login', {
+            res.render('/public/index', {
                 title: 'Login',
                 logged: req.session.logged
             });
@@ -75,7 +73,7 @@ app.get('/', function (req, res) {
         req.session.logged = 0;
         userId = 0;
         
-        res.render('login', {
+        res.render('/public/index', {
         title: 'Login',
         logged: req.session.logged
         });
@@ -83,7 +81,7 @@ app.get('/', function (req, res) {
 });
 
 // Login Action
-app.post('/loginaction', function (req, res) {
+app.post('/api/login', function (req, res) {
 
   // Gather the values of the submission
   var email = req.param('email');
@@ -104,13 +102,14 @@ app.post('/loginaction', function (req, res) {
         req.session.logged = 1;
         req.session.userId = user._id;
         req.session.fname = user.fname;
-
-        // Render the dashboard
-        res.redirect('/dashboard');
+        
+        // Send the user data to the dashboard view
+        res.send(user);
+          
 
       } else {
         // Wrong password
-        res.redirect('/');
+        res.send(false);
       }
 
     }
@@ -136,7 +135,7 @@ app.get('/register', function (req, res) {
             req.session.logged = 0;
             userId = 0;
 
-            res.render('register', {
+            res.render('/public/views/register', {
                 title: 'Register',
                 logged: req.session.logged
             });
@@ -148,7 +147,7 @@ app.get('/register', function (req, res) {
         req.session.logged = 0;
         userId = 0;
         
-        res.render('register', {
+        res.render('/public/views/register', {
             title: 'Register',
             logged: req.session.logged
         });
@@ -158,7 +157,7 @@ app.get('/register', function (req, res) {
 });
 
 // Register Action
-app.post('/registeraction', function (req, res) {
+app.post('/register', function (req, res) {
 
   // Gather the values of the submission
   var email=req.param('email');
@@ -204,7 +203,7 @@ app.post('/registeraction', function (req, res) {
           req.session.fname = fname;
 
           // On success...
-          res.render('dashboard', {
+          res.render('/public/views/dashboard', {
             title: 'Dashboard',
             email: email,
             userId: id,
@@ -230,6 +229,16 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+// Logout Route 
+app.get('/api/authCheck', function (req, res) {
+  if (req.session.logged === 1) {
+    res.send(true);
+  }else{
+    res.send(false);
+  }
+  
+});
+
 /*=================================
         Protected Routes
 =================================*/
@@ -247,7 +256,7 @@ app.get('/dashboard', function (req, res) {
         db.users.findOne({_id: req.session.userId}, function (err, user) {
           
             //The user is logged in...
-            res.render('dashboard', {
+            res.render('/public/views/dashboard', {
                 title: 'My Dashboard',
                 logged: req.session.logged,
                 fname: req.session.fname,
@@ -272,6 +281,6 @@ app.get('/dashboard', function (req, res) {
 });
 
 
-httpServer.listen(80, function() {
+httpServer.listen(3000, function() {
   console.log('Express server listening on port 3000');
 });

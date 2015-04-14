@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" ng-app="tracingInk">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{{title}}</title>
+
+        <link rel="stylesheet" href="/css/normalize.css"><!-- Normalize.CSS-->
+        <link rel="stylesheet" href="/css/custom.css"><!-- Custom.CSS-->
+
+        <script src="/js/vendor/modernizr.js"></script><!-- Modernizr.JS-->
+        
+<!--
+        <script src="//use.typekit.net/qdg6fcy.js"></script>  Adobe Typekit 
+        <script>try{Typekit.load();}catch(e){}</script>
+-->
+        
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+        <!-- Angular-Route -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.js"></script>
+        
+        <!-- Angular App -->
+        <script src="js/main.js"></script>
+
+        <!-- Controllers -->
+        <script src="js/controllers/loginController.js"></script>
+        <script src="js/controllers/registerController.js"></script>
+        <script src="js/controllers/dashboardController.js"></script>
+        
+    </head><!-- End of Head -->
+    
+    
+    <body>
+        
+        <!--Begining of Wrapper-->
+        <div id="wrapper">
+            
+            <!-- Views load here... -->
+            <ng-view>
+            </ng-view> <!-- End of Angular's View module -->
+            
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><!-- jQuery -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script><!-- jQuery UI-->
+        
+        </div> <!-- End of Wrapper -->
+    
+    </body>
+</html>
+        
