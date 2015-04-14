@@ -46,40 +46,6 @@ app.use(bodyParser.urlencoded({extended: false}));
             Routes
 =================================*/
 
-// Login Route
-app.get('/', function (req, res) {
-    if (req.session.logged) {
-
-        var logged = req.session.logged;
-        userId = req.session.userId;
-        
-        if (req.session.logged === 1) {
-            // The user is already logged in...
-            res.redirect('/#/dashboard');
-        }else{
-            // Not logged yet
-            req.session.logged = 0;
-            userId = 0;
-
-            res.render('/public/index', {
-                title: 'Login',
-                logged: req.session.logged
-            });
-        }
-
-    } else {
-        
-        // Not logged yet
-        req.session.logged = 0;
-        userId = 0;
-        
-        res.render('/public/index', {
-        title: 'Login',
-        logged: req.session.logged
-        });
-    }
-});
-
 // Login Action
 app.post('/api/login', function (req, res) {
 
@@ -92,7 +58,7 @@ app.post('/api/login', function (req, res) {
     if (!user) {
 
       // User was not found redirect...
-      res.redirect('/');
+      res.send(false);
 
     } else {
 
@@ -120,44 +86,8 @@ app.post('/api/login', function (req, res) {
         Register Route
 =================================*/
 
-// Register Route
-app.get('/register', function (req, res) {
-    if (req.session.logged) {
-
-        var logged = req.session.logged;
-        userId = req.session.userId;
-        
-        if (req.session.logged === 1) {
-            // The user is already logged in...
-            res.redirect('/dashboard');
-        }else{
-            // Not logged yet
-            req.session.logged = 0;
-            userId = 0;
-
-            res.render('/public/views/register', {
-                title: 'Register',
-                logged: req.session.logged
-            });
-        }
-
-    } else {
-        
-        // Not logged yet
-        req.session.logged = 0;
-        userId = 0;
-        
-        res.render('/public/views/register', {
-            title: 'Register',
-            logged: req.session.logged
-        });
-    }
-  
-    
-});
-
 // Register Action
-app.post('/register', function (req, res) {
+app.post('/api/register', function (req, res) {
 
   // Gather the values of the submission
   var email=req.param('email');
@@ -203,33 +133,28 @@ app.post('/register', function (req, res) {
           req.session.fname = fname;
 
           // On success...
-          res.render('/public/views/dashboard', {
-            title: 'Dashboard',
-            email: email,
-            userId: id,
-            fname: fname,
-            logged: req.session.logged
-          });
+          // Send the user data to the dashboard view
+          res.send(user);
 
     }else{
       // User found
       req.session.logged = 0;
       console.log(req.session.logged);
       console.log('An existing user WAS found. Proceeding to LOGIN...');
-      res.redirect('/');
+      res.send(false);
     }
   });
 }
 });
 
 // Logout Route 
-app.get('/logout', function (req, res) {
+app.get('/api/logout', function (req, res) {
   req.session.logged = 0;
   req.session.userId = null;
-  res.redirect('/');
+  res.send(true);
 });
 
-// Logout Route 
+// Authentication Route 
 app.get('/api/authCheck', function (req, res) {
   if (req.session.logged === 1) {
     res.send(true);
