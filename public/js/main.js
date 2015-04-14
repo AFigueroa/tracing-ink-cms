@@ -21,12 +21,6 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "loginController"
     })
   
-    // Register
-    .when('/register', {
-      templateUrl:"views/register.html",
-      controller: "registerController"
-    })
-  
     // Dashboard
     .when('/dashboard', {
       templateUrl:"views/dashboard.html",

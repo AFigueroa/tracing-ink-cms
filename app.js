@@ -82,70 +82,70 @@ app.post('/api/login', function (req, res) {
   });
 });
 
-/*=================================
-        Register Route
-=================================*/
-
-// Register Action
-app.post('/api/register', function (req, res) {
-
-  // Gather the values of the submission
-  var email=req.param('email');
-  var phone=req.param('phone');
-  var fname=req.param('fname');
-  var lname=req.param('lname');
-  var pass=req.param('pass');
-  var repass=req.param('repass');
-
-  if( email == ""
-    || phone == ""
-    || fname == ""
-    || lname == ""
-    || pass == ""
-    || repass == ""
-    || pass != repass
-  ){
-    res.redirect('/register');
-  }else{
-
-    db.users.findOne({email: email}, function(err, user){
-      if (!user){
-        
-          var id = uid.v4();
-          
-          // Proceed to add 
-          console.log('An existing user was NOT found. Proceding to INSERT...');
-        
-          // Insert into the db
-          db.users.save({        
-              _id: id,          
-              email: email,           
-              phone: phone,               
-              fname: fname,          
-              lname: lname,          
-              pass: pass
-          });
-
-
-          // Session for logged is TRUE
-          req.session.logged = 1;
-          req.session.userId = id;
-          req.session.fname = fname;
-
-          // On success...
-          // Send the user data to the dashboard view
-          res.send(user);
-
-    }else{
-      // User found
-      req.session.logged = 0;
-      console.log(req.session.logged);
-      console.log('An existing user WAS found. Proceeding to LOGIN...');
-      res.send(false);
-    }
-  });
-}
-});
+///*=================================
+//        Register Route
+//=================================*/
+//
+//// Register Action
+//app.post('/api/register', function (req, res) {
+//
+//  // Gather the values of the submission
+//  var email=req.param('email');
+//  var phone=req.param('phone');
+//  var fname=req.param('fname');
+//  var lname=req.param('lname');
+//  var pass=req.param('pass');
+//  var repass=req.param('repass');
+//
+//  if( email == ""
+//    || phone == ""
+//    || fname == ""
+//    || lname == ""
+//    || pass == ""
+//    || repass == ""
+//    || pass != repass
+//  ){
+//    res.redirect('/register');
+//  }else{
+//
+//    db.users.findOne({email: email}, function(err, user){
+//      if (!user){
+//        
+//          var id = uid.v4();
+//          
+//          // Proceed to add 
+//          console.log('An existing user was NOT found. Proceding to INSERT...');
+//        
+//          // Insert into the db
+//          db.users.save({        
+//              _id: id,          
+//              email: email,           
+//              phone: phone,               
+//              fname: fname,          
+//              lname: lname,          
+//              pass: pass
+//          });
+//
+//
+//          // Session for logged is TRUE
+//          req.session.logged = 1;
+//          req.session.userId = id;
+//          req.session.fname = fname;
+//
+//          // On success...
+//          // Send the user data to the dashboard view
+//          res.send(user);
+//
+//    }else{
+//      // User found
+//      req.session.logged = 0;
+//      console.log(req.session.logged);
+//      console.log('An existing user WAS found. Proceeding to LOGIN...');
+//      res.send(false);
+//    }
+//  });
+//}
+//});
 
 // Logout Route 
 app.get('/api/logout', function (req, res) {
