@@ -40,6 +40,24 @@
         <!--Begining of Wrapper-->
         <div id="wrapper">
             
+<!--        Top Navigation-->
+            <div class="row" id="top-nav" ng-show="authData">
+                
+                <div id="sidenav_btn">
+                    <img src="img/burgerstack_single.png" id="sidenav_btn1">
+                    <img src="img/burgerstack_single.png" id="sidenav_btn2">
+                </div>
+                
+                <div id="page-title">
+                    <h3>{{pageTitle}}</h3>
+                </div>
+                
+                <div id="user-profile-btn">    
+                    <img src="img/user_profile_blank.png" id="user-profile-img">
+                </div>
+                
+            </div>
+            
             <!-- Views load here... -->
             <ng-view>
             </ng-view> <!-- End of Angular's View module -->

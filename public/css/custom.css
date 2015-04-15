@@ -14,6 +14,41 @@ body{
     margin: 0;
 }
 
+/*Top Nav*/
+#top-nav{
+    height: 65px;
+    background-color: #F2F0F0;
+}
+
+#sidenav_btn{
+    z-index: 1;
+    position: absolute;
+    width: 48px;
+    float: left;
+    padding: 14.5px;
+}
+
+#page-title{
+    text-align: center;
+    height: 36px;
+    padding: 14.5px 31%;
+    z-index: -1;
+    line-height: 0;
+}
+
+#user-profile-btn{
+    width: 100%;
+    position: absolute;
+}
+
+#user-profile-img{
+    position: relative;
+    float: right;
+    top: -50px;
+    width: 45px;
+    padding-right: 14.5px;
+    z-index: 2;
+}
 
 /* Login's Header Branding */
 
