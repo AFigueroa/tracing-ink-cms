@@ -11,6 +11,7 @@
 
         <link rel="stylesheet" href="/css/normalize.css"><!-- Normalize.CSS-->
         <link rel="stylesheet" href="/css/custom.css"><!-- Custom.CSS-->
+        <link rel="stylesheet" href="/css/animation.css"><!-- Custom Animations-->
 
         <script src="/js/vendor/modernizr.js"></script><!-- Modernizr.JS-->
         
@@ -31,6 +32,7 @@
         <script src="js/controllers/loginController.js"></script>
         <script src="js/controllers/logoutController.js"></script>
         <script src="js/controllers/dashboardController.js"></script>
+        <script src="js/controllers/navController.js"></script>
         
     </head><!-- End of Head -->
     
@@ -40,22 +42,36 @@
         <!--Begining of Wrapper-->
         <div id="wrapper">
             
-<!--        Top Navigation-->
-            <div class="row" id="top-nav" ng-show="authData">
-                
-                <div id="sidenav_btn">
+            <!--Top Navigation-->
+            <div class="row" id="top-nav" ng-show="authData" ng-controller="navController">
+
+                <div id="sidenav_btn" ng-click="toggleSideNav()">
                     <img src="img/burgerstack_single.png" id="sidenav_btn1">
                     <img src="img/burgerstack_single.png" id="sidenav_btn2">
                 </div>
-                
+
                 <div id="page-title">
                     <h3>{{pageTitle}}</h3>
                 </div>
-                
+
                 <div id="user-profile-btn">    
                     <img src="img/user_profile_blank.png" id="user-profile-img">
                 </div>
-                
+
+            </div>
+
+            <!-- Side Navigation -->
+            <div class="row side-nav" id="side-nav" ng-show="authData">
+
+                <div class="row">
+                    <h3>Client name here</h3>
+                </div>
+
+                <div class="row" id="sidenav_alert">
+                    <p><img src="img/alert_icon.png"> 2 tasks due today</p>
+                </div>
+
+
             </div>
             
             <!-- Views load here... -->

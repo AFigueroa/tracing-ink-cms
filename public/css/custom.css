@@ -23,7 +23,7 @@ body{
 #sidenav_btn{
     z-index: 1;
     position: absolute;
-    width: 48px;
+    width: 38px;
     float: left;
     padding: 14.5px;
 }
@@ -50,6 +50,59 @@ body{
     z-index: 2;
 }
 
+/* Side Navigation */
+
+#side-nav{
+    position: absolute;
+    top: 500;
+    left: -457px;
+    max-width: 350pt;
+    width: 100%;
+    z-index: 3;
+    padding-top: 0;
+    height: 750px;
+    background: rgba(65,64,66,1);
+    background: -moz-linear-gradient(top, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(65,64,66,1)), color-stop(100%, rgba(65,64,66,0.6)));
+    background: -webkit-linear-gradient(top, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
+    background: -o-linear-gradient(top, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
+    background: -ms-linear-gradient(top, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
+    background: linear-gradient(to bottom, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#414042', endColorstr='#414042', GradientType=0 );
+}
+
+#side-nav h3{
+    margin: 0;
+    margin-bottom: 10px;
+    color: #E5E5E5;
+    text-align: center;
+	font-family: 'Helvetica Neue';
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 100;
+    padding-top:42px; 
+}
+
+#sidenav_alert{
+    position: absolute;
+}
+
+#sidenav_alert p{
+    margin: 0;
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+	font-variant: normal;
+	font-weight: 100;
+    color: #E5E5E5;
+    text-align: center;
+    line-height: 5px;
+}
+
+#sidenav_alert img{
+    width: 20px;
+    padding-right: 10px;
+}
 /* Login's Header Branding */
 
 #login-logo {
