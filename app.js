@@ -66,8 +66,14 @@ app.post('/api/login', function (req, res) {
       if (user.pass === pass) {
 
         req.session.logged = 1;
-        req.session.userId = user._id;
-        req.session.fname = user.fname;
+        req.session.user = {
+            "_id" : user._id,
+            "fname" : user.fname,
+            "lname" : user.lname,
+            "email" : user.email,
+            "phone" : user.phone,
+            "type" : user.type
+        }
         
         // Send the user data to the dashboard view
         res.send(user);
@@ -157,7 +163,24 @@ app.get('/api/logout', function (req, res) {
 // Authentication Route 
 app.get('/api/authCheck', function (req, res) {
   if (req.session.logged === 1) {
+      
     res.send(true);
+      
+  }else{
+      
+    res.send(false);
+      
+  }
+  
+});
+
+// Get User Data Route 
+app.get('/api/getUser', function (req, res) {
+  if (req.session.user) {
+      
+      user = req.session.user;
+      res.send(user);
+      
   }else{
     res.send(false);
   }

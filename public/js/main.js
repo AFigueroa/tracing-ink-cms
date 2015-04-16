@@ -4,7 +4,7 @@ var app = angular.module("tracingInk", ["ngRoute"]);
 app.run(function($http, $rootScope){
     var auth = $http.get("/api/authCheck").then(function(auth){
         $rootScope.authData = auth.data;
-        console.log($rootScope.authData);
+        //console.log($rootScope.authData);
     });
     
 });

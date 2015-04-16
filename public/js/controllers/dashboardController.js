@@ -1,14 +1,18 @@
-app.controller("dashboardController", [ "$scope", "$rootScope", "$location",
-function($scope, $rootScope, $location){
+app.controller("dashboardController", [ "$scope", "$rootScope", "$location", "$http",
+function($scope, $rootScope, $location, $http){
+    
+    var user = $http.get("/api/getUser").then(function(user){
+        $rootScope.user = user.data;
+    });
     
     var authData = $rootScope.authData;
-    console.log(authData);
+    //console.log(authData);
     
     if (authData === true){
-        console.log("authenticated");
-        console.log($scope.user);
+        //console.log("authenticated");
+        //console.log($rootScope.user);
     }else{
-        console.log("not authenticated");
+        //console.log("not authenticated");
         $location.path('/');
     }
     

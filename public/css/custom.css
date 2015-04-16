@@ -1,5 +1,7 @@
 /* Layout Styles */
-
+html,body{
+    overflow-x: hidden;
+}
 body{
 /*    width: 100%;*/
     background-image: url("/img/pattern.png");
@@ -55,7 +57,7 @@ body{
 #side-nav{
     position: absolute;
     top: 500;
-    left: -457px;
+    left: -467px;
     max-width: 350pt;
     width: 100%;
     z-index: 3;
@@ -103,6 +105,31 @@ body{
     width: 20px;
     padding-right: 10px;
 }
+.side-nav-anchors{
+    margin-top: 100px;
+    width: 100%;
+}
+.side-nav-anchors a{
+    padding-left: 15%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    position: relative;
+    width: auto;
+    display: block;
+    font-size: 20pt;
+    color: #E5E5E5;
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+    font-weight: 100;
+    text-decoration: none;
+	font-variant: normal;
+    border-top: 1px #E5E5E5 solid;
+}
+
+.side-nav-anchors a:last-of-type{
+    border-bottom: 1px #E5E5E5 solid;
+}
+
 /* Login's Header Branding */
 
 #login-logo {

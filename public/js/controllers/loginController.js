@@ -24,8 +24,19 @@ function($scope, $rootScope, $location, $http){
                     //console.log(user.data);
 
                     if (user.data){
-
-                        $rootScope.user = user;
+                        
+                        
+                        var userData = {
+                            "_id": user.data._id,
+                            "fname": user.data.fname,
+                            "lname": user.data.lname,
+                            "email": user.data.email,
+                            "phone": user.data.phone,
+                            "type": user.data.type,
+                        };
+                        
+                        $rootScope.user = userData;
+                        
                         $rootScope.authData = true;
 
                         // Redirect to the Dashboard  

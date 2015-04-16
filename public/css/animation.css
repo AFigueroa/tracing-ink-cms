@@ -18,10 +18,42 @@
     transition-duration:1s;
     transition-timing-function:ease;
     transition-delay:0s;
+
 }
-.side-nav open{
-    -moz-transform: translate(500px, 0); 
-    -o-transform: translate(500px, 0); 
-   	-webkit-transform: translate(500px,0); 
-    transform: translate(500px,0);
+.side-nav.open{
+    -moz-transform: translate(467px, 0); 
+    -o-transform: translate(467px, 0); 
+   	-webkit-transform: translate(467px,0); 
+    transform: translate(467px,0);
+    left: 467px;
+}
+
+.views-section{
+    -webkit-transition-property:webkit-transform;
+    -webkit-transition-duration: 1s;
+    -webkit-transition-timing-function:ease;
+    -webkit-transition-delay:0s;
+    
+    -moz-transition-property:moz-transform;
+    -moz-transition-duration:1s;
+    -moz-transition-timing-function:ease;
+    -moz-transition-delay:0s;
+    
+    -o-transition-property:o-transform;
+    -o-transition-duration:1s;
+    -o-transition-timing-function:ease;
+    -o-transition-delay:0s;
+    
+    transition-property:transform;
+    transition-duration:1s;
+    transition-timing-function:ease;
+    transition-delay:0s;
+
+}
+.views-section.open{
+    -moz-transform: translate(467px, 0); 
+    -o-transform: translate(467px, 0); 
+   	-webkit-transform: translate(467px,0); 
+    transform: translate(467px,0);
+    left: 467px;
 }

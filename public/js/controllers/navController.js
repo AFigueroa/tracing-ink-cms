@@ -8,10 +8,12 @@ function($scope, $rootScope, $location){
           if (checkClass) {
         
               $('.side-nav').removeClass('open');
+              $('.views-section').removeClass('open');
               
           } else {
             
               $('.side-nav').addClass('open');
+              $('.views-section').addClass('open');
               
           }
     };

@@ -1,10 +1,10 @@
-app.controller("logoutController", [ "$scope", "$rootScope", "$location",
+app.controller("teamController", [ "$scope", "$rootScope", "$location",
 function($scope, $rootScope, $location){
     
     $rootScope.authData = false;
     $scope = null;
     // Set the title of the page
-    $rootScope.title = "Logging out";
+    $rootScope.title = "Team";
     
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
           
