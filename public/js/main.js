@@ -26,6 +26,30 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       templateUrl:"views/dashboard.html",
       controller: "dashboardController"
     })
+    
+    // Team
+    .when('/team', {
+      templateUrl:"views/team.html",
+      controller: "teamController"
+    })
+    
+    // Projects
+    .when('/projects', {
+      templateUrl:"views/projects.html",
+      controller: "projectsController"
+    })
+    
+    // Calendar
+    .when('/calendar', {
+      templateUrl:"views/calendar.html",
+      controller: "calendarController"
+    })
+    
+    // Messages
+    .when('/messages', {
+      templateUrl:"views/messages.html",
+      controller: "messagesController"
+    })
   
     // Logout
     .when('/logout', {

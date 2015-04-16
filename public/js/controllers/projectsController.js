@@ -1,4 +1,4 @@
-app.controller("teamController", [ "$scope", "$rootScope", "$location", "$http", "$location",
+app.controller("projectsController", [ "$scope", "$rootScope", "$location", "$http", "$location",
 function($scope, $rootScope, $location, $http, $location){
     
     var user = $http.get("/api/getUser").then(function(user){
@@ -17,8 +17,8 @@ function($scope, $rootScope, $location, $http, $location){
     }
     
     // Set the title of the page
-    $rootScope.title = "Tracing Ink | Team";
-    $rootScope.pageTitle = "Team";
+    $rootScope.title = "Tracing Ink | Projects";
+    $rootScope.pageTitle = "Projects";
     
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
           

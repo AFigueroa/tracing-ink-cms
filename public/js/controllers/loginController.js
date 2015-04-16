@@ -10,7 +10,7 @@ function($scope, $rootScope, $location, $http){
     }else{
     
         // Set the title of the page
-        $rootScope.title = "Login";
+        $rootScope.title = "Tracing Ink | Login";
 
         $scope.submit = function() {
 
