@@ -3,6 +3,8 @@ function($scope, $rootScope, $location){
     
     $rootScope.authData = false;
     $scope = null;
+    $rootScope = null;
+    
     // Set the title of the page
     $rootScope.title = "Logging out";
     
