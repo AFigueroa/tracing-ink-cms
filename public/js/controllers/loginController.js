@@ -44,6 +44,12 @@ function($scope, $rootScope, $location, $http){
                             "type": user.data.type,
                         };
                         
+                        if (userData.type === "1"){
+                            
+                            // User is master admin
+                            
+                            $rootScope.admin = true;
+                        }
                         $rootScope.user = userData;
                         
                         $rootScope.authData = true;

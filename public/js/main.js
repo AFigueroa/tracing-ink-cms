@@ -36,6 +36,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "dashboardController"
     })
     
+    // Dashboard
+    .when('/clients', {
+      templateUrl:"views/clients.html",
+      controller: "clientsController"
+    })
+    
     // Team
     .when('/team', {
       templateUrl:"views/team.html",
