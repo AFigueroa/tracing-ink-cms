@@ -62,7 +62,7 @@ body{
     width: 100%;
     z-index: 3;
     padding-top: 0;
-    height: 750px;
+    height: 900px;
     background: rgba(65,64,66,1);
     background: -moz-linear-gradient(top, rgba(65,64,66,1) 0%, rgba(65,64,66,0.6) 100%);
     background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(65,64,66,1)), color-stop(100%, rgba(65,64,66,0.6)));

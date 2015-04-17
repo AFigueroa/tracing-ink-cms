@@ -7,6 +7,15 @@ app.run(function($http, $rootScope){
         //console.log($rootScope.authData);
     });
     
+    var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
+          
+    if (checkClass) {
+
+        $('.side-nav').removeClass('open');
+        $('.views-section').removeClass('open');
+
+    };
+    
 });
 
 // Configure the app's routes

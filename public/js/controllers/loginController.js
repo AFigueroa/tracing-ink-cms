@@ -1,6 +1,15 @@
 app.controller("loginController", [ "$scope", "$rootScope", "$location","$http",
 function($scope, $rootScope, $location, $http){
     
+    var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
+          
+    if (checkClass) {
+
+        $('.side-nav').removeClass('open');
+        $('.views-section').removeClass('open');
+
+    };
+    
     if ($rootScope.authData === true){
         // User is already logged in
         
