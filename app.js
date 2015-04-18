@@ -190,7 +190,7 @@ app.post('/api/addClient', function (req, res) {
             
                 
                   var myMsg = new Email({
-                    from: "tracing.ink.co@gmail.com",
+                    from: "afigueroa@tracingink.com",
                     to:   email,
                     subject: "Tracing Ink: Registration Invite",
                     body: "Thank you for choosing Tracing Ink. Please use the following link to"
