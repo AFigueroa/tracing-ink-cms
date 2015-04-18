@@ -14,7 +14,7 @@ var passport = require('passport'), LocalStrategy = require('passport-local').St
 var session = require('express-session');
 var moment = require('moment');
 var time = require('time');
-var Email = require('email').Email
+var Email = require('email').Email;
 
 
 /*=================================
