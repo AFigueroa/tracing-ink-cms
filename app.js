@@ -14,6 +14,7 @@ var passport = require('passport'), LocalStrategy = require('passport-local').St
 var session = require('express-session');
 var moment = require('moment');
 var time = require('time');
+var Email = require('email').Email
 
 
 /*=================================
@@ -186,6 +187,17 @@ app.post('/api/addClient', function (req, res) {
                     dateCreated: now,
                     active: 1
                 });
+            
+                
+                  var myMsg = new Email({
+                    from: "tracing.ink.co@gmail.com",
+                    to:   email,
+                    subject: "Tracing Ink: Registration Invite",
+                    body: "Thank you for choosing Tracing Ink. Please use the following link to"
+                });
+                  
+                myMsg.send();
+                  
                 res.send(true);
               }else {
                   
