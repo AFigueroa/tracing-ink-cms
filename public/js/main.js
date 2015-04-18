@@ -7,6 +7,10 @@ app.run(function($http, $rootScope){
         //console.log($rootScope.authData);
     });
     
+    var user = $http.get("/api/getUser").then(function(user){
+        $rootScope.user = user.data;
+    });
+    
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
           
     if (checkClass) {
@@ -36,9 +40,15 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "dashboardController"
     })
     
-    // Dashboard
+    // Show All Clients
     .when('/clients', {
       templateUrl:"views/clients.html",
+      controller: "clientsController"
+    })
+    
+    // Add Clients
+    .when('/addClient', {
+      templateUrl:"views/addClient.html",
       controller: "clientsController"
     })
     

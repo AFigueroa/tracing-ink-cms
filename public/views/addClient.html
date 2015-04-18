@@ -1,0 +1,50 @@
+
+<!--		
+	====================================
+		 	Add Client 
+	=====================================
+-->	
+
+<div class="row">
+    
+    <h1 id="login-logo">Tracing Ink</h1>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel secured">
+        
+        <div class="panel-head">Add New Client</div>
+        
+        <div class="panel-body">
+            
+            <form method="post" ng-submit="addClient()" ng-controller="clientsController">
+                
+                <div class="row">
+                    <label for="email">Client Name:</label>
+                    <input type="text" name="cName" ng-model="client.cName">
+                </div>
+                
+                <div class="row">
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" ng-model="client.email">
+                </div>
+                
+
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Create">
+                </div>
+                
+<!--
+                <div class="row">
+                    <p class="form-anchor"><a href="/#/register">Not a member yet? Register here.</a></p>
+                </div>
+-->
+                
+            </form>
+            
+        </div>
+    </div>
+</div>

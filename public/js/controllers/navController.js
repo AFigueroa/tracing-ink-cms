@@ -1,5 +1,23 @@
-app.controller("navController", [ "$scope", "$rootScope", "$location",
-function($scope, $rootScope, $location){
+app.controller("navController", [ "$scope", "$rootScope", "$location", "$http",
+function($scope, $rootScope, $location, $http){
+    
+    var user = $http.get("/api/getUser").then(function(user){
+        $rootScope.user = user.data;
+        
+        if (user){
+            
+            var userType= $rootScope.user.type;
+        
+            if (userType === "1" ){
+
+                // User is Master Admin
+                $rootScope.admin = true;
+
+            }
+        }
+    });
+    
+    
     
     $scope.toggleSideNav = function(){
         

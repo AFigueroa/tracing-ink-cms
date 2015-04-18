@@ -1,12 +1,29 @@
 
 <!--		
 	====================================
-		 	Clients CRUD
+		 	All Clients 
 	=====================================
 -->	
 
 <div class="row">
     
-    <h1 id="login-logo">Clients</h1>
+    <h1 id="login-logo">Tracing Ink</h1>
     
+</div>
+
+<div class="row addButtonRow">
+
+    <a href="/#/addClient" class="addButton">+ NEW</a>
+
+</div>
+
+<div class="row">
+    <div ><div class="row">
+    
+    <div class="panel">
+        
+        <div ng-repeat="client in clients" class="panel-head">{{client.cName}}</div>
+
+    </div>
+</div></div>
 </div>

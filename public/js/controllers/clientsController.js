@@ -10,6 +10,7 @@ function($scope, $rootScope, $location, $http, $location){
 
     }
     
+    
     var authData = $rootScope.authData;
     //console.log(authData);
     
@@ -19,7 +20,18 @@ function($scope, $rootScope, $location, $http, $location){
         
         var userType= $rootScope.user.type;
         
-        if (userType === "1" ){
+        if (userType === "1"){
+            
+            $http.get("/api/getClients").then(function(clients){
+                    
+                    if (clients){
+
+                        $rootScope.clients = clients.data;
+                        
+                    }else{
+                        //console.log("no clients");
+                    }
+            });
             
             // User is Master Admin
             $rootScope.admin = true;
@@ -27,6 +39,26 @@ function($scope, $rootScope, $location, $http, $location){
             $rootScope.title = "Tracing Ink | Clients";
             $rootScope.pageTitle = "Clients";
             
+            
+            $scope.addClient = function() {
+                
+                if ($scope.client) {
+                    
+                    $http.post("/api/addClient", $scope.client).then(function(client){
+                    
+                        if (client){
+                            
+                            //console.log("true");
+                            $location.path('/clients');
+
+
+                        }else{
+                           
+//                            console.log("no client");
+                        }
+                  });
+                }
+            }
         }else{
             
             // User doesn't have enough privileges.
