@@ -216,6 +216,6 @@ app.post('/api/addClient', function (req, res) {
   
 });
 
-httpServer.listen(80, function() {
+httpServer.listen(3000, function() {
   console.log('Express server listening on port 3000');
 });
