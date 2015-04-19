@@ -52,6 +52,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "clientsController"
     })
     
+    // Add Manager
+    .when('/addManager/:cName', {
+      templateUrl:"views/addManager.html",
+      controller: "managerController"
+    })
+    
     // Team
     .when('/team', {
       templateUrl:"views/team.html",

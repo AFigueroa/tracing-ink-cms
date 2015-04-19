@@ -1,0 +1,52 @@
+
+<!--		
+	====================================
+		 	Add Manager
+	=====================================
+-->	
+
+<div class="row">
+    
+    <h1 id="login-logo">Tracing Ink</h1>
+    <p id="login-branding">Project Management Made Simple</p>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel">
+        
+        <div class="panel-head">Register as a Manager</div>
+        
+        <div class="panel-body">
+            
+            <form method="post" ng-submit="submit()" ng-controller="managerController">
+                
+                <div class="row">
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" ng-model="user.email">
+                </div>
+                
+                <div class="row">
+                    <label for="pass">Password:</label>
+                    <input type="password" name="pass" ng-model="user.pass">
+                </div>
+                
+                <div class="row">
+                    <p class="form-anchor"><a>Forgot your Password?</a></p>
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Login" ng-click="login(user)">
+                </div>
+                
+<!--
+                <div class="row">
+                    <p class="form-anchor"><a href="/#/register">Not a member yet? Register here.</a></p>
+                </div>
+-->
+                
+            </form>
+            
+        </div>
+    </div>

@@ -16,7 +16,9 @@ var moment = require('moment');
 var time = require('time');
 var fs = require('fs');
 var Email = require('email').Email;
-var CryptoJS = require("crypto-js");
+var crypto = require("crypto"),
+    algorithm = 'aes-256-ctr',
+    password = 'n123oDHri1VCodqdaD';
 
 
 /*=================================
@@ -65,11 +67,10 @@ app.post('/api/login', function (req, res) {
       res.send(false);
 
     } else {
+                
+        pass= encrypt(pass);
+        pass= String(pass);
         
-        var key = "n123oDHri1VCodqdaD"
-        
-        pass= CryptoJS.HmacSHA1(pass, key);
-        pass = String(pass);
         // On success...
         if (user.pass === pass) {
 
@@ -130,6 +131,14 @@ app.get('/api/getUser', function (req, res) {
   
 });
 
+// Decrypt data
+app.get('/api/decrypt', function (req, res) {
+
+    var data = decrypt(req.param('cName'));
+    res.send(data);
+
+});
+
 // Get Clients
 app.get('/api/getClients', function (req, res) {
     
@@ -174,38 +183,40 @@ app.post('/api/addClient', function (req, res) {
               
               if (!err){
               
-                console.log("no errors");
+                //console.log("no errors");
                 
                 var id = uid.v4();
+                var inviteId = uid.v4();
                   
                 var now = new time.Date();
                 now = now.setTimezone("America/New_York");
                   
                 now = now.toString();
                  
-                var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/addManager?cName='+cName;  
-//                fs.readFile('/public/views/registerManagerEmail.html', function(err, data){
-//                    if (data){
-//                        
-//                        emailMsg = data; 
-//                        
-//                    }else{
-//                        
-//                        res.send(false);
-//                    }
-//                });
-        
-
+                var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/#/addManager/'+encrypt(id);  
+                  
+                var invitedBy =  user.fname+" "+user.lname;
+                var invitedByEmail =  user.email;
                 // Proceed to add 
 
                 // Insert into the db
                 db.clients.save({        
-                    _id: id,          
-                    email: email,           
+                    _id: id,                     
                     cName: cName,
                     dateCreated: now,
                     active: 1
                 });
+                  
+                // Add an invite within the system for the newly invited user  
+                db.clients.update(
+                { _id: id },
+                { $set:{
+                        invites: [
+                            {_id:inviteId, email: email, invitedBy: invitedBy, invitedByEmail: invitedByEmail }
+                        ]
+                    }
+                }
+                );
             
                 
                   var myMsg = new Email({
@@ -234,6 +245,20 @@ app.post('/api/addClient', function (req, res) {
   }
   
 });
+
+function encrypt(text){
+  var cipher = crypto.createCipher(algorithm,password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm,password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
 
 httpServer.listen(3000, function() {
   console.log('Express server listening on port 3000');

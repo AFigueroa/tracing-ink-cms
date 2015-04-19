@@ -27,7 +27,7 @@ function($scope, $rootScope, $location, $http){
 
                 //Submission values
                 //console.log($scope.user);
-
+                
                 $http.post("/api/login", $scope.user).then(function(user){
 
                     //console.log(user.data);
