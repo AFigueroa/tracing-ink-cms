@@ -15,7 +15,7 @@ module.exports = function (grunt) {
                     port: 8080,
                     base: '',
                     hostname: 'localhost',
-                    livereload: 9000
+                    livereload: 3000
                 }
             }
         },
@@ -37,8 +37,9 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-execute');
-    grunt.loadNpmTasks('grunt-contrib-connect');
+    //grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     
-    grunt.registerTask('default', ['execute', 'connect', 'watch']);
+    grunt.registerTask('default', ['execute']);
+    grunt.registerTask('dev', ['execute', 'watch']);
 };

@@ -14,7 +14,9 @@ var passport = require('passport'), LocalStrategy = require('passport-local').St
 var session = require('express-session');
 var moment = require('moment');
 var time = require('time');
+var fs = require('fs');
 var Email = require('email').Email;
+var CryptoJS = require("crypto-js");
 
 
 /*=================================
@@ -63,9 +65,13 @@ app.post('/api/login', function (req, res) {
       res.send(false);
 
     } else {
-
-      // On success...
-      if (user.pass === pass) {
+        
+        var key = "n123oDHri1VCodqdaD"
+        
+        pass= CryptoJS.HmacSHA1(pass, key);
+        pass = String(pass);
+        // On success...
+        if (user.pass === pass) {
 
         req.session.logged = 1;
         req.session.user = {
@@ -79,12 +85,12 @@ app.post('/api/login', function (req, res) {
         req.session.userType = user.type;
         // Send the user data to the dashboard view
         res.send(user);
-          
 
-      } else {
+
+        } else {
         // Wrong password
         res.send(false);
-      }
+        }
 
     }
   });
@@ -176,6 +182,19 @@ app.post('/api/addClient', function (req, res) {
                 now = now.setTimezone("America/New_York");
                   
                 now = now.toString();
+                 
+                var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/addManager?cName='+cName;  
+//                fs.readFile('/public/views/registerManagerEmail.html', function(err, data){
+//                    if (data){
+//                        
+//                        emailMsg = data; 
+//                        
+//                    }else{
+//                        
+//                        res.send(false);
+//                    }
+//                });
+        
 
                 // Proceed to add 
 
@@ -193,7 +212,7 @@ app.post('/api/addClient', function (req, res) {
                     from: "afigueroa@tracingink.com",
                     to:   email,
                     subject: "Tracing Ink: Registration Invite",
-                    body: "Thank you for choosing Tracing Ink. Please use the following link to"
+                    body: emailMsg
                 });
                   
                 myMsg.send();
