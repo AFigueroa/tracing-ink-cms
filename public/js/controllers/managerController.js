@@ -1,6 +1,8 @@
 app.controller("managerController", [ "$scope", "$rootScope", "$location","$http","$routeParams",
 function($scope, $rootScope, $location, $http, $routeParams){
     
+    $rootScope.authData = null;
+    
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
           
     if (checkClass) {
@@ -10,12 +12,21 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
     };
     
-    var manager= {
-        cName: $routeParams
+    console.log($routeParams);
+    
+    var cName=  $routeParams.cName;
+    var inviteId= $routeParams.inviteId;
+    
+    var manager = {
+        cName : cName,
+        inviteId : inviteId
     };
     
-    $http.post("/api/decrypt", manager).then(function(data){
-        //console.log(data);
+    $http.post("/api/decryptManager", manager).then(function(manager){
+        
+        $rootScope.cName = manager.data.cName;
+        $rootScope.inviteId = manager.data.inviteId;
+    
     });
     
     // Set the title of the page

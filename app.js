@@ -132,10 +132,23 @@ app.get('/api/getUser', function (req, res) {
 });
 
 // Decrypt data
-app.get('/api/decrypt', function (req, res) {
+app.post('/api/decryptManager', function (req, res) {
+    if(req.param('cName') && req.param('inviteId')){
+        
+        var cName = decrypt(req.param('cName'));
+        var inviteId = decrypt(req.param('inviteId'));
 
-    var data = decrypt(req.param('cName'));
-    res.send(data);
+        var manager = {
+            cName: cName,
+            inviteId: inviteId
+        };
+
+        res.send(manager);
+        
+    }else{
+        res.send(false);
+    }
+    
 
 });
 
@@ -182,21 +195,18 @@ app.post('/api/addClient', function (req, res) {
           if (!client){
               
               if (!err){
-              
-                //console.log("no errors");
-                
+                  
                 var id = uid.v4();
-                var inviteId = uid.v4();
+                var inviteId = uid.v4();  
+                var invitedBy =  user.fname+" "+user.lname;
+                var invitedByEmail =  user.email;
                   
                 var now = new time.Date();
                 now = now.setTimezone("America/New_York");
-                  
                 now = now.toString();
                  
-                var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/#/addManager/'+encrypt(id);  
-                  
-                var invitedBy =  user.fname+" "+user.lname;
-                var invitedByEmail =  user.email;
+                var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);  
+        
                 // Proceed to add 
 
                 // Insert into the db
@@ -210,9 +220,9 @@ app.post('/api/addClient', function (req, res) {
                 // Add an invite within the system for the newly invited user  
                 db.clients.update(
                 { _id: id },
-                { $set:{
+                { $push:{
                         invites: [
-                            {_id:inviteId, email: email, invitedBy: invitedBy, invitedByEmail: invitedByEmail }
+                            {_id: inviteId , email: email, invitedBy: invitedBy, invitedByEmail: invitedByEmail }
                         ]
                     }
                 }

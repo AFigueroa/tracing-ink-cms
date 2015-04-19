@@ -53,7 +53,7 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
     })
     
     // Add Manager
-    .when('/addManager/:cName', {
+    .when('/addManager/:cName/:inviteId', {
       templateUrl:"views/addManager.html",
       controller: "managerController"
     })
