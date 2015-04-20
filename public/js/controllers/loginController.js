@@ -37,18 +37,18 @@ function($scope, $rootScope, $location, $http){
                         
                         var userData = {
                             "_id": user.data._id,
-                            "fname": user.data.fname,
-                            "lname": user.data.lname,
-                            "email": user.data.email,
-                            "phone": user.data.phone,
-                            "type": user.data.type,
+                            "fname": user.fname,
+                            "lname": user.lname,
+                            "email": user.email,
+                            "phone": user.phone,
+                            "type": user.type
                         };
                         
                         if (userData.type === "1"){
                             
                             // User is master admin
-                            
                             $rootScope.admin = true;
+                            
                         }
                         $rootScope.user = userData;
                         

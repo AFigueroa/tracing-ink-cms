@@ -87,8 +87,10 @@ function($scope, $rootScope, $location, $http, $routeParams){
                         invitedBy:invitedBy,
                         invitedByEmail:invitedByEmail
                     };
+                    
                     console.log('passwords match');
-                    $http.post("/api/registerManager", manager).then(function(user){
+                    
+                    $http.post("/api/addManager", manager).then(function(user){
                         console.log(user);
                     });
                     
