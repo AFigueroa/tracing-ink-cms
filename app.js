@@ -25,7 +25,7 @@ var crypto = require("crypto"),
           Configuration
 =================================*/
 
-var collections = ["users", "clients"];
+var collections = ["users", "clients", "invites"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 var app = express();
@@ -137,19 +137,52 @@ app.post('/api/decryptManager', function (req, res) {
         
         var cName = decrypt(req.param('cName'));
         var inviteId = decrypt(req.param('inviteId'));
+        
+        // Confirm invite Id is in the database.
+        db.invites.findOne({_id: inviteId}, function (err, invite) {
+                
+                res.send(invite);
 
-        var manager = {
-            cName: cName,
-            inviteId: inviteId
-        };
+            
+          });
 
-        res.send(manager);
+        
         
     }else{
         res.send(false);
     }
     
 
+});
+
+// Decrypt data
+app.post('/api/registerManager', function (req, res) {
+    
+    var cName= req.param('cName');
+    var email= req.param('email');
+    var invitedId= req.param('invitedId');
+    var invitedBy= req.param('invitedBy');
+    var invitedByEmail= req.param('invitedByEmail');
+    var pass= req.param('pass');
+    var repass= req.param('repass');
+    
+    if(cName && email && invitedId && invitedBy && invitedByEmail && pass && repass){
+        
+        var manager = {
+            invitedId:invitedId,
+            cName:cName,
+            email:email,
+            invitedBy:invitedBy,
+            invitedByEmail:invitedByEmail
+        };
+
+        res.send(manager);
+    
+    }else{
+        res.send(false);
+    }
+    
+    
 });
 
 // Get Clients
@@ -218,15 +251,15 @@ app.post('/api/addClient', function (req, res) {
                 });
                   
                 // Add an invite within the system for the newly invited user  
-                db.clients.update(
-                { _id: id },
-                { $push:{
-                        invites: [
-                            {_id: inviteId , email: email, invitedBy: invitedBy, invitedByEmail: invitedByEmail }
-                        ]
-                    }
-                }
-                );
+                db.invites.save({
+                    _id: inviteId,
+                    cName: cName,
+                    dateCreated: now,
+                    active: 1,
+                    email: email,
+                    invitedBy: invitedBy,
+                    invitedByEmail: invitedByEmail
+                });
             
                 
                   var myMsg = new Email({

@@ -11,9 +11,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
         $('.views-section').removeClass('open');
 
     };
-    
-    console.log($routeParams);
-    
+        
     var cName=  $routeParams.cName;
     var inviteId= $routeParams.inviteId;
     
@@ -22,64 +20,94 @@ function($scope, $rootScope, $location, $http, $routeParams){
         inviteId : inviteId
     };
     
-    $http.post("/api/decryptManager", manager).then(function(manager){
+    $http.post("/api/decryptManager", manager).then(function(invite){
         
-        $rootScope.cName = manager.data.cName;
-        $rootScope.inviteId = manager.data.inviteId;
+        if (invite){
+                        
+            var active = invite.data.active;
+            if (active === 1){
+
+                // Set the title of the page
+                $rootScope.title = "Tracing Ink | Register";
+                
+                var cName = invite.data.cName;
+                var inviteId = invite.data._id;
+                var email = invite.data.email;
+                var invitedBy = invite.data.invitedBy;
+                var invitedByEmail = invite.data.invitedByEmail;
+                
+                var manager = {
+                    inviteId:inviteId,
+                    cName:cName,
+                    email:email,
+                    invitedBy:invitedBy,
+                    invitedByEmail:invitedByEmail
+                };
+                
+                $rootScope.manager = manager;
+                
+            }else{
+                // Invite is Expired
+                $location.path('/');
+            }
+            
+        }else{
+            // No invite found redirect to login for now
+            $location.path('/');
+        }
     
     });
-    
-    // Set the title of the page
-    $rootScope.title = "Tracing Ink | Register";
 
-//    $scope.submit = function() {
-//
-//        if ($scope.user) {
-//
-//            //Submission values
-//            //console.log($scope.user);
-//
-//            $http.post("/api/login", $scope.user).then(function(user){
-//
-//                //console.log(user.data);
-//
-//                if (user.data){
-//
-//
-//                    var userData = {
-//                        "_id": user.data._id,
-//                        "fname": user.data.fname,
-//                        "lname": user.data.lname,
-//                        "email": user.data.email,
-//                        "phone": user.data.phone,
-//                        "type": user.data.type,
-//                    };
-//
-//                    if (userData.type === "1"){
-//
-//                        // User is master admin
-//
-//                        $rootScope.admin = true;
-//                    }
-//                    $rootScope.user = userData;
-//
-//                    $rootScope.authData = true;
-//
-//                    // Redirect to the Dashboard  
-//                    $location.path('/dashboard');
-//
-//                }else{
-//                   // Redirect to login
-//                    $location.path('/'); 
-//                }
-//          });
-//
-//        }else{
-//
-//            // Redirect to login
-//            $location.path('/');
-//
-//        }
-//    };
+    $scope.registerManager = function() {
+
+        if ($scope.manager) {
+            
+            var fname = $scope.manager.fname;
+            var cName = $scope.manager.cName;
+            var lname = $scope.manager.lname;
+            var email = $scope.manager.email;
+            var pass = $scope.manager.pass;
+            var repass = $scope.manager.repass;
+            var inviteId = $rootScope.manager.inviteId;
+            var invitedBy = $rootScope.manager.invitedBy;
+            var invitedByEmail = $rootScope.manager.invitedByEmail;
+
+            if(cName && fname && lname && email && pass && repass && inviteId && invitedBy && invitedByEmail){
+                
+                if(pass === repass){
+                    
+                    var manager = {
+                        fname:fname,
+                        lname:lname,
+                        cName:cName,
+                        email:email,
+                        pass:pass,
+                        repass:repass,
+                        inviteId:inviteId,
+                        invitedBy:invitedBy,
+                        invitedByEmail:invitedByEmail
+                    };
+                    console.log('passwords match');
+                    $http.post("/api/registerManager", manager).then(function(user){
+                        console.log(user);
+                    });
+                    
+                }else{
+                    //Passwords dont match
+                }
+                
+            }else{
+                // Missing Fields
+            }
+            
+            
+
+        }else{
+
+            // Redirect to login
+            $location.path('/');
+
+        }
+    };
     
 }]);

@@ -20,24 +20,40 @@
         
         <div class="panel-body">
             
-            <form method="post" ng-submit="submit()">
+            <form method="post">
+                
+                <div class="row">
+                    <label for="cName">Company Name:</label>
+                    <input ng-disabled="true" type="text" name="cName" ng-model="manager.cName">
+                </div>
+                
+                <div class="row">
+                    <label for="fname">First Name:</label>
+                    <input type="text" name="fname" ng-model="manager.fname">
+                </div>
+                
+                <div class="row">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" name="lname" ng-model="manager.lname">
+                </div>
                 
                 <div class="row">
                     <label for="email">Email:</label>
-                    <input type="text" name="email" ng-model="user.email">
+                    <input type="text" name="email" ng-model="manager.email">
                 </div>
                 
                 <div class="row">
                     <label for="pass">Password:</label>
-                    <input type="password" name="pass" ng-model="user.pass">
+                    <input type="password" name="pass" ng-model="manager.pass">
                 </div>
                 
                 <div class="row">
-                    <p class="form-anchor"><a>Forgot your Password?</a></p>
+                    <label for="repass">Confirm Password:</label>
+                    <input type="password" name="repass" ng-model="manager.repass">
                 </div>
                 
                 <div class="row">
-                    <input type="submit" class="submit" value="Login" ng-click="login(user)">
+                    <input type="submit" class="submit" value="Register" ng-click="registerManager(manager)">
                 </div>
                 
 <!--
