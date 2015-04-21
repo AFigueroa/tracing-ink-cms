@@ -8,17 +8,6 @@ module.exports = function (grunt) {
                 src: ['app.js']
             }
         },
-        
-        connect: {
-            server: {
-                options: {
-                    port: 8080,
-                    base: '',
-                    hostname: 'localhost',
-                    livereload: 3000
-                }
-            }
-        },
 
         watch: {
             options: {

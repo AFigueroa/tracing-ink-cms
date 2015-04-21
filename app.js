@@ -346,17 +346,20 @@ app.post('/api/addClient', function (req, res) {
                                 subject: "Tracing Ink: Registration Invite",
                                 body: emailMsg
                             });
-
-                            // Save the new Client data in to the database
-                            db.clients.save({        
+                            
+                            // Create a Client object to store in the database
+                            var client = {        
                                 _id: id,                     
                                 cName: cName,
                                 dateCreated: now,
                                 active: 1
-                            });
+                            };
+                            
+                            // Save the new Client data in to the database
+                            db.clients.save(client);
 
-                            // Save the new Invite data in to the database  
-                            db.invites.save({
+                            // Create a Invite object to store in the database
+                            var invite = {
                                 _id: inviteId,
                                 cName: cName,
                                 dateCreated: now,
@@ -364,10 +367,13 @@ app.post('/api/addClient', function (req, res) {
                                 email: email,
                                 invitedBy: invitedBy,
                                 invitedByEmail: invitedByEmail
-                            });
+                            };
+                            
+                            // Save the new Invite data in to the database  
+                            db.invites.save(invite);
 
                             // Send the invite Email
-                            myMsg.send();
+                            //myMsg.send();
                             
                             // Respond to the front-end with a Success message
                             res.send(true);
