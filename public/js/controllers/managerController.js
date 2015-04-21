@@ -1,65 +1,99 @@
+// Manager Controller
 app.controller("managerController", [ "$scope", "$rootScope", "$location","$http","$routeParams",
 function($scope, $rootScope, $location, $http, $routeParams){
     
+    // Make sure the session is logged off
     $rootScope.authData = null;
     
+    // Check if the Side Nav is open or not
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
-          
+    
+    // Check if true or false
     if (checkClass) {
 
+        // The side Nav is Open
+        
+        // Remove "open" class from the side nav and from the views section
         $('.side-nav').removeClass('open');
         $('.views-section').removeClass('open');
 
     };
-        
+     
+    // Get the values of the URL Get submission
     var cName=  $routeParams.cName;
     var inviteId= $routeParams.inviteId;
     
-    var manager = {
-        cName : cName,
-        inviteId : inviteId
-    };
-    
-    $http.post("/api/decryptManager", manager).then(function(invite){
+    // Check if all submissions are present
+    if(cName && inviteId){
         
-        if (invite){
-                        
-            var active = invite.data.active;
-            if (active === 1){
-
-                // Set the title of the page
-                $rootScope.title = "Tracing Ink | Register";
-                
-                var cName = invite.data.cName;
-                var inviteId = invite.data._id;
-                var email = invite.data.email;
-                var invitedBy = invite.data.invitedBy;
-                var invitedByEmail = invite.data.invitedByEmail;
-                
-                var manager = {
-                    inviteId:inviteId,
-                    cName:cName,
-                    email:email,
-                    invitedBy:invitedBy,
-                    invitedByEmail:invitedByEmail
-                };
-                
-                $rootScope.manager = manager;
-                
-            }else{
-                // Invite is Expired
-                $location.path('/');
-            }
+        // Submission values are present
+        
+        // Create the Manager object 
+        var manager = {
+            cName : cName,
+            inviteId : inviteId
+        };
+        
+        // Send the encrypted values of the submission to the server
+        $http.post("/api/decryptManager", manager).then(function(invite){
             
-        }else{
-            // No invite found redirect to login for now
-            $location.path('/');
-        }
+            // Check if an invite was found
+            if (invite){
+                
+                // Get the value for "Active" from the invite's data
+                var active = invite.data.active;
+                
+                // Check if the invite is active
+                if (active === 1){
+                    
+                    // The invite is active
+                    var cName = invite.data.cName; // Company Name
+                    var inviteId = invite.data._id; // Invitation Id
+                    var email = invite.data.email; // Invited User's Email
+                    var invitedBy = invite.data.invitedBy; // Invitation Sender's Full Name
+                    var invitedByEmail = invite.data.invitedByEmail; // Invitation Sender's Email
+
+                    // Create a manager object with the data available so far
+                    var manager = {
+                        inviteId:inviteId,
+                        cName:cName,
+                        email:email,
+                        invitedBy:invitedBy,
+                        invitedByEmail:invitedByEmail
+                    };
+
+                    // Store the manager's data within scope
+                    $rootScope.manager = manager;
+                    
+                    // Set the title of the page
+                    $rootScope.title = "Tracing Ink | Register";
+
+                }else{
+                    
+                    // Invite is Expired
+                    $location.path('/');
+                }
+
+            }else{
+                
+                // No invite found redirect to login for now
+                $location.path('/');
+                
+            }
+        });
+        
+    }else{
+        
+        // Missing submission values
+        $location.path('/');
+        
+    }
     
-    });
-
+    // Register Manager
     $scope.registerManager = function() {
-
+    // This method will send the values of the form to the server to...
+    // add them to the database and create a new user with the type of manager
+        
         if ($scope.manager) {
             
             var fname = $scope.manager.fname;

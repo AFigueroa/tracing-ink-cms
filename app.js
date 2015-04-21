@@ -436,6 +436,7 @@ function decrypt(text){
     dec += decipher.final('utf8');
     
     // Return the decrypted data
+    // Return the decrypted data
     return dec;
 }
 
