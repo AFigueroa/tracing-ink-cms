@@ -248,6 +248,7 @@ app.post('/api/addManager', function (req, res) {
     
     // Get all the values from the submission
     var cName= req.param('cName');
+    var fname= req.param('fname');
     var email= req.param('email');
     var invitedId= req.param('invitedId');
     var invitedBy= req.param('invitedBy');
@@ -444,6 +445,6 @@ function decrypt(text){
           Activate Server
 =================================*/
 
-httpServer.listen(3000, function() {
-  console.log('Express server listening on port 3000');
+httpServer.listen(80, function() {
+  console.log('Express server listening on port 80');
 });
