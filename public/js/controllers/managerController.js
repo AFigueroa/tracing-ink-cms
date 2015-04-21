@@ -94,8 +94,12 @@ function($scope, $rootScope, $location, $http, $routeParams){
     // This method will send the values of the form to the server to...
     // add them to the database and create a new user with the type of manager
         
+        // Check if the form was submitted successfully
         if ($scope.manager) {
             
+            // Form submitted succesfully
+            
+            // Get all the values
             var fname = $scope.manager.fname;
             var cName = $scope.manager.cName;
             var lname = $scope.manager.lname;
@@ -106,10 +110,17 @@ function($scope, $rootScope, $location, $http, $routeParams){
             var invitedBy = $rootScope.manager.invitedBy;
             var invitedByEmail = $rootScope.manager.invitedByEmail;
 
+            // Check if any neccessary value is missing
             if(cName && fname && lname && email && pass && repass && inviteId && invitedBy && invitedByEmail){
                 
+                // All values submitted
+                
+                // Check if passwords match
                 if(pass === repass){
                     
+                    // Passwords match
+                    
+                    // Create the manager object to be added as a User
                     var manager = {
                         fname:fname,
                         lname:lname,
@@ -122,28 +133,29 @@ function($scope, $rootScope, $location, $http, $routeParams){
                         invitedByEmail:invitedByEmail
                     };
                     
-                    console.log('passwords match');
-                    
+                    // Make a request to the server to add the manager to users
                     $http.post("/api/addManager", manager).then(function(user){
+                        
                         console.log(user);
+                        
                     });
                     
                 }else{
+                    
                     //Passwords dont match
+                    
                 }
                 
             }else{
+                
                 // Missing Fields
+                
             }
             
-            
-
         }else{
 
-            // Redirect to login
-            $location.path('/');
+            // No Submission 
 
         }
-    };
-    
+    }; 
 }]);
