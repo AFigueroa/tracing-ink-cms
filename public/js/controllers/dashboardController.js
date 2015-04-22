@@ -36,8 +36,13 @@ function($scope, $rootScope, $location, $http){
                 // User is Master Admin
                 $rootScope.admin = true;  
 
-            }
+            } else if(userType === 2){
+                    
+                // User is master admin
+                $rootScope.manager = true;
 
+            }
+                        
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Dashboard";
             $rootScope.pageTitle = "Dashboard";

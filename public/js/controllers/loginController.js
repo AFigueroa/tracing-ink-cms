@@ -50,6 +50,7 @@ function($scope, $rootScope, $location, $http){
                     var userData = {
                         "_id": user.data._id,
                         "fname": user.fname,
+                        "cName": user.cName,
                         "lname": user.lname,
                         "email": user.email,
                         "phone": user.phone,
@@ -62,11 +63,16 @@ function($scope, $rootScope, $location, $http){
                         // User is master admin
                         $rootScope.admin = true;
 
+                    } else if(userData.type === 2){
+                    
+                        // User is master admin
+                        $rootScope.manager = true;
+                        
                     }
                     
                     // Store the user data within the $rootScope
                     $rootScope.user = userData;
-                    
+                                        
                     // Set the scope's authdata value to true
                     $rootScope.authData = true;
 

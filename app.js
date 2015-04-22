@@ -100,6 +100,7 @@ app.post('/api/login', function (req, res) {
                 req.session.user = {
                     "_id" : user._id,
                     "fname" : user.fname,
+                    "cName" : user.cName,
                     "lname" : user.lname,
                     "email" : user.email,
                     "phone" : user.phone,
@@ -249,40 +250,133 @@ app.post('/api/addManager', function (req, res) {
     // Get all the values from the submission
     var cName= req.param('cName');
     var fname= req.param('fname');
+    var lname= req.param('lname');
     var email= req.param('email');
-    var invitedId= req.param('invitedId');
+    var phone= req.param('phone');
+    var inviteId= req.param('inviteId');
     var invitedBy= req.param('invitedBy');
     var invitedByEmail= req.param('invitedByEmail');
     var pass= req.param('pass');
     var repass= req.param('repass');
-    
+    var id = uid.v4(); // Create Manager Id
+
     // Check if any field is missing
-    if(cName && email && invitedId && invitedBy && invitedByEmail && pass && repass){
+    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
         
         // Found all fields
-        
-        // Create a Manager object with the data submitted
-        var manager = {
-            invitedId:invitedId,
-            cName:cName,
-            email:email,
-            invitedBy:invitedBy,
-            invitedByEmail:invitedByEmail
-        };
+       
+        if(pass === repass){
+                        
+            // Passwords match
+            
+            // Encrypt the password
+            pass = encrypt(pass);
 
-        // Add the manager data to the database
+            // Create a Manager object with the data submitted
+            var manager = {
+                _id:id,
+                type:2,
+                fname:fname,
+                lname:lname,
+                cName:cName,
+                pass:pass,
+                email:email,
+                phone:phone,
+                invitedBy:invitedBy,
+                invitedByEmail:invitedByEmail
+            };
+            
+            // Check if theres an active invite with the same Id
+            db.invites.find({_id:inviteId, active:1}, function(err, invite){
+                
+                if(!err){
+                    
+                    if(invite){
+
+                        // An active invite has been found
+
+
+                        // Add the manager data to the database
+                        db.users.save(manager, function(err, user){
+
+                            if(!err){
+                                
+                                // Check if theres an active invite with the same Id
+                                db.invites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
+
+                                    if(!err){
+
+                                        if(invite){
+
+                                            // Invite Successfully deleted
+                                            
+                                            // Sanitize the manager data to send to the front-end
+                                            
+                                            manager = {
+                                                _id:id,
+                                                type:2,
+                                                fname:fname,
+                                                lname:lname,
+                                                cName:cName,
+                                                email:email,
+                                                phone:phone
+                                            };
+                                            
+                                            // Send the manager data to the front-end
+                                            res.send(manager);
+
+                                        }else{
+
+                                            // No active invite found
+                                            res.send(false);
+
+                                        }   
+
+                                    }else{
+
+                                        // An error ocurred with the DB
+                                        res.send(false);
+                                    }
+                                    
+                                });
+                                
+                            }else{
+                                
+                                // An error ocurred with the DB
+                                res.send(false);
+
+                            }
+                            
+                        });
+
+                    }else{
+
+                        // No active invite found
+                        res.send(false);
+
+                    }   
+                    
+                }else{
+                    
+                    // An error ocurred with the DB
+                    res.send(false);
+                }
+                
+                
+            });
+            
+        }else{
+            
+            // Passwords don't match
+            res.send(false);
+        }
         
-        
-        // Send the manager data to the front-end
-        res.send(manager);
-    
     }else{
         
         // There where fields missing
-        res.send(false);
-    }
+        res.send(false);   
     
-    
+    }  
 });
 
 // Add Client Route
@@ -337,7 +431,7 @@ app.post('/api/addClient', function (req, res) {
                             now = now.toString();
                             
                             // Email Body to be sent as Invite
-                            var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:3000/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
+                            var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:80/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
                             
                             // Create the new Email Object
                             var myMsg = new Email({
@@ -373,6 +467,19 @@ app.post('/api/addClient', function (req, res) {
                             db.invites.save(invite);
 
                             // Send the invite Email
+                            myMsg.send(function(err){
+                                
+                                // Check if there where any errors
+                                if(err){
+                                    
+                                    // Errors found
+                                    
+                                    // Send error to the front-end
+                                    res.send(err);
+                                    
+                                }
+                                
+                            });
                             //myMsg.send();
                             
                             // Respond to the front-end with a Success message
@@ -446,6 +553,14 @@ function decrypt(text){
     // Return the decrypted data
     return dec;
 }
+
+/*=================================
+           Server Processes
+=================================*/
+
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+});
 
 /*=================================
           Activate Server

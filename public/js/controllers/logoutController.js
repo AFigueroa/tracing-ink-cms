@@ -5,6 +5,10 @@ function($scope, $rootScope, $location, $http){
     // Set the scope variable for authenticated to false
     $rootScope.authData = false;
     
+    // User is master admin
+    $rootScope.admin = false;
+    $rootScope.manager = false;
+    
     // Reset $scope
     $scope = null;
     

@@ -80,6 +80,7 @@ function($scope, $rootScope, $location, $http){
                 // Check if the Add Client method was successful
                 if (client){
                     
+                    console.log(client);
                     // Client was added successfully
                     
                     // Redirect to the Clients List

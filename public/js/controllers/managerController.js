@@ -90,7 +90,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
     }
     
     // Register Manager
-    $scope.registerManager = function() {
+    $scope.addManager = function() {
     // This method will send the values of the form to the server to...
     // add them to the database and create a new user with the type of manager
         
@@ -104,14 +104,15 @@ function($scope, $rootScope, $location, $http, $routeParams){
             var cName = $scope.manager.cName;
             var lname = $scope.manager.lname;
             var email = $scope.manager.email;
+            var phone = $scope.manager.phone;
             var pass = $scope.manager.pass;
             var repass = $scope.manager.repass;
-            var inviteId = $rootScope.manager.inviteId;
-            var invitedBy = $rootScope.manager.invitedBy;
-            var invitedByEmail = $rootScope.manager.invitedByEmail;
+            var inviteId = $scope.manager.inviteId;
+            var invitedBy = $scope.manager.invitedBy;
+            var invitedByEmail = $scope.manager.invitedByEmail;
 
             // Check if any neccessary value is missing
-            if(cName && fname && lname && email && pass && repass && inviteId && invitedBy && invitedByEmail){
+            if(cName && fname && lname && email && pass && repass && inviteId && invitedBy && invitedByEmail && phone){
                 
                 // All values submitted
                 
@@ -126,6 +127,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
                         lname:lname,
                         cName:cName,
                         email:email,
+                        phone:phone,
                         pass:pass,
                         repass:repass,
                         inviteId:inviteId,
@@ -133,10 +135,57 @@ function($scope, $rootScope, $location, $http, $routeParams){
                         invitedByEmail:invitedByEmail
                     };
                     
+                    //console.log($scope.manager);
+                    
                     // Make a request to the server to add the manager to users
-                    $http.post("/api/addManager", manager).then(function(user){
+                    $http.post("/api/addManager", $scope.manager).then(function(user){
                         
-                        console.log(user);
+                        // Check if post was successful
+                        if (user.data){
+
+                            // Post was successful
+                            
+                            user = user.data;
+
+                            // Gather the sanitized user data and store it within an object
+                            var userData = {
+                                "_id": user._id,
+                                "fname": user.fname,
+                                "cName": user.cName,
+                                "lname": user.lname,
+                                "email": user.email,
+                                "phone": user.phone,
+                                "type": user.type
+                            };
+
+                            // Check if the user is a master admin
+                            if (userData.type === "1"){
+
+                                // User is master admin
+                                $rootScope.admin = true;
+
+                            } else if(userData.type === "2"){
+                                
+                                // User is master admin
+                                $rootScope.manager = true;
+                            
+                            }
+
+                            // Store the user data within the $rootScope
+                            $rootScope.user = userData;
+
+                            // Set the scope's authdata value to true
+                            $rootScope.authData = true;
+
+                            // Redirect to the Dashboard  
+                            $location.path('/dashboard');
+
+                        }else{
+
+                           // No user found
+                            $location.path('/'); 
+
+                        }
                         
                     });
                     

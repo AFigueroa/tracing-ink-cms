@@ -20,6 +20,11 @@ function($scope, $rootScope, $location, $http){
                 // User is Master Admin
                 $rootScope.admin = true;
 
+            }else if (userType === "2" ){
+
+                // User is Master Admin
+                $rootScope.manager = true;
+
             }
         }
     });
