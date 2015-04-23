@@ -1,5 +1,17 @@
 <div class="row">
     
-    <h1 id="login-logo">My Team</h1>
+    <h1 id="login-logo">{{user.cName}}'s Team</h1>
     
+</div>
+
+<div class="row addButtonRow" ng-hide="manager">
+
+    <a href="/#/inviteMember" class="addButton">+ NEW MEMBER</a>
+
+</div>
+
+<div class="row addButtonRow" ng-hide="admin">
+
+    <a href="/#/inviteMember" class="addButton">+ NEW MEMBER</a>
+
 </div>

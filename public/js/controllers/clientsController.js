@@ -78,7 +78,7 @@ function($scope, $rootScope, $location, $http){
             $http.post("/api/addClient", $scope.client).then(function(client){
                 
                 // Check if the Add Client method was successful
-                if (client){
+                if (client.data){
                     
                     console.log(client);
                     // Client was added successfully

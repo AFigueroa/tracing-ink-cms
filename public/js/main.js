@@ -82,6 +82,18 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "managerController"
     })
     
+    // Add Member Form
+    .when('/inviteMember', {
+      templateUrl:"views/inviteMember.html",
+      controller: "teamController"
+    })
+    
+    // Add Member Form
+    .when('/inviteSuccess', {
+      templateUrl:"views/inviteSuccess.html",
+      controller: "teamController"
+    })
+    
     // Team
     .when('/team', {
       templateUrl:"views/team.html",

@@ -26,7 +26,7 @@ var crypto = require("crypto"),
 =================================*/
 
 // Mongo DB
-var collections = ["users", "clients", "invites"];
+var collections = ["users", "clients", "invites", "memberInvites"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 // Express JS
@@ -294,57 +294,115 @@ app.post('/api/addManager', function (req, res) {
                     if(invite){
 
                         // An active invite has been found
+                        
+                        // Check if email is taken
+                        db.users.find({email:email}, function(err, user){
+                        
+                            if (!err){
+                                // No Errors
+                                if(!user){
+                                    
+                                    // No user found with the same email
+                                    
+                                    // Add the manager data to the database
+                                    db.users.save(manager, function(err, user){
+
+                                        if(!err){
+
+                                            // Check if theres an active invite with the same Id
+                                            db.invites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
+
+                                                if(!err){
+
+                                                    if(invite){
+
+                                                        // Invite Successfully deleted
+
+                                                        // Sanitize the manager data to send to the front-end
+
+                                                        manager = {
+                                                            _id:id,
+                                                            type:2,
+                                                            fname:fname,
+                                                            lname:lname,
+                                                            cName:cName,
+                                                            email:email,
+                                                            phone:phone
+                                                        };
+
+                                                        // Check if theres an active invite with the same Id
+                                                        db.clients.update({cName:cName, active:1},{$push:{members:manager}}, function(err, member){
+
+                                                            // Check if errors
+                                                            if(!err){
+
+                                                                // Check if succesfull
+                                                                if(member){
+
+                                                                    // Create Session to know the system the user is logged in
+                                                                    req.session.logged = 1; 
+
+                                                                    // Create a session for the Users privilege level 
+                                                                    req.session.userType = manager.type;
+                                                                    req.session.user = manager;
+
+                                                                    // Send the manager data to the front-end
+                                                                    res.send(manager);
+
+                                                                }else{
+
+                                                                    // Member not added
+                                                                    res.send(false);
+
+                                                                }
+
+                                                            }else{
+
+                                                                // An error occurred
+                                                                res.send(false);
+
+                                                            }
+
+                                                        });
 
 
-                        // Add the manager data to the database
-                        db.users.save(manager, function(err, user){
 
-                            if(!err){
-                                
-                                // Check if theres an active invite with the same Id
-                                db.invites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
+                                                    }else{
 
-                                    if(!err){
+                                                        // No active invite found
+                                                        res.send(false);
 
-                                        if(invite){
+                                                    }   
 
-                                            // Invite Successfully deleted
-                                            
-                                            // Sanitize the manager data to send to the front-end
-                                            
-                                            manager = {
-                                                _id:id,
-                                                type:2,
-                                                fname:fname,
-                                                lname:lname,
-                                                cName:cName,
-                                                email:email,
-                                                phone:phone
-                                            };
-                                            
-                                            // Send the manager data to the front-end
-                                            res.send(manager);
+                                                }else{
+
+                                                    // An error ocurred with the DB
+                                                    res.send(false);
+                                                }
+
+                                            });
 
                                         }else{
 
-                                            // No active invite found
+                                            // An error ocurred with the DB
                                             res.send(false);
 
-                                        }   
+                                        }
 
-                                    }else{
-
-                                        // An error ocurred with the DB
-                                        res.send(false);
-                                    }
+                                    });
+                            
+                                }else{
                                     
-                                });
-                                
+                                    // An user has been found with that email
+                                    res.send(false);
+
+                                }
+                            
                             }else{
                                 
                                 // An error ocurred with the DB
                                 res.send(false);
-
+                                
                             }
                             
                         });
@@ -409,81 +467,105 @@ app.post('/api/addClient', function (req, res) {
                 // Query the database to see if there is already a Client if the name submitted
                 db.clients.findOne({cName: cName}, function(err, client){
                     
-                    // Check if a Client was found or not
-                    if (!client){
+                    // Check if there were errors
+                    if (!err){
                         
-                        // No client found, the submitted value is not taken
+                        // No errors
                         
-                        // Check if there were errors
-                        if (!err){
+                        // Check if a Client was found or not
+                        if (!client){
                             
-                            // No errors
-                            
-                            // Create the values for the new Client from the data available so far
-                            var id = uid.v4(); // Client Id
-                            var inviteId = uid.v4();  // Invite Id
-                            var invitedBy =  user.fname+" "+user.lname; 
-                            var invitedByEmail =  user.email;
-                            
-                            // Timestamp
-                            var now = new time.Date(); 
-                            now = now.setTimezone("America/New_York");
-                            now = now.toString();
-                            
-                            // Email Body to be sent as Invite
-                            var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:80/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
-                            
-                            // Create the new Email Object
-                            var myMsg = new Email({
-                                from: "afigueroa@tracingink.com",
-                                to:   email,
-                                subject: "Tracing Ink: Registration Invite",
-                                body: emailMsg
-                            });
-                            
-                            // Create a Client object to store in the database
-                            var client = {        
-                                _id: id,                     
-                                cName: cName,
-                                dateCreated: now,
-                                active: 1
-                            };
-                            
-                            // Save the new Client data in to the database
-                            db.clients.save(client);
+                            // Query the database to see if there is already a Client if the name submitted
+                            db.users.findOne({email: email}, function(err, user){
 
-                            // Create a Invite object to store in the database
-                            var invite = {
-                                _id: inviteId,
-                                cName: cName,
-                                dateCreated: now,
-                                active: 1,
-                                email: email,
-                                invitedBy: invitedBy,
-                                invitedByEmail: invitedByEmail
-                            };
-                            
-                            // Save the new Invite data in to the database  
-                            db.invites.save(invite);
+                                // Check if there were errors
+                                if (!err){
 
-                            // Send the invite Email
-                            myMsg.send(function(err){
-                                
-                                // Check if there where any errors
-                                if(err){
+                                    // No errors
+
+                                    // Check if a Client was found or not
+                                    if (!user){
+                                        
+                                        // No client found nor was the email already in use
+                            
+                                        // Create the values for the new Client from the data available so far
+                                        var id = uid.v4(); // Client Id
+                                        var inviteId = uid.v4();  // Invite Id
+                                        var invitedBy =  user.fname+" "+user.lname; 
+                                        var invitedByEmail =  user.email;
+
+                                        // Timestamp
+                                        var now = new time.Date(); 
+                                        now = now.setTimezone("America/New_York");
+                                        now = now.toString();
+
+                                        // Email Body to be sent as Invite
+                                        var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:80/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
+
+                                        // Create the new Email Object
+                                        var myMsg = new Email({
+                                            from: "afigueroa@tracingink.com",
+                                            to:   email,
+                                            subject: "Tracing Ink: Registration Invite",
+                                            body: emailMsg
+                                        });
+
+                                        // Create a Client object to store in the database
+                                        var client = {        
+                                            _id: id,                     
+                                            cName: cName,
+                                            dateCreated: now,
+                                            active: 1
+                                        };
+
+                                        // Save the new Client data in to the database
+                                        db.clients.save(client);
+
+                                        // Create a Invite object to store in the database
+                                        var invite = {
+                                            _id: inviteId,
+                                            cName: cName,
+                                            dateCreated: now,
+                                            active: 1,
+                                            email: email,
+                                            invitedBy: invitedBy,
+                                            invitedByEmail: invitedByEmail
+                                        };
+
+                                        // Save the new Invite data in to the database  
+                                        db.invites.save(invite);
+
+                                        // Send the invite Email
+                                        myMsg.send(function(err){
+
+                                            // Check if there where any errors
+                                            if(err){
+
+                                                // Errors found
+
+                                                // Send error to the front-end
+                                                res.send(err);
+
+                                            }
+
+                                        });
+
+                                        // Respond to the front-end with a Success message
+                                        res.send(true);
+                                        
+                                    }else{
+                                        
+                                        // A user was found cannot invite another
+                                        res.send(false);
+                                        
+                                    }
+                                }else{
                                     
-                                    // Errors found
-                                    
-                                    // Send error to the front-end
-                                    res.send(err);
+                                    // Query errors found
+                                    res.send(false);
                                     
                                 }
-                                
                             });
-                            //myMsg.send();
-                            
-                            // Respond to the front-end with a Success message
-                            res.send(true);
                             
                         }else {
                             
@@ -509,6 +591,97 @@ app.post('/api/addClient', function (req, res) {
     }else{
         
         // The user is either not logged on or is not an master admin
+        res.send(false);
+        
+    }
+});
+
+// Invite Member
+app.post('/api/inviteMember', function (req, res) {
+    
+    // Gether the submission values
+    var email = req.param('email');
+    var invitedBy = req.param('invitedBy');
+    var invitedByEmail = req.param('invitedByEmail');
+    var cName = req.param('cName');
+    var inviteId = uid.v4(); // Invite Id
+    
+    // Timestamp
+    var now = new time.Date(); 
+    now = now.setTimezone("America/New_York");
+    now = now.toString();
+
+    // Verify if all fileds are present
+    if(email && invitedBy && invitedByEmail && cName){
+        
+        // Create a Invite object to store in the database
+        var invite = {
+            _id: inviteId,
+            cName: cName,
+            dateCreated: now,
+            active: 1,
+            email: email,
+            invitedBy: invitedBy,
+            invitedByEmail: invitedByEmail
+        };
+        
+        // Confirm invite Id is in the database.
+        db.memberInvites.save(invite, function (err, invite) {
+                
+            if(!err){
+                
+                // No errors
+                
+                if(invite){
+                    
+                    // Invite saved succesfully
+                    
+                    // Email Body to be sent as Invite
+                    var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://localhost:80/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
+
+                    // Create the new Email Object
+                    var myMsg = new Email({
+                        from: "donotreply@tracingink.com",
+                        to:   email,
+                        subject: "Tracing Ink: Registration Invite",
+                        body: emailMsg
+                    });
+                    
+                    // Send the invite Email
+                    myMsg.send(function(err){
+
+                        // Check if there where any errors
+                        if(err){
+
+                            // Errors found
+
+                            // Send error to the front-end
+                            res.send(err);
+
+                        }
+
+                    });
+                    
+                    // Send the invite's data to the front-end
+                    res.send(invite);    
+                
+                }else{
+                
+                    // Invite not sent
+                    res.send(false);
+                    
+                }
+            }else{
+                
+                // Error happened
+                res.send(false);
+                
+            }
+        });
+        
+    }else{
+        
+        // Submission is missing a key
         res.send(false);
         
     }

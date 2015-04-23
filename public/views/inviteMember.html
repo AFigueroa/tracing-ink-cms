@@ -1,0 +1,38 @@
+
+<!--		
+	====================================
+		 	Add Member 
+	=====================================
+-->	
+
+<div class="row">
+    
+    <h1 id="login-logo">{{user.cName}}</h1>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel secured">
+        
+        <div class="panel-head">Invite Team Member</div>
+        
+        <div class="panel-body">
+            
+            <form method="post" ng-submit="inviteMember()" ng-controller="teamController">
+                
+                <div class="row">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" ng-model="member.email">
+                </div>
+                
+
+                <div class="row">
+                    <input type="submit" class="submit" value="Invite">
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</div>
