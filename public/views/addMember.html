@@ -1,0 +1,67 @@
+
+<!--		
+	====================================
+		 	Add Member
+	=====================================
+-->	
+
+<div class="row">
+    
+    <h1 id="login-logo">Tracing Ink</h1>
+    <p id="login-branding">Project Management Made Simple</p>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel">
+        
+        <div class="panel-head">Register</div>
+        
+        <div class="panel-body">
+            
+            <form method="post">
+                
+                <div class="row">
+                    <label for="cName">Company Name:</label>
+                    <input ng-disabled="true" type="text" name="cName" ng-model="manager.cName">
+                </div>
+                
+                <div class="row">
+                    <label for="fname">First Name:</label>
+                    <input type="text" name="fname" ng-model="manager.fname">
+                </div>
+                
+                <div class="row">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" name="lname" ng-model="manager.lname">
+                </div>
+                
+                <div class="row">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" ng-model="manager.email">
+                </div>
+                
+                <div class="row">
+                    <label for="phone">Phone:</label>
+                    <input type="text" name="phone" ng-model="manager.phone">
+                </div>
+                
+                <div class="row">
+                    <label for="pass">Password:</label>
+                    <input type="password" name="pass" ng-model="manager.pass">
+                </div>
+                
+                <div class="row">
+                    <label for="repass">Confirm Password:</label>
+                    <input type="password" name="repass" ng-model="manager.repass">
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Register" ng-click="addMember(manager)">
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>

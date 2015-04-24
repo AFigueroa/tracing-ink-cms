@@ -43,6 +43,11 @@ function($scope, $rootScope, $location, $http){
                 // User is master admin
                 $rootScope.manager = true;
 
+            }else if(userType === 3){
+                    
+                // User is master admin
+                $rootScope.member = true;
+
             }
             
             // Set the title of the page
@@ -84,13 +89,19 @@ function($scope, $rootScope, $location, $http){
                     // Check if the Add Client method was successful
                     if (member){
 
-                        console.log(member);
-                        // Client was added successfully
+                        if(member.data === false){
+                            
+                            // An error occurred
+                        
+                        }else{
+                            
+                            // Member was invited successfully
 
-                        // Redirect to the Clients List
-                        //$location.path('/inviteSuccess');
-
-
+                            // Redirect to the Invite Success
+                            $location.path('/inviteSuccess');
+                        
+                        };
+                        
                     }else{
 
                         // Invite was NOT sent

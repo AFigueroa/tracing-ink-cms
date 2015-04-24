@@ -68,6 +68,11 @@ function($scope, $rootScope, $location, $http){
                         // User is master admin
                         $rootScope.manager = true;
                         
+                    }else if(userData.type === 3){
+                    
+                        // User is master admin
+                        $rootScope.member = true;
+                        
                     }
                     
                     // Store the user data within the $rootScope

@@ -1,5 +1,5 @@
 // Manager Controller
-app.controller("managerController", [ "$scope", "$rootScope", "$location","$http","$routeParams",
+app.controller("memberController", [ "$scope", "$rootScope", "$location","$http","$routeParams",
 function($scope, $rootScope, $location, $http, $routeParams){
     
     // Make sure the session is logged off
@@ -29,7 +29,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
         // Submission values are present
         
         // Create the Manager object 
-        var manager = {
+        var member = {
             cName : cName,
             inviteId : inviteId
         };
@@ -37,7 +37,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
         //console.log(manager);
         
         // Send the encrypted values of the submission to the server
-        $http.post("/api/decryptManager", manager).then(function(invite){
+        $http.post("/api/decryptMember", member).then(function(invite){
             
             // Check if an invite was found
             if (invite){
@@ -73,7 +73,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
                 }else{
                     
                     // Invite is Expired
-                    $location.path('/');
+                    //$location.path('/');
                     
                     //console.log(manager);
                 }
@@ -94,7 +94,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
     }
     
     // Register Manager
-    $scope.addManager = function() {
+    $scope.addMember = function() {
     // This method will send the values of the form to the server to...
     // add them to the database and create a new user with the type of manager
         
@@ -125,22 +125,8 @@ function($scope, $rootScope, $location, $http, $routeParams){
                     
                     // Passwords match
                     
-                    // Create the manager object to be added as a User
-                    var manager = {
-                        fname:fname,
-                        lname:lname,
-                        cName:cName,
-                        email:email,
-                        phone:phone,
-                        pass:pass,
-                        repass:repass,
-                        inviteId:inviteId,
-                        invitedBy:invitedBy,
-                        invitedByEmail:invitedByEmail
-                    };
-                    
                     // Make a request to the server to add the manager to users
-                    $http.post("/api/addManager", $scope.manager).then(function(user){
+                    $http.post("/api/addMember", $scope.manager).then(function(user){
                         
                         console.log(user);
                         // Check if post was successful
@@ -172,12 +158,12 @@ function($scope, $rootScope, $location, $http, $routeParams){
                                 // User is master admin
                                 $rootScope.manager = true;
                             
-                            }else if(userData.type === 3){
+                            } else if(userData.type === 3){
                                 
                                 // User is master admin
                                 $rootScope.member = true;
                             
-                            }
+                            };
 
                             // Store the user data within the $rootScope
                             $rootScope.user = userData;
@@ -215,4 +201,6 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
         }
     }; 
+    
 }]);
+

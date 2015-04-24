@@ -221,6 +221,12 @@ app.post('/api/decryptManager', function (req, res) {
 // The url the user clicks on contains two encrypted keys which the server...
 // will decrypt and compare to authenticate the invitation.
     
+    // Clear all session variables
+    req.session.logged = 0;
+    req.session.userId = null;
+    
+    req.session = null;
+    
     // Verify if both keys are present
     if(req.param('cName') && req.param('inviteId')){
         
@@ -230,10 +236,59 @@ app.post('/api/decryptManager', function (req, res) {
         
         // Confirm invite Id is in the database.
         db.invites.findOne({_id: inviteId}, function (err, invite) {
+                if(!invite){
+                  
+                        // No member invites
+                        res.send(false);
                 
-                // Send the invite's data to the front-end
-                res.send(invite);
-            
+                }else{
+                    
+                    // Send the invite's data to the front-end
+                    res.send(invite);
+                
+                }
+          });
+        
+    }else{
+        
+        // Submission is missing a key
+        res.send(false);
+        
+    }
+});
+
+// Decrypt Member Data
+app.post('/api/decryptMember', function (req, res) {
+// This route triggers when a user accepts a Tracing Ink Client invite.
+// The url the user clicks on contains two encrypted keys which the server...
+// will decrypt and compare to authenticate the invitation.
+    
+    // Clear all session variables
+    req.session.logged = 0;
+    req.session.userId = null;
+    
+    req.session = null;
+    
+    // Verify if both keys are present
+    if(req.param('cName') && req.param('inviteId')){
+        
+        // Decrypt the submissions and store them in local variables
+        var cName = decrypt(req.param('cName'));
+        var inviteId = decrypt(req.param('inviteId'));
+        
+        // Confirm invite Id is in the database.
+        db.memberInvites.findOne({_id: inviteId}, function (err, invite) {
+                if(!invite){
+                    
+                    // Submission is missing a key
+                    res.send(false);
+                
+                }else{
+                    
+                    // Send the invite's data to the front-end
+                    res.send(invite);
+                
+                }
           });
         
     }else{
@@ -285,7 +340,7 @@ app.post('/api/addManager', function (req, res) {
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
             };
-            
+            console.log(manager);
             // Check if theres an active invite with the same Id
             db.invites.find({_id:inviteId, active:1}, function(err, invite){
                 
@@ -296,7 +351,7 @@ app.post('/api/addManager', function (req, res) {
                         // An active invite has been found
                         
                         // Check if email is taken
-                        db.users.find({email:email}, function(err, user){
+                        db.users.findOne({email:email}, function(err, user){
                         
                             if (!err){
                                 // No Errors
@@ -350,14 +405,14 @@ app.post('/api/addManager', function (req, res) {
                                                                     res.send(manager);
 
                                                                 }else{
-
+                                                                    console.log("Member not added");
                                                                     // Member not added
                                                                     res.send(false);
 
                                                                 }
 
                                                             }else{
-
+                                                                console.log("An error ocurred with the DB");
                                                                 // An error occurred
                                                                 res.send(false);
 
@@ -368,14 +423,14 @@ app.post('/api/addManager', function (req, res) {
 
 
                                                     }else{
-
+                                                        console.log("No active invite found");
                                                         // No active invite found
                                                         res.send(false);
 
                                                     }   
 
                                                 }else{
-
+                                                    console.log("An error ocurred with the DB");
                                                     // An error ocurred with the DB
                                                     res.send(false);
                                                 }
@@ -383,7 +438,7 @@ app.post('/api/addManager', function (req, res) {
                                             });
 
                                         }else{
-
+                                            console.log("An error ocurred with the DB");
                                             // An error ocurred with the DB
                                             res.send(false);
 
@@ -392,14 +447,14 @@ app.post('/api/addManager', function (req, res) {
                                     });
                             
                                 }else{
-                                    
+                                    console.log("An user has been found with that email");
                                     // An user has been found with that email
                                     res.send(false);
 
                                 }
                             
                             }else{
-                                
+                                console.log("An error ocurred with the DB");
                                 // An error ocurred with the DB
                                 res.send(false);
                                 
@@ -408,14 +463,14 @@ app.post('/api/addManager', function (req, res) {
                         });
 
                     }else{
-
+                        console.log("No active invite found");
                         // No active invite found
                         res.send(false);
 
                     }   
                     
                 }else{
-                    
+                    console.log("An error ocurred with the DB");
                     // An error ocurred with the DB
                     res.send(false);
                 }
@@ -431,6 +486,199 @@ app.post('/api/addManager', function (req, res) {
         
     }else{
         
+        // There where fields missing
+        res.send(false);   
+    
+    }  
+});
+
+// Add Member Route
+app.post('/api/addMember', function (req, res) {
+    
+    // Get all the values from the submission
+    var cName= req.param('cName');
+    var fname= req.param('fname');
+    var lname= req.param('lname');
+    var email= req.param('email');
+    var phone= req.param('phone');
+    var inviteId= req.param('inviteId');
+    var invitedBy= req.param('invitedBy');
+    var invitedByEmail= req.param('invitedByEmail');
+    var pass= req.param('pass');
+    var repass= req.param('repass');
+    var id = uid.v4(); // Create Manager Id
+
+    // Check if any field is missing
+    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
+        
+        // Found all fields
+       
+        if(pass === repass){
+                        
+            // Passwords match
+            
+            // Encrypt the password
+            pass = encrypt(pass);
+
+            // Create a Manager object with the data submitted
+            var manager = {
+                _id:id,
+                type:3,
+                fname:fname,
+                lname:lname,
+                cName:cName,
+                pass:pass,
+                email:email,
+                phone:phone,
+                invitedBy:invitedBy,
+                invitedByEmail:invitedByEmail
+            };
+            
+            // Check if theres an active invite with the same Id
+            db.memberInvites.find({_id:inviteId, active:1}, function(err, invite){
+                
+                if(!err){
+                    
+                    if(invite){
+                        
+                        // An active invite has been found
+                        
+                        // Check if email is taken
+                        db.users.findOne({email:email}, function(err, user){
+                        
+                            if (!err){
+                                // No Errors
+                                if(!user){
+                                    
+                                    // No user found with the same email
+                                    
+                                    // Add the manager data to the database
+                                    db.users.save(manager, function(err, user){
+
+                                        if(!err){
+
+                                            // Check if theres an active invite with the same Id
+                                            db.memberInvites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
+
+                                                if(!err){
+
+                                                    if(invite){
+
+                                                        // Invite Successfully deleted
+
+                                                        // Sanitize the manager data to send to the front-end
+
+                                                        manager = {
+                                                            _id:id,
+                                                            type:3,
+                                                            fname:fname,
+                                                            lname:lname,
+                                                            cName:cName,
+                                                            email:email,
+                                                            phone:phone
+                                                        };
+
+                                                        // Check if theres an active invite with the same Id
+                                                        db.clients.update({cName:cName, active:1},{$push:{members:manager}}, function(err, member){
+
+                                                            // Check if errors
+                                                            if(!err){
+
+                                                                // Check if succesfull
+                                                                if(member){
+
+                                                                    // Create Session to know the system the user is logged in
+                                                                    req.session.logged = 1; 
+
+                                                                    // Create a session for the Users privilege level 
+                                                                    req.session.userType = manager.type;
+                                                                    req.session.user = manager;
+
+                                                                    // Send the manager data to the front-end
+                                                                    res.send(manager);
+
+                                                                }else{
+                                                                    console.log("Member not added");
+                                                                    // Member not added
+                                                                    res.send(false);
+
+                                                                }
+
+                                                            }else{
+                                                                console.log("An error ocurred with the DB");
+                                                                // An error occurred
+                                                                res.send(false);
+
+                                                            }
+
+                                                        });
+
+
+
+                                                    }else{
+                                                        console.log("No active invite found");
+                                                        // No active invite found
+                                                        res.send(false);
+
+                                                    }   
+
+                                                }else{
+                                                    console.log("An error ocurred with the DB");
+                                                    // An error ocurred with the DB
+                                                    res.send(false);
+                                                }
+
+                                            });
+
+                                        }else{
+                                            console.log("An error ocurred with the DB");
+                                            // An error ocurred with the DB
+                                            res.send(false);
+
+                                        }
+
+                                    });
+                            
+                                }else{
+                                    console.log("An error ocurred with the DB");
+                                    // An user has been found with that email
+                                    res.send(false);
+
+                                }
+                            
+                            }else{
+                                console.log("An error ocurred with the DB");
+                                // An error ocurred with the DB
+                                res.send(false);
+                                
+                            }
+                            
+                        });
+
+                    }else{
+
+                        // No active invite found
+                        res.send(false);
+
+                    }   
+                    
+                }else{
+                    console.log("An error ocurred with the DB");
+                    // An error ocurred with the DB
+                    res.send(false);
+                }
+                
+                
+            });
+            
+        }else{
+            console.log("Passwords don't match");
+            // Passwords don't match
+            res.send(false);
+        }
+        
+    }else{
+        console.log("There where fields missing");
         // There where fields missing
         res.send(false);   
     
@@ -476,7 +724,7 @@ app.post('/api/addClient', function (req, res) {
                         if (!client){
                             
                             // Query the database to see if there is already a Client if the name submitted
-                            db.users.findOne({email: email}, function(err, user){
+                            db.users.findOne({email: email}, function(err, oldUser){
 
                                 // Check if there were errors
                                 if (!err){
@@ -484,7 +732,7 @@ app.post('/api/addClient', function (req, res) {
                                     // No errors
 
                                     // Check if a Client was found or not
-                                    if (!user){
+                                    if (!oldUser){
                                         
                                         // No client found nor was the email already in use
                             
@@ -611,72 +859,94 @@ app.post('/api/inviteMember', function (req, res) {
     now = now.setTimezone("America/New_York");
     now = now.toString();
 
-    // Verify if all fileds are present
+    // Verify if all fields are present
     if(email && invitedBy && invitedByEmail && cName){
-        
-        // Create a Invite object to store in the database
-        var invite = {
-            _id: inviteId,
-            cName: cName,
-            dateCreated: now,
-            active: 1,
-            email: email,
-            invitedBy: invitedBy,
-            invitedByEmail: invitedByEmail
-        };
-        
-        // Confirm invite Id is in the database.
-        db.memberInvites.save(invite, function (err, invite) {
-                
+
+        // Query the database to see if there is already a Client if the name submitted
+        db.users.findOne({email: email}, function(err, user){
+            
             if(!err){
                 
-                // No errors
-                
-                if(invite){
+                if(!user){
                     
-                    // Invite saved succesfully
-                    
-                    // Email Body to be sent as Invite
-                    var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://localhost:80/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
+                    // Create a Invite object to store in the database
+                    var invite = {
+                        _id: inviteId,
+                        cName: cName,
+                        dateCreated: now,
+                        active: 1,
+                        email: email,
+                        invitedBy: invitedBy,
+                        invitedByEmail: invitedByEmail
+                    };
 
-                    // Create the new Email Object
-                    var myMsg = new Email({
-                        from: "donotreply@tracingink.com",
-                        to:   email,
-                        subject: "Tracing Ink: Registration Invite",
-                        body: emailMsg
-                    });
-                    
-                    // Send the invite Email
-                    myMsg.send(function(err){
+                    // Confirm invite Id is in the database.
+                    db.memberInvites.save(invite, function (err, invite) {
 
-                        // Check if there where any errors
-                        if(err){
+                        if(!err){
 
-                            // Errors found
+                            // No errors
 
-                            // Send error to the front-end
-                            res.send(err);
+                            if(invite){
+
+                                // Invite saved succesfully
+
+                                // Email Body to be sent as Invite
+                                var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://localhost:80/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
+
+                                // Create the new Email Object
+                                var myMsg = new Email({
+                                    from: "donotreply@tracingink.com",
+                                    to:   email,
+                                    subject: "Tracing Ink: Registration Invite",
+                                    body: emailMsg
+                                });
+
+                                // Send the invite Email
+                                myMsg.send(function(err){
+
+                                    // Check if there where any errors
+                                    if(err){
+
+                                        // Errors found
+
+                                        // Send error to the front-end
+                                        res.send(err);
+
+                                    }
+
+                                });
+
+                                // Send the invite's data to the front-end
+                                res.send(invite);    
+
+                            }else{
+
+                                // Invite not sent
+                                res.send(false);
+
+                            }
+                        }else{
+
+                            // Error happened
+                            res.send(false);
 
                         }
-
                     });
-                    
-                    // Send the invite's data to the front-end
-                    res.send(invite);    
-                
+            
                 }else{
-                
-                    // Invite not sent
+
+                    // An existing user has beend found
                     res.send(false);
-                    
                 }
+            
             }else{
                 
                 // Error happened
                 res.send(false);
                 
             }
+        
         });
         
     }else{

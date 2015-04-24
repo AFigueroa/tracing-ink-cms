@@ -41,6 +41,11 @@ function($scope, $rootScope, $location, $http){
                 // User is master admin
                 $rootScope.manager = true;
 
+            }else if(userType === 3){
+                    
+                // User is master admin
+                $rootScope.member = true;
+
             }
                         
             // Set the title of the page

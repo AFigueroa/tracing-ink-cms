@@ -68,7 +68,7 @@ function($scope, $rootScope, $location, $http){
     
     // This Function is activated on a form submission in Add Client route
     $scope.addClient = function() {
-         
+
         // Check if the form was succesfully submitted
         if ($scope.client) {
             
@@ -80,7 +80,6 @@ function($scope, $rootScope, $location, $http){
                 // Check if the Add Client method was successful
                 if (client.data){
                     
-                    console.log(client);
                     // Client was added successfully
                     
                     // Redirect to the Clients List

@@ -20,10 +20,15 @@ function($scope, $rootScope, $location, $http){
                 // User is Master Admin
                 $rootScope.admin = true;
 
-            }else if (userType === "2" ){
+            }else if (userType === 2 ){
 
                 // User is Master Admin
                 $rootScope.manager = true;
+
+            }else if (userType === 3 ){
+
+                // User is Master Admin
+                $rootScope.member = true;
 
             }
         }
