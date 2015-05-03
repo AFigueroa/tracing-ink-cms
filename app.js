@@ -215,6 +215,62 @@ app.get('/api/getClients', function (req, res) {
     }
 });
 
+// Get Clients
+app.post('/api/getTeam', function (req, res) {
+// This route will get the clients data from the database IF the user is a master admin
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        var cName = req.param("cName");
+        
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.clients.findOne({active:active, cName:cName}, function(err, clients){
+            
+            // Check if there was any errors
+            if (!err){
+                
+                // No errors
+                
+                // Send the clients data to the front-end
+                res.send(clients.members);
+
+            }else{
+                // Query errors found
+                
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+app.post('/api/getMessages', function (req, res) {
+    
+    console.log(req.param("teamMembers"));
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("teamMembers")) {
+    
+        var contacts = req.param("teamMembers");
+        console.log(contacts);
+        res.send(contacts);
+        
+    }else{
+        res.send(false);
+    }
+    
+});
+
 // Decrypt Manager Data
 app.post('/api/decryptManager', function (req, res) {
 // This route triggers when a user accepts a Tracing Ink Client invite.
@@ -1009,6 +1065,6 @@ process.on('uncaughtException', function (err) {
           Activate Server
 =================================*/
 
-httpServer.listen(80, function() {
-  console.log('Express server listening on port 80');
+httpServer.listen(3000, function() {
+  console.log('Express server listening on port 3000');
 });

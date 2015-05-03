@@ -18,12 +18,24 @@
 </div>
 
 <div class="row">
-    <div ><div class="row">
-    
-    <div class="panel">
+    <div class="row">
         
-        <div ng-repeat="client in clients" class="panel-head">{{client.cName}}</div>
+         <div class="panel panel-dropdown" ng-repeat="client in clients" >
+        
+            <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            
+                <p class="panel-main">{{client.cName}}</p>
+                
+            </div>
 
-    </div>
-</div></div>
+            <div class="panel-body" ng-show="panelOpen">
+
+                <div class="row">
+                    <button type="submit" class="submit"  ng-click="message(member)">
+                        New Message
+                    </button>
+                </div>
+            </div>
+        </div>
+</div>
 </div>

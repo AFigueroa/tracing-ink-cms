@@ -31,6 +31,9 @@ function($scope, $rootScope, $location, $http){
             
             // Get the user's type
             var userType= $rootScope.user.type;
+            $rootScope.userType = userType ;
+            
+            console.log(userType);
             
             // Check if user is master admin
             if (userType === "1"){
@@ -54,6 +57,27 @@ function($scope, $rootScope, $location, $http){
             $rootScope.title = $rootScope.user.cName+"'s | Team";
             $rootScope.pageTitle = "Team Members";
         
+            // Check for team members for this company
+            cName = {cName:user.data.cName};
+            
+            $http.post("/api/getTeam", cName).then(function(members){
+                
+                if (members.data){
+                    // Members found
+                    
+                    // Load the team members within the front-end scope
+                    $rootScope.teamMembers = members.data;
+
+                }else{
+                    // No members found
+                    
+                    // Set teamMembers as an empty array
+                    $rootScope.teamMembers = [];
+                    
+                };
+                
+            });
+            
         });
         
     }else{
@@ -115,6 +139,32 @@ function($scope, $rootScope, $location, $http){
             
             // Form not submitted
             
+        }
+    };
+    
+    
+    // Open and Close the Side nav
+    $scope.toggleBtmNav = function(){
+    // This method removes or places the class open on the side navigation and the Angular views section.
+        
+        // Check if Side Navigation has class "open"
+        var checkClass = $('#btm-nav').hasClass('showing'); // True if nav is open
+         
+        // Check if Open or Closed 
+        if (checkClass) {
+            
+            // Side Navigation is Open
+            
+            // Remove Class Open
+            $('#btm-nav').removeClass('showing');
+              
+        } else {
+            
+            // Side Navigation is Closed
+            
+            // Add Class Open
+            $('#btm-nav').addClass('showing');
+    
         }
     };
 }]);

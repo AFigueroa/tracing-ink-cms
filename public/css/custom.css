@@ -16,13 +16,16 @@ body{
     margin: 0;
 }
 
+#wrapper{
+    z-index: 0;
+}
 /*Top Nav*/
-#top-nav{
+#top-nav, #btm-nav{
     height: 65px;
     background-color: #F2F0F0;
 }
 
-#sidenav_btn{
+#sidenav_btn, #btm-bar-toggle{
     z-index: 1;
     position: absolute;
     width: 38px;
@@ -30,7 +33,7 @@ body{
     padding: 14.5px;
 }
 
-#page-title{
+#page-title, #btm-bar-title{
     text-align: center;
     height: 36px;
     padding: 14.5px 31%;
@@ -55,7 +58,7 @@ body{
 /* Side Navigation */
 
 #side-nav{
-    position: absolute;
+    position: fixed;
     top: 500;
     left: -467px;
     max-width: 350pt;
@@ -158,14 +161,39 @@ body{
 	line-height: 44px;
 }
 
+.pushDown{
+    padding-bottom: 35px;
+}
+
 /* Panel Rules */
 .panel{
     width: 90%;
     max-width: 500px;
     background-color: #F2F0F0;
-    border-radius: 5px;
     margin-left: auto;
     margin-right: auto;
+    overflow: hidden;
+}
+.panel:first-child {
+ border-radius: 5px 5px 0 0;   
+}
+.panel:last-child {
+ border-bottom-right-radius: 5px;
+ border-bottom-left-radius: 5px;
+}
+p.panel-main{
+    float: left;
+    padding-left: 10%;
+    display: block;
+}
+.panel-dropdown .panel-body{
+    border-bottom: #d8d8d8 1px solid;
+}
+p.panel-secondary{
+    float: right;
+    padding-right: 10%;
+    display: inline-block;
+    
 }
 
 .panel.secured{
@@ -173,6 +201,7 @@ body{
 }
 
 .panel-head{
+    overflow: hidden;
     text-align: center;
     font-size: 2.;
     font-family: "futura-pt",sans-serif;
@@ -262,4 +291,49 @@ form .row:last-of-type{
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/*------------------Columns------------------*/
+/*-------------------------------------------*/
+.one{
+    width: 8.3333%;
+}
+.two{
+    width: 16.6667%;
+}
+.three{
+    width: 25%;
+}
+.four{
+    width: 33.3333%;
+}
+.five{
+    width: 41.6667%;
+}
+.six{
+    width: 50%;
+}
+.seven{
+    width: 58.3333%;
+}
+.eight{
+    width: 66.6667%;
+}
+.nine{
+    width: 75%;
+}
+.ten{
+    width: 83.3333%;
+}
+.eleven{
+    width: 91.6667%;
+}
+.twelve{
+     width: 100%;
+ }
+.column, .columns{
+    position: relative;
+    float: left;
+    min-height: 35px;
+    display: block;
 }

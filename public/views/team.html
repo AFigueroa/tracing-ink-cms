@@ -1,17 +1,49 @@
-<div class="row">
+<div class="row" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
     
     <h1 id="login-logo">{{user.cName}}'s Team</h1>
     
 </div>
 
-<div class="row addButtonRow" ng-hide="manager">
+<div class="row addButtonRow" ng-show="user.type==1 || user.type==2">
 
     <a href="/#/inviteMember" class="addButton">+ NEW MEMBER</a>
 
 </div>
 
-<div class="row addButtonRow" ng-hide="admin">
+<div class="row">
 
-    <a href="/#/inviteMember" class="addButton">+ NEW MEMBER</a>
+    <div class="panel panel-dropdown" ng-repeat="member in teamMembers" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main">{{member.fname}} {{member.lname}}</p>
+            
+            <p ng-show="member.type==1" class="panel-secondary">Admin</p>
+            <p ng-show="member.type==2" class="panel-secondary">Manager</p>
+            <p ng-show="member.type==3" class="panel-secondary">Member</p> 
+            
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    New Message
+                </button>
+            </div>
+        </div>
+        
+<!--
+        <div class="panel-body" ng-class="{open:panelOpen}">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    New Message
+                </button>
+            </div>
+        </div>
+-->
+
+
+    </div>
 
 </div>

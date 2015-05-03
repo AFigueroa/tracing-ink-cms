@@ -49,6 +49,7 @@ function($scope, $rootScope, $location, $http){
             // Remove Class Open
             $('.side-nav').removeClass('open');
             $('.views-section').removeClass('open');
+            $('.btm-nav').removeClass('open');
               
         } else {
             
@@ -56,6 +57,7 @@ function($scope, $rootScope, $location, $http){
             
             // Add Class Open
             $('.side-nav').addClass('open');
+            $('.btm-nav').addClass('open');
             $('.views-section').addClass('open');
       
         }
