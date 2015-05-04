@@ -1,5 +1,5 @@
 // Initiate the AngularJS module.
-var app = angular.module("tracingInk", ["ngRoute"]);
+var app = angular.module("tracingInk", ["ngRoute","checklist-model"]);
 
 // This runs everytime a route is called by the front-end
 app.run(function($http, $rootScope){

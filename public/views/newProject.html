@@ -45,7 +45,7 @@
                 <div class="row">
                     <label for="team">Assign Members:</label>
                     <div class="row" ng-repeat="member in teamMembers">
-                        <input type="checkbox" class="checkbox" name="team" ng-model="project.members" value="{{member._id}}"> <p class="checkboxLabel">{{member.fname}} {{member.lname}}</p>
+                        <input type="checkbox" class="checkbox" name="team" checklist-model="project.members" checklist-value="member._id"> <p class="checkboxLabel">{{member.fname}} {{member.lname}}</p>
                     </div>
                     
                 </div>
