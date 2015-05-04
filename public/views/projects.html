@@ -1,5 +1,45 @@
+<div class="row" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
+    
+    <h1 id="login-logo">{{user.cName}}'s Projects</h1>
+    
+</div>
+
+<div class="row addButtonRow" ng-show="user.type==1 || user.type==2">
+
+    <a href="/#/newProject" class="addButton">+ NEW PROJECT</a>
+
+</div>
+
 <div class="row">
-    
-    <h1 id="login-logo">Projects</h1>
-    
+
+    <div class="panel panel-dropdown" ng-repeat="project in projects" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main">Project name</p>
+            
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    Assign Members
+                </button>
+            </div>
+        </div>
+        
+<!--
+        <div class="panel-body" ng-class="{open:panelOpen}">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    New Message
+                </button>
+            </div>
+        </div>
+-->
+
+
+    </div>
+
 </div>

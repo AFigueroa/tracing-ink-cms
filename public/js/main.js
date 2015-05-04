@@ -88,10 +88,16 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "memberController"
     })
     
-    // Add Member Form
+    // Invite Member Form
     .when('/inviteMember', {
       templateUrl:"views/inviteMember.html",
       controller: "teamController"
+    })
+    
+    // Add Member Form
+    .when('/newProject', {
+      templateUrl:"views/newProject.html",
+      controller: "projectsController"
     })
     
     // Add Member Form

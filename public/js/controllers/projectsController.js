@@ -26,6 +26,28 @@ function($scope, $rootScope, $location, $http){
         // Get the user data from the server
         var user = $http.get("/api/getUser").then(function(user){
             
+            // Check for team members for this company
+            cName = {cName:user.data.cName};
+            
+            $http.post("/api/getTeam", cName).then(function(members){
+                
+                if (members.data){
+                    // Members found
+                    
+                    // Load the team members within the front-end scope
+                    $rootScope.teamMembers = members.data;
+
+                }else{
+                    // No members found
+                    
+                    // Set teamMembers as an empty array
+                    $rootScope.teamMembers = [];
+                    
+                };
+                
+            });
+            
+            
             // Store the data within the $rootScope
             $rootScope.user = user.data;
             
@@ -40,5 +62,22 @@ function($scope, $rootScope, $location, $http){
         // User is Logged OFF
         $location.path('/');
         
+    }
+    
+    // This Function is activated on a form submission in Add Client route
+    $scope.addProject = function() {
+
+        // Check if the form was succesfully submitted
+        if ($scope.project) {
+            
+            // Client object is within scope
+            console.log($scope.project);
+//            // Send a request to the server to add a Client
+//            $http.post("/api/addProject", $scope.project).then(function(project){
+//                
+//                console.log(project);
+//                
+//            });
+        }
     }
 }]);

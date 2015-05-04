@@ -900,6 +900,35 @@ app.post('/api/addClient', function (req, res) {
     }
 });
 
+// Add Project Route
+app.post('/api/addProject', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+    
+
+            // Store the form submission values
+            var name=req.param('name');
+            var description=req.param('description');
+            var members=req.param('members');
+            var dueDate=req.param('dueDate');
+            
+            // Check if either field was left empty
+            if( name == "" || description == "" || members == "" || dueDate == ""){
+                
+                // One form value was left empty
+                res.send(false);
+                
+            }else{
+            
+                // One form value was left empty
+                res.send(true);
+                
+            }
+        
+    }
+});
 // Invite Member
 app.post('/api/inviteMember', function (req, res) {
     
