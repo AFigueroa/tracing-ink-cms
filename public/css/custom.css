@@ -175,17 +175,36 @@ body{
     overflow: hidden;
 }
 .panel:first-child {
- border-radius: 5px 5px 0 0;   
+    border-radius: 5px 5px 0 0;   
 }
+
 .panel:last-child {
- border-bottom-right-radius: 5px;
- border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
+
 p.panel-main{
     float: left;
-    padding-left: 10%;
     display: block;
 }
+
+a.project-link, a.project-link:visited{
+    color:black;
+}
+
+.right{
+    padding-right: 5%;
+    width: 45%;
+    float: right;
+    text-align: right;
+}
+.left{
+    padding-left: 5%;
+    width: 45%;
+    float: left;
+    text-align: left;
+}
+
 .panel-dropdown .panel-body{
     border-bottom: #d8d8d8 1px solid;
 }

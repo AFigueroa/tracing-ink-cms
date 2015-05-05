@@ -26,7 +26,7 @@ var crypto = require("crypto"),
 =================================*/
 
 // Mongo DB
-var collections = ["users", "clients", "invites", "memberInvites"];
+var collections = ["users", "projects", "clients", "invites", "memberInvites"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 // Express JS
@@ -215,7 +215,7 @@ app.get('/api/getClients', function (req, res) {
     }
 });
 
-// Get Clients
+// Get Team Members
 app.post('/api/getTeam', function (req, res) {
 // This route will get the clients data from the database IF the user is a master admin
     
@@ -255,14 +255,55 @@ app.post('/api/getTeam', function (req, res) {
     }
 });
 
+// Get Projects
+app.post('/api/getProjects', function (req, res) {
+// This route will get the clients data from the database IF the user is a master admin
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        var cName = req.param("cName");
+        
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.projects.find({active:active, cName:cName}, function(err, projects){
+            
+            // Check if there was any errors
+            if (!err){
+                
+                // No errors
+                
+                // Send the clients data to the front-end
+                res.send(projects);
+
+            }else{
+                // Query errors found
+                
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+
+// Get Messages
 app.post('/api/getMessages', function (req, res) {
     
-    console.log(req.param("teamMembers"));
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("teamMembers")) {
     
         var contacts = req.param("teamMembers");
-        console.log(contacts);
+
         res.send(contacts);
         
     }else{
@@ -908,24 +949,44 @@ app.post('/api/addProject', function (req, res) {
     if (req.session.logged === 1) {
     
 
-            // Store the form submission values
-            var name=req.param('name');
-            var description=req.param('description');
-            var members=req.param('members');
-            var dueDate=req.param('dueDate');
+        // Store the form submission values
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var dueDate=req.param('dueDate');
+        var projectId = uid.v4(); // Project Id
+
+        // Check if either field was left empty
+        if( name == "" || description == "" || cName == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        var project = {
+            _id : projectId,
+            name : name,
+            cName : cName,
+            description : description,
+            members : members,
+            dueDate : dueDate,
+            active : 1
+        };
+        
+        db.projects.insert(project, function(project){
             
-            // Check if either field was left empty
-            if( name == "" || description == "" || members == "" || dueDate == ""){
-                
-                // One form value was left empty
-                res.send(false);
-                
-            }else{
-            
-                // One form value was left empty
-                res.send(true);
-                
+            if(project){
+                res.send(true);    
             }
+
+        });
+
+        // One form value was left empty
+        res.send(true);
+                
+            
         
     }
 });

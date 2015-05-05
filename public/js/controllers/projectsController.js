@@ -29,6 +29,15 @@ function($scope, $rootScope, $location, $http){
             // Check for team members for this company
             cName = {cName:user.data.cName};
             
+            // Send a request to the server to add a Client
+            $http.post("/api/getProjects", cName).then(function(projects){
+                
+                projects = projects.data;
+                
+                $rootScope.projects = projects;
+                                
+            });
+            
             $http.post("/api/getTeam", cName).then(function(members){
                 
                 if (members.data){
@@ -71,13 +80,31 @@ function($scope, $rootScope, $location, $http){
         if ($scope.project) {
             
             // Client object is within scope
-            console.log($scope.project);
-//            // Send a request to the server to add a Client
-//            $http.post("/api/addProject", $scope.project).then(function(project){
-//                
-//                console.log(project);
-//                
-//            });
+            $scope.project.cName = $scope.user.cName;
+            
+            if (!$scope.project.members){
+                $scope.project.members = [];
+                
+            }
+            
+            $scope.project.members.push($scope.user._id);
+            
+            // Send a request to the server to add a Client
+            $http.post("/api/addProject", $scope.project).then(function(project){
+    
+                
+                if (project.data){
+                    
+                    $scope.project = null;
+                    $location.path("/projects");
+                    
+                }else{
+                
+                    console.log("Something went wrong");
+                    
+                }
+                
+            });
         }
     }
 }]);
