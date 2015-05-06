@@ -82,7 +82,13 @@ function($scope, $rootScope, $location, $http){
             
             // Client object is within scope
             $scope.project.cName = $scope.user.cName;
+            $scope.project.manager = {
+                _id: $scope.user._id,
+                fname: $scope.user.fname,
+                lname: $scope.user.lname
+            };
             
+            // If no members within scope establish an empty array
             if (!$scope.project.members){
                 $scope.project.members = [];
                 

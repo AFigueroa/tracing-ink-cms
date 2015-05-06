@@ -996,6 +996,7 @@ app.post('/api/addProject', function (req, res) {
         var description=req.param('description');
         var cName=req.param('cName');
         var members=req.param('members');
+        var manager=req.param('manager');
         var dueDate=req.param('dueDate');
         var projectId = uid.v4(); // Project Id
 
@@ -1013,6 +1014,7 @@ app.post('/api/addProject', function (req, res) {
             cName : cName,
             description : description,
             members : members,
+            manager : manager,
             dueDate : dueDate,
             active : 1
         };
