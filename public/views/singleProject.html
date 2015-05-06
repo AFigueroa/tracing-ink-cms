@@ -1,0 +1,44 @@
+<div class="row" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
+    
+    <h1 id="login-logo">{{project.name}}</h1>
+    
+</div>
+
+<div class="row addButtonRow">
+
+    <a href="/#/newTask" class="addButton">+ NEW TASK</a>
+
+</div>
+
+<div class="row">
+
+    <div class="panel panel-dropdown" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main">Task Name</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    New Message
+                </button>
+            </div>
+        </div>
+        
+<!--
+        <div class="panel-body" ng-class="{open:panelOpen}">
+       
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="message(member)">
+                    New Message
+                </button>
+            </div>
+        </div>
+-->
+
+
+    </div>
+
+</div>

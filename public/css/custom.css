@@ -190,6 +190,7 @@ p.panel-main{
 
 a.project-link, a.project-link:visited{
     color:black;
+    text-decoration: none;
 }
 
 .right{

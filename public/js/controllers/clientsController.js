@@ -34,6 +34,7 @@ function($scope, $rootScope, $location, $http){
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Clients";
             $rootScope.pageTitle = "Clients";
+            $rootScope.pageTitleUrl = "#/clients";
             
             // The user is Master Admin
             

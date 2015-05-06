@@ -118,6 +118,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "projectsController"
     })
     
+    // Individual Project
+    .when('/project/:projectId', {
+      templateUrl:"views/singleProject.html",
+      controller: "singleProjectController"
+    })
+    
     // Calendar
     .when('/calendar', {
       templateUrl:"views/calendar.html",

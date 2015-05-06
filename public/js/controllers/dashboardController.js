@@ -51,6 +51,7 @@ function($scope, $rootScope, $location, $http){
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Dashboard";
             $rootScope.pageTitle = "Dashboard";
+            $rootScope.pageTitleUrl = "#/dashboard";
         
         });
          

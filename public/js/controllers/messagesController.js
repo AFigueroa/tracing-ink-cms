@@ -32,6 +32,7 @@ function($scope, $rootScope, $location, $http){
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Messages";
             $rootScope.pageTitle = "Messages";
+            $rootScope.pageTitleUrl = "#/messages";
         
         });
         

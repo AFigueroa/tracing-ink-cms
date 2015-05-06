@@ -296,6 +296,48 @@ app.post('/api/getProjects', function (req, res) {
 });
 
 
+// Get Single Project
+app.post('/api/getProject', function (req, res) {
+// This route will get the clients data from the database IF the user is a master admin
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        var cName = req.param("cName");
+        var projectId = req.param("projectId");
+        
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.projects.findOne({active:active, cName:cName, _id:projectId}, function(err, project){
+            
+            // Check if there was any errors
+            if (!err){
+                
+                // No errors
+                
+                // Send the clients data to the front-end
+                res.send(project);
+
+            }else{
+                // Query errors found
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+
+
 // Get Messages
 app.post('/api/getMessages', function (req, res) {
     

@@ -48,6 +48,7 @@
         <script src="js/controllers/navController.js"></script>
         <script src="js/controllers/teamController.js"></script>
         <script src="js/controllers/projectsController.js"></script>
+        <script src="js/controllers/singleProjectController.js"></script>
         <script src="js/controllers/messagesController.js"></script>
         <script src="js/controllers/calendarController.js"></script>
         <script src="js/controllers/clientsController.js"></script>
@@ -76,7 +77,7 @@
                 </div>
 
                 <div id="page-title">
-                    <h3>{{pageTitle}}</h3>
+                    <a ng-href="{{pageTitleUrl}}" class="project-link"><h3>{{pageTitle}}</h3></a>
                 </div>
 
                 <div id="user-profile-btn">    
@@ -100,11 +101,11 @@
                     
                     <a href="/#/dashboard" ng-click="toggleSideNav()">Dashboard</a> 
                     
-                    <a href="/#/messages" ng-click="toggleSideNav()">Messages</a> 
-                    
-                    <a href="/#/clients" ng-show="admin" ng-click="toggleSideNav()">Clients</a>                    
+                    <a href="/#/clients" ng-show="admin" ng-click="toggleSideNav()">Clients</a> 
                     
                     <a href="/#/projects" ng-click="toggleSideNav()">Projects</a>
+                    
+                    <a href="/#/messages" ng-click="toggleSideNav()">Messages</a> 
                                       
                     <a href="/#/team" ng-click="toggleSideNav()">Team</a>
                              

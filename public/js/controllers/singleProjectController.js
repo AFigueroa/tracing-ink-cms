@@ -1,6 +1,6 @@
-// Projects Controller
-app.controller("projectsController", [ "$scope", "$rootScope", "$location", "$http",
-function($scope, $rootScope, $location, $http){
+// Single Project Controller
+app.controller("singleProjectController", [ "$scope", "$rootScope", "$location", "$http", "$routeParams",
+function($scope, $rootScope, $location, $http, $routeParams){
     
     // Check if the Side Nav is open or not
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
@@ -26,18 +26,33 @@ function($scope, $rootScope, $location, $http){
         // Get the user data from the server
         var user = $http.get("/api/getUser").then(function(user){
             
-            // Check for team members for this company
-            cName = {cName:user.data.cName};
+            // The Project Id
+            var projectId=  $routeParams.projectId;
             
-            // Send a request to the server to add a Client
-            $http.post("/api/getProjects", cName).then(function(projects){
+            // Store the Company name
+            cName = user.data.cName;
+            
+            // Create the Project object 
+            var project = {
+                cName : cName,
+                projectId : projectId
+            };
+
+            // Request the project based on the projectId selected
+            $http.post("/api/getProject", project).then(function(project){
                 
-                projects = projects.data;
+                project = project.data;
                 
-                $rootScope.projects = projects;
+                console.log(project);
+                
+                $rootScope.project = project;
                                 
             });
             
+            // Reformat Company name to query for all team members
+            cName = {cName:user.data.cName};
+            
+            // Request the team data
             $http.post("/api/getTeam", cName).then(function(members){
                 
                 if (members.data){
@@ -61,7 +76,7 @@ function($scope, $rootScope, $location, $http){
             $rootScope.user = user.data;
             
             // Set the title of the page
-            $rootScope.title = "Tracing Ink | Projects";
+            $rootScope.title = "Tracing Ink | Single Project";
             $rootScope.pageTitle = "Projects";
             $rootScope.pageTitleUrl = "#/projects";
         

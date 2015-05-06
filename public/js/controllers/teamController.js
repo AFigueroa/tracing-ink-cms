@@ -56,6 +56,7 @@ function($scope, $rootScope, $location, $http){
             // Set the title of the page
             $rootScope.title = $rootScope.user.cName+"'s | Team";
             $rootScope.pageTitle = "Team Members";
+            $rootScope.pageTitleUrl = "#/team";
         
             // Check for team members for this company
             cName = {cName:user.data.cName};
