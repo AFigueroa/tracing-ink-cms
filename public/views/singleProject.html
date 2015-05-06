@@ -26,26 +26,47 @@
 
 <div class="row addButtonRow">
 
-    <a href="/#/newTask" class="addButton">+ NEW TASK</a>
+    
+    <a ng-href="/#/newTask/{{project._id}}" class="addButton right">+ NEW TASK</a>
+    <a class="addButton left">Active Tasks:</a>
 
 </div>
 
 <div class="row">
 
-    <div class="panel panel-dropdown" >
+    <div class="panel panel-dropdown" ng-repeat="task in tasks" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main left">Task Name</p>
-            <p class="panel-main right">Due date</p>
+            <p class="panel-main left">{{task.name}}</p>
+            <p class="panel-main right">{{task.members.length}} Members</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">
        
             <div class="row">
-                <button type="submit" class="submit"  ng-click="message(member)">
-                    New Message
+                <p>
+                    {{task.description}}
+                </p>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="complete(task._id)">
+                    Complete
                 </button>
             </div>
+            
+            <div class="row">
+                <button type="submit" class="edit"  ng-click="edit(task._id)">
+                    Edit
+                </button>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="delete"  ng-click="delete(task._id)">
+                    Delete
+                </button>
+            </div>
+            
         </div>
         
 <!--

@@ -1016,7 +1016,8 @@ app.post('/api/addProject', function (req, res) {
             members : members,
             manager : manager,
             dueDate : dueDate,
-            active : 1
+            active : 1,
+            completed : false
         };
         
         db.projects.insert(project, function(project){
@@ -1034,6 +1035,67 @@ app.post('/api/addProject', function (req, res) {
         
     }
 });
+
+
+// Add Project Route
+app.post('/api/addTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        console.log("Got something");
+
+        // Store the form submission values
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var creator=req.param('creator');
+        var dueDate=req.param('dueDate');
+        var projectId=req.param('projectId');
+        var taskId = uid.v4(); // Task Id
+
+        // Check if either field was left empty
+        if( name == "" || description == "" || cName == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        var task = {
+            _id : taskId,
+            projectId: projectId,
+            name : name,
+            cName : cName,
+            description : description,
+            members : members,
+            creator : creator,
+            dueDate : dueDate,
+            completed : false,
+            active : 1
+        };
+        
+        db.projects.update({_id:projectId},{$push:{tasks:task}}, function(task, err){
+            
+            if(!err){
+                res.send(true);    
+            }else{
+                console.log(err);
+            }
+
+        });
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+
 // Invite Member
 app.post('/api/inviteMember', function (req, res) {
     

@@ -1,0 +1,56 @@
+
+<!--		
+	====================================
+		 	New Project
+	=====================================
+-->	
+
+<div class="row page-header">
+    
+    <a ng-href="/#/project/{{project._id}}"><h1 id="login-logo">{{project.name}}</h1></a>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel secured">
+        
+        <div class="panel-head">Add New Task </div> 
+        
+        <div class="panel-body">
+            
+            <form method="post" ng-submit="addTask()" ng-controller="singleProjectController">
+                
+                <div class="row">
+                    <label for="name">Task Name:</label>
+                    <input type="text" name="name" ng-model="task.name">
+                </div>
+                
+                <div class="row">
+                    <label for="dueDate">Due by (Optional):</label>
+                    <input type="date" name="dueDate" ng-model="task.dueDate">
+                </div>
+                
+                <div class="row">
+                    <label for="description">Description:</label>
+                    <textarea name="description" ng-model="task.description"></textarea>
+                </div>
+
+                <div class="row">
+                    <label for="team">Assign Members:</label>
+                    <div class="row" ng-repeat="member in teamMembers">
+                        <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="team" checklist-model="task.members" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
+                    </div>
+                    
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Create">
+                </div>
+                
+                
+            </form>
+            
+        </div>
+    </div>
+</div>

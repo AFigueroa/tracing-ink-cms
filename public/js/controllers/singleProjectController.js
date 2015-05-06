@@ -29,9 +29,6 @@ function($scope, $rootScope, $location, $http, $routeParams){
             // The Project Id
             var projectId=  $routeParams.projectId;
             
-            // Store the value of the focused Project's id within scope
-            $scope.thisProject=  projectId;
-            
             // Store the Company name
             cName = user.data.cName;
             
@@ -45,10 +42,9 @@ function($scope, $rootScope, $location, $http, $routeParams){
             $http.post("/api/getProject", project).then(function(project){
                 
                 project = project.data;
-                
-                console.log(project);
-                
                 $rootScope.project = project;
+                $rootScope.tasks = project.tasks;
+                $rootScope.projectMembers = project.members;
                                 
             });
             
@@ -92,30 +88,36 @@ function($scope, $rootScope, $location, $http, $routeParams){
         
     }
     
-    // This Function is activated on a form submission in Add Client route
-    $scope.addProject = function() {
+    // This Function is activated on a form submission in Add task route
+    $scope.addTask = function() {
 
         // Check if the form was succesfully submitted
-        if ($scope.project) {
+        if ($scope.task) {
             
-            // Client object is within scope
-            $scope.project.cName = $scope.user.cName;
+            // Task object is within scope
+            $scope.task.cName = $scope.user.cName;
+            $scope.task.projectId = $scope.project._id;
             
-            if (!$scope.project.members){
-                $scope.project.members = [];
+            $scope.task.creator = {
+                _id: $scope.user._id,
+                fname: $scope.user.fname,
+                lname: $scope.user.lname
+            };
+            
+            if (!$scope.task.members){
+                $scope.task.members = [];
                 
             }
             
-            $scope.project.members.push($scope.user._id);
+            $scope.task.members.push($scope.user._id);
             
-            // Send a request to the server to add a Client
-            $http.post("/api/addProject", $scope.project).then(function(project){
+            // Send a request to the server to add a Task
+            $http.post("/api/addtask", $scope.task).then(function(task){
     
                 
-                if (project.data){
-                    
-                    $scope.project = null;
-                    $location.path("/projects");
+                if (task.data){
+                    $scope.task = null;
+                    $location.path("/project/"+$scope.project._id);
                     
                 }else{
                 

@@ -124,6 +124,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "singleProjectController"
     })
     
+    // New Task
+    .when('/newTask/:projectId', {
+      templateUrl:"views/newTask.html",
+      controller: "singleProjectController"
+    })
+    
     // Calendar
     .when('/calendar', {
       templateUrl:"views/calendar.html",
