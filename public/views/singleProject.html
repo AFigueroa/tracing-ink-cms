@@ -1,7 +1,27 @@
-<div class="row" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
+<div class="row">
     
     <h1 id="login-logo">{{project.name}}</h1>
+    <h1 id="login-logo-secondary">Manager: {{project.manager.fname}} {{project.manager.lname}}</h1>
     
+</div>
+
+<div class="row">
+        
+        <div class="clear-panel ">
+        
+            <div class="panel-head-clear">
+                <p class="panel-main left">Description:</p>
+
+            </div>
+
+            <div class="panel-body">
+
+                <p>{{project.description}}</p>
+
+            </div>
+            
+            
+        </div>
 </div>
 
 <div class="row addButtonRow">
@@ -15,7 +35,8 @@
     <div class="panel panel-dropdown" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main">Task Name</p>
+            <p class="panel-main left">Task Name</p>
+            <p class="panel-main right">Due date</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">

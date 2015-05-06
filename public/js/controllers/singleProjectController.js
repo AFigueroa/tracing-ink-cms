@@ -29,6 +29,9 @@ function($scope, $rootScope, $location, $http, $routeParams){
             // The Project Id
             var projectId=  $routeParams.projectId;
             
+            // Store the value of the focused Project's id within scope
+            $scope.thisProject=  projectId;
+            
             // Store the Company name
             cName = user.data.cName;
             
