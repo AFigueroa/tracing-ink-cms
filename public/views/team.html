@@ -15,11 +15,11 @@
     <div class="panel panel-dropdown" ng-repeat="member in teamMembers" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main">{{member.fname}} {{member.lname}}</p>
+            <p class="panel-main left">{{member.fname}} {{member.lname}}</p>
             
-            <p ng-show="member.type==1" class="panel-secondary">Admin</p>
-            <p ng-show="member.type==2" class="panel-secondary">Manager</p>
-            <p ng-show="member.type==3" class="panel-secondary">Member</p> 
+            <p ng-show="member.type==1" class="panel-main right">Admin</p>
+            <p ng-show="member.type==2" class="panel-main right">Manager</p>
+            <p ng-show="member.type==3" class="panel-main right">Member</p> 
             
         </div>
         

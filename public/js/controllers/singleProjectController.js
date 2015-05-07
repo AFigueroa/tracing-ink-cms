@@ -32,6 +32,31 @@ function($scope, $rootScope, $location, $http, $routeParams){
             // Store the Company name
             cName = user.data.cName;
             
+            if($routeParams.taskId){
+                
+                var taskId = $routeParams.taskId;
+                
+                // Create the Project object 
+                var task = {
+                    cName : cName,
+                    projectId : projectId,
+                    taskId : taskId
+                };
+                
+                // Request the project based on the projectId selected
+                $http.post("/api/getTask", task).then(function(task){
+
+                    task = task.data;
+                    $rootScope.task = task;
+
+                });
+                
+            }else{
+                
+                $rootScope.task = null;
+                
+            }
+            
             // Create the Project object 
             var project = {
                 cName : cName,
@@ -43,8 +68,22 @@ function($scope, $rootScope, $location, $http, $routeParams){
                 
                 project = project.data;
                 $rootScope.project = project;
-                $rootScope.tasks = project.tasks;
+                //$rootScope.tasks = project.tasks;
                 $rootScope.projectMembers = project.members;
+                                
+            });
+            
+            // Create the Project object 
+            var project = {
+                cName : cName,
+                projectId : projectId
+            };
+            
+            // Request the Tasks based on the projectId selected
+            $http.post("/api/getTasks", project).then(function(tasks){
+                
+                tasks = tasks.data;
+                $rootScope.tasks = tasks;
                                 
             });
             
@@ -115,6 +154,29 @@ function($scope, $rootScope, $location, $http, $routeParams){
             $http.post("/api/addtask", $scope.task).then(function(task){
     
                 
+                if (task.data){
+                    $scope.task = null;
+                    $location.path("/project/"+$scope.project._id);
+                    
+                }else{
+                
+                    console.log("Something went wrong");
+                    
+                }
+                
+            });
+        }
+    }
+    
+    // This Function is activated on a form submission in update task
+    $scope.updateTask = function() {
+
+        // Check if the form was succesfully submitted
+        if ($scope.task) {
+                        
+            // Send a request to the server to update a Task
+            $http.post("/api/updatetask", $scope.task).then(function(task){
+    
                 if (task.data){
                     $scope.task = null;
                     $location.path("/project/"+$scope.project._id);

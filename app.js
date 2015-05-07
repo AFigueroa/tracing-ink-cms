@@ -26,7 +26,7 @@ var crypto = require("crypto"),
 =================================*/
 
 // Mongo DB
-var collections = ["users", "projects", "clients", "invites", "memberInvites"];
+var collections = ["users", "projects", "clients", "invites", "memberInvites", "tasks"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 // Express JS
@@ -338,6 +338,89 @@ app.post('/api/getProject', function (req, res) {
 
 
 
+// Get Single Task
+app.post('/api/getTask', function (req, res) {
+// This route will get the clients data from the database IF the user is a master admin
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName") && req.param("taskId") && req.param("projectId")) {
+        
+        var cName = req.param("cName");
+        var taskId = req.param("taskId");
+        var projectId = req.param("projectId");
+        
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.tasks.findOne({active:active, cName:cName, projectId:projectId, _id: taskId}, function(err, task){
+            
+            // Check if there was any errors
+            if (!err){
+                
+                // No errors
+                                
+                // Found the task load it to the front-end
+                res.send(task);
+                        
+
+            }else{
+                // Query errors found
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+// Get Single Tasks
+app.post('/api/getTasks', function (req, res) {
+// This route will get the clients data from the database IF the user is a master admin
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        var cName = req.param("cName");
+        var projectId = req.param("projectId");
+        
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.tasks.find({active:active, cName:cName, projectId:projectId}, function(err, tasks){
+            
+            // Check if there was any errors
+            if (!err){
+                
+                // No errors
+                
+                // Send the Tasks data to the front-end
+                res.send(tasks);
+
+            }else{
+                // Query errors found
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+
 // Get Messages
 app.post('/api/getMessages', function (req, res) {
     
@@ -479,7 +562,7 @@ app.post('/api/addManager', function (req, res) {
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
             };
-            console.log(manager);
+
             // Check if theres an active invite with the same Id
             db.invites.find({_id:inviteId, active:1}, function(err, invite){
                 
@@ -1044,8 +1127,6 @@ app.post('/api/addTask', function (req, res) {
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
         
-        console.log("Got something");
-
         // Store the form submission values
         var name=req.param('name');
         var description=req.param('description');
@@ -1077,7 +1158,7 @@ app.post('/api/addTask', function (req, res) {
             active : 1
         };
         
-        db.projects.update({_id:projectId},{$push:{tasks:task}}, function(task, err){
+        db.tasks.insert(task, function(task, err){
             
             if(!err){
                 res.send(true);    
@@ -1086,6 +1167,67 @@ app.post('/api/addTask', function (req, res) {
             }
 
         });
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+// Add Project Route
+app.post('/api/updateTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var creator=req.param('creator');
+        var dueDate=req.param('dueDate');
+        var projectId=req.param('projectId');
+        var taskId = req.param('_id'); // Task Id
+
+        // Check if either field was left empty
+        if( name == "" || description == "" || cName == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        var task = {
+            _id : taskId,
+            projectId: projectId,
+            name : name,
+            cName : cName,
+            description : description,
+            members : members,
+            creator : creator,
+            dueDate : dueDate,
+            completed : false,
+            active : 1
+        };
+        
+        db.tasks.update({_id:taskId}, { $set:{
+                name:name,
+                description:description,
+                members:members,
+                dueDate:dueDate
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );
 
         // One form value was left empty
         res.send(true);

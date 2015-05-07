@@ -211,7 +211,33 @@ body{
     border-bottom-left-radius: 5px;
 }
 
+.panel-main{
+    width: 100%;
+}
+
+.panel-main.cluttered{
+    width: 90%;
+    padding-top: 5px;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 0;
+    margin:0;
+    text-align: left;
+    
+}
+
+.panel-main.cluttered.secondary{
+    font-size: .90em;
+    
+}
+.panel-main.cluttered:last-of-type{
+    padding-bottom: 5px;
+    padding-top: 0px;
+    
+}
+
 p.panel-main{
+
     float: left;
     display: block;
 }
@@ -384,6 +410,15 @@ form .row:last-of-type{
     float: right;
     padding-right: 0;
 
+}
+
+@media (max-width: 554px) {
+  .addButton.right {
+    margin-right: 5%;
+  }
+    .addButton.left {
+    margin-left: 5%;
+  }
 }
 
 .backButton{
