@@ -2,6 +2,13 @@
 app.controller("projectsController", [ "$scope", "$rootScope", "$location", "$http",
 function($scope, $rootScope, $location, $http){
     
+    if($scope.project){
+        
+        // Erase the value of project within scope
+        $scope.project = null;
+    
+    }
+    
     // Check if the Side Nav is open or not
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
     
