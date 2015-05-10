@@ -104,6 +104,7 @@ app.post('/api/login', function (req, res) {
                     "lname" : user.lname,
                     "email" : user.email,
                     "phone" : user.phone,
+                    "myTasks" : user.myTasks,
                     "type" : user.type
                 };
                 
@@ -380,9 +381,8 @@ app.post('/api/getTask', function (req, res) {
     }
 });
 
-// Get Single Tasks
+// Get A Project's Tasks
 app.post('/api/getTasks', function (req, res) {
-// This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
@@ -412,6 +412,42 @@ app.post('/api/getTasks', function (req, res) {
 
         });
 
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+// Get A Project's Tasks
+app.post('/api/getMyTask', function (req, res) {
+
+    var taskId = "";
+    
+    if (req.param("taskId")){
+        taskId = req.param("taskId");
+        
+    }
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        
+        var cName = req.param("cName");
+        var active = 1;
+        
+        db.tasks.findOne({_id : taskId, active : active, completed : false}, function(err, task){
+            
+            // Check if there was any errors
+            if (!err && task){
+
+                res.send(task);
+
+            }
+
+        });
+        
     }else{
         
         // User is either not logged in or is not an admin
@@ -1145,6 +1181,20 @@ app.post('/api/addTask', function (req, res) {
 
         }
         
+        // For each member add the task Id to myTasks
+        for(var i = 0; i < members.length - 1; i++){
+        
+            db.users.update({_id : members[i]}, {$push : {myTasks: taskId}} ,function(task, err){
+                
+                if(err){
+                    
+                    res.send(false);
+                }
+            
+            });
+            
+        }
+        
         var task = {
             _id : taskId,
             projectId: projectId,
@@ -1176,7 +1226,7 @@ app.post('/api/addTask', function (req, res) {
     }
 });
 
-// Add Project Route
+// Update Task Route
 app.post('/api/updateTask', function (req, res) {
 // This route will add a client when an admin sends a post submission
     
@@ -1193,6 +1243,130 @@ app.post('/api/updateTask', function (req, res) {
         var projectId=req.param('projectId');
         var taskId = req.param('_id'); // Task Id
 
+        // Get the values of the old members.
+        db.tasks.findOne({_id : taskId}, function(err, thisTask){
+            if (!err && thisTask){
+                
+                // Get the old members
+                var oldMembers = thisTask.members;
+
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                console.log("Old Members List: ", oldMembers);
+                console.log("New Members List: ", members);
+                console.log("");
+                
+                // Initiate an array of member that exist in both lists.
+                var toBeKept = [];
+                
+                // Initiate a to be removed array of member Ids
+                var toBeRemoved = [];
+                
+                // Initiate for those members that didn't exists before in array. We will copy the new members and remove from it any that are to be kept or removed, leaving an array of only the new members to be added.
+                var toBeAdded = members;
+                
+                
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                
+                // For each old member, determine which members are to be removed
+                for (var i = 0; i <= oldMembers.length - 1; i++){
+                    
+                    // On this iteration of oldMembers loop over new members to verify if the values exist.
+                    for (var n = 0; n <= members.length - 1; n++ ){
+                    
+                        // Check if values are identical
+                        if(oldMembers[i] == members[n]){
+                        
+                            // Member exists in both arrays, no need to update this one
+                            toBeKept.push(oldMembers[i]);
+                            
+                            // Set the value from the array of added to false, that member doesnt need updating.
+                            toBeAdded[n] = false;
+                            
+                            // No need to keep looping, we know that the value is to be kept.
+                            break;
+                            
+                        }else{
+                        
+                            // Ids dont match
+                            
+                            // Check if it's the last value
+                            if(n == members.length - 1){
+                                
+                                // Value for oldMembers[i] not present in new array
+                                toBeRemoved.push(oldMembers[i]);
+                            
+                                // Set the value from the array of added to false, that member doesnt need updating.
+                                toBeAdded[n] = false;
+                            
+                            }
+                        }
+                    
+                        
+                    }
+                
+                }
+                
+                // Initiate an array to store the non-false values of the toBeAdded array
+                var cleanedToBeAdded = [];
+                
+                // Loop over the toBeAdded array
+                for (var e = 0; e <= toBeAdded.length - 1; e++){
+                    
+                    // Verify if this value is false
+                    if(toBeAdded[e] != false){
+                        
+                        // The value is not false, push it to the cleaned array
+                        cleanedToBeAdded.push(toBeAdded[e]);
+                    
+                    }
+                
+                }
+                
+                // Update the toBeAdded array with the clean array
+                toBeAdded = cleanedToBeAdded;
+                
+                console.log("To be Removed: ", toBeRemoved);
+                console.log("To be Added: ", toBeAdded);
+                
+                // If toBeRemoved is not empty
+                if(toBeRemoved.length != 0){
+                    
+                    // For all users in the toBeRemoved list. Remove this taskId from myTasks.
+                    for (i = 0; i <= toBeRemoved.length - 1; i++){
+                        
+                        db.users.update({_id : toBeRemoved[i]}, {$pull : {myTasks : taskId}} );
+                        
+                    }
+                    
+                }
+                
+                // If toBeRemoved is not empty
+                if(toBeAdded.length != 0){
+                    
+                    // For all users in the toBeRemoved list. Remove this taskId from myTasks.
+                    for (i = 0; i <= toBeAdded.length - 1; i++){
+                        
+                        db.users.update({_id : toBeAdded[i]}, {$push : {myTasks : taskId}} );
+                        
+                    }
+                    
+                }
+                
+                
+                // For all users in the toBeAdded list. Add this taskId from myTasks.
+            
+            }else{
+            
+                // Something went wrong
+                res.send(false);
+                
+            }
+            
+        });
+        
+        
+        
+        
         // Check if either field was left empty
         if( name == "" || description == "" || cName == ""){
 
@@ -1219,6 +1393,122 @@ app.post('/api/updateTask', function (req, res) {
                 description:description,
                 members:members,
                 dueDate:dueDate
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+
+// Update Task Route
+app.post('/api/deleteTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var taskId=req.param('taskId');
+
+        // Check if either field was left empty
+        if( taskId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.tasks.update({_id:taskId}, { $set:{
+                active:0
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+
+// Complete Task Route
+app.post('/api/completeTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var taskId=req.param('taskId');
+
+        // Check if either field was left empty
+        if( taskId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.tasks.update({_id:taskId}, { $set:{
+                completed:true
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+// Activate Completed Task Route
+app.post('/api/activateTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var taskId=req.param('taskId');
+
+        // Check if either field was left empty
+        if( taskId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.tasks.update({_id:taskId}, { $set:{
+                completed:false
             }}, function(task, err){
 
                 if(!err){

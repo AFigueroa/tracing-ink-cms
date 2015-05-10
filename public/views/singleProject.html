@@ -50,7 +50,7 @@
             </div>
             
             <div class="row">
-                <button type="submit" class="submit"  ng-click="complete(task._id)">
+                <button type="submit" class="submit"  ng-click="completeTask(task._id)">
                     Complete
                 </button>
             </div>
@@ -62,7 +62,7 @@
             </div>
             
             <div class="row">
-                <button type="submit" class="delete"  ng-click="delete(task._id)">
+                <button type="submit" class="delete"  ng-click="deleteTask(task._id)">
                     Delete
                 </button>
             </div>
@@ -83,7 +83,7 @@
 
 <div class="row">
 
-    <div class="panel panel-dropdown" ng-repeat="task in tasks | filter: {completed: true}" >
+    <div class="panel panel-dropdown completed" ng-repeat="task in tasks | filter: {completed: true, active:1}" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
             <p class="panel-main cluttered">{{task.name}}</p>
@@ -99,19 +99,13 @@
             </div>
             
             <div class="row">
-                <button type="submit" class="submit"  ng-click="complete(task._id)">
-                    Complete
+                <button type="submit" class="submit"  ng-click="activateTask(task._id)">
+                    Activate
                 </button>
             </div>
             
             <div class="row">
-                <a ng-href="/#/editTask/{{project._id}}/{{task._id}}"><button type="submit" class="edit" >
-                    Edit
-                </button></a>
-            </div>
-            
-            <div class="row">
-                <button type="submit" class="delete"  ng-click="delete(task._id)">
+                <button type="submit" class="delete"  ng-click="deleteTask(task._id)">
                     Delete
                 </button>
             </div>

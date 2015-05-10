@@ -21,8 +21,7 @@ function($scope, $rootScope, $location, $http){
     
     if (authData === true){
         
-        // User is logged in
-        var user = $http.get("/api/getUser").then(function(user){
+        $http.get("/api/getUser").then(function(user){
             
             // Store the user's data within scope
             $rootScope.user = user.data;
@@ -47,6 +46,31 @@ function($scope, $rootScope, $location, $http){
                 $rootScope.member = true;
 
             }
+
+            var thisTask = {}
+            var myTasks = [];
+            
+            for (var i = 0; i <= $rootScope.user.myTasks.length - 1; i++){
+                
+                // Get the tasks associated to this user.
+                thisTask = {
+                    cName : $rootScope.user.cName,   
+                    taskId : $rootScope.user.myTasks[i]
+
+                };
+                
+                // Request the Tasks based on the projectId selected
+                $http.post("/api/getMyTask", thisTask).then(function(task){
+
+                    task = task.data;
+
+                    console.log("One Task: ",task);
+
+                    $scope.myTasks.push(task);
+                    
+                });
+                
+            }            
                         
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Dashboard";

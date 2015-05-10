@@ -190,4 +190,137 @@ function($scope, $rootScope, $location, $http, $routeParams){
             });
         }
     }
+    
+    // This Function is activated on a form submission in update task
+    $scope.deleteTask = function(taskId) {
+
+       if(!taskId){
+           
+           return false;
+           
+       }
+        
+        var task = {
+            taskId : taskId
+        }
+        
+        // Send a request to the server to Delete a selected Task based on _id
+        $http.post("/api/deleteTask", task).then(function(res){
+
+            if (res.data){
+                
+                // Create the Project object 
+                var project = {
+                    cName : $scope.user.cName,
+                    projectId : $scope.project._id
+                };
+                
+                // Request the Tasks based on the projectId selected
+                $http.post("/api/getTasks", project).then(function(tasks){
+
+                    tasks = tasks.data;
+                    $rootScope.tasks = tasks;
+
+                });
+                
+                console.log(res.data);
+                $location.path("/project/"+$scope.project._id);
+
+            }else{
+
+                console.log("Something went wrong");
+
+            }
+
+        });
+        
+    }
+    
+    // This Function is activated on a form submission in update task
+    $scope.completeTask = function(taskId) {
+
+       if(!taskId){
+           
+           return false;
+           
+       }
+        
+        var task = {
+            taskId : taskId
+        }
+        
+        // Send a request to the server to Delete a selected Task based on _id
+        $http.post("/api/completeTask", task).then(function(res){
+
+            if (res.data){
+                
+                // Create the Project object 
+                var project = {
+                    cName : $scope.user.cName,
+                    projectId : $scope.project._id
+                };
+                
+                // Request the Tasks based on the projectId selected
+                $http.post("/api/getTasks", project).then(function(tasks){
+
+                    tasks = tasks.data;
+                    $rootScope.tasks = tasks;
+
+                });
+                
+                $location.path("/project/"+$scope.project._id);
+
+            }else{
+
+                console.log("Something went wrong");
+
+            }
+
+        });
+        
+    }
+    
+    // This Function is activated on a form submission in update task
+    $scope.activateTask = function(taskId) {
+
+       if(!taskId){
+           
+           return false;
+           
+       }
+        
+        var task = {
+            taskId : taskId
+        }
+        
+        // Send a request to the server to Delete a selected Task based on _id
+        $http.post("/api/activateTask", task).then(function(res){
+
+            if (res.data){
+                
+                // Create the Project object 
+                var project = {
+                    cName : $scope.user.cName,
+                    projectId : $scope.project._id
+                };
+                
+                // Request the Tasks based on the projectId selected
+                $http.post("/api/getTasks", project).then(function(tasks){
+
+                    tasks = tasks.data;
+                    $rootScope.tasks = tasks;
+
+                });
+                
+                $location.path("/project/"+$scope.project._id);
+
+            }else{
+
+                console.log("Something went wrong");
+
+            }
+
+        });
+        
+    }
 }]);

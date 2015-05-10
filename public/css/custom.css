@@ -192,6 +192,16 @@ body{
     overflow: hidden;
 }
 
+.panel.completed{
+    color: #ccc;
+    background-color: rgba(242, 240, 240, .50);
+}
+
+.panel.completed .panel-body{
+    border: 1px rgba(242, 240, 240, .50);
+    background-color: transparent;
+}
+
 .clear-panel{
     width: 90%;
     max-width: 500px;
@@ -211,6 +221,7 @@ body{
     border-bottom-left-radius: 5px;
 }
 
+
 .panel-main{
     width: 100%;
 }
@@ -228,6 +239,10 @@ body{
 
 .panel-main.cluttered.secondary{
     font-size: .90em;
+    font-weight: 100;
+    position: relative;
+    top: -20px;
+    height: 23px;
     
 }
 .panel-main.cluttered:last-of-type{
