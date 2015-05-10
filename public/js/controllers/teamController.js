@@ -32,9 +32,7 @@ function($scope, $rootScope, $location, $http){
             // Get the user's type
             var userType= $rootScope.user.type;
             $rootScope.userType = userType ;
-            
-            console.log(userType);
-            
+                        
             // Check if user is master admin
             if (userType === "1"){
 

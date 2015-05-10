@@ -3,7 +3,8 @@
 =================================*/
 
 var bodyParser = require('body-parser');
-var express = require('express');
+var express = require('express'),
+    cors = require('cors');
 var hashids = require('hashids');
 var http = require('http');
 var mongo = require('mongojs');
@@ -31,6 +32,10 @@ var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collectio
 
 // Express JS
 var app = express();
+
+// Enable Cors 
+app.use(cors());
+
 var httpServer = http.createServer(app);
 
 // Views Directory Location
@@ -1693,6 +1698,6 @@ process.on('uncaughtException', function (err) {
           Activate Server
 =================================*/
 
-httpServer.listen(3000, function() {
+httpServer.listen(80, function() {
   console.log('Express server listening on port 3000');
 });
