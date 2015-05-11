@@ -1,5 +1,5 @@
 // Messages Controller
-app.controller("messagesController", [ "$scope", "$rootScope", "$location", "$http",
+app.controller("conversationsController", [ "$scope", "$rootScope", "$location", "$http",
 function($scope, $rootScope, $location, $http){
     
     // Check if the Side Nav is open or not
@@ -30,9 +30,30 @@ function($scope, $rootScope, $location, $http){
             $rootScope.user = user.data;
             
             // Set the title of the page
-            $rootScope.title = "Tracing Ink | Messages";
-            $rootScope.pageTitle = "Messages";
-            $rootScope.pageTitleUrl = "#/messages";
+            $rootScope.title = "Tracing Ink | Conversations ";
+            $rootScope.pageTitle = "Conversations";
+            $rootScope.pageTitleUrl = "#/conversations";
+            
+            // Check for team members for this company
+            cName = {cName:user.data.cName};
+            
+            $http.post("/api/getTeam", cName).then(function(members){
+                
+                if (members.data){
+                    // Members found
+                    
+                    // Load the team members within the front-end scope
+                    $rootScope.teamMembers = members.data;
+
+                }else{
+                    // No members found
+                    
+                    // Set teamMembers as an empty array
+                    $rootScope.teamMembers = [];
+                    
+                };
+                
+            });
         
         });
         

@@ -1,0 +1,68 @@
+<div class="row">
+    
+    <h1 id="login-logo">My Conversations</h1>
+    
+</div>
+
+<div class="row addButtonRow">
+
+    <a href="/#/newConversation" class="addButton">+ NEW CONVERSATION</a>
+
+</div>
+
+<div class="row">
+
+    <div class="panel panel-dropdown" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main cluttered">Conversation Subject</p>
+            <p class="panel-main cluttered secondary">Member's Emails</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <p>
+                    Chat Panel
+                </p>
+            </div>
+            
+            <div class="row">
+                
+                <form method="post" ng-submit="addPost()">
+                
+                <div class="row">
+                    <label for="body">Post Message:</label>
+                    <input type="text" name="body" ng-model="message.body">
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Post">
+                </div>
+                
+            </form>
+                
+            </div>
+            </br>
+            
+            <div class="row">
+                <button type="submit" class="submit">
+                    Invite Members
+                </button>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="submit" >
+                    Archive
+                </button>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="delete">
+                    Delete
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>

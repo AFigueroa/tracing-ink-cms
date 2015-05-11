@@ -1,0 +1,51 @@
+
+<!--		
+	====================================
+		 	New Conversation
+	=====================================
+-->	
+
+<div class="row page-header">
+    
+    <a ng-href="/#/conversations"><h1 id="login-logo">My Conversations</h1></a>
+    
+</div>
+
+<div class="row">
+    
+    <div class="panel secured">
+        
+        <div class="panel-head">Add New Conversation </div> 
+        
+        <div class="panel-body">
+            
+            <form method="post" ng-submit="addConversation()">
+                
+                <div class="row">
+                    <label for="subject">Subject:</label>
+                    <input type="text" name="subject" ng-model="conversation.subject">
+                </div>
+                
+                <div class="row">
+                    <label for="message">Message:</label>
+                    <textarea name="message" ng-model="conversation.message"></textarea>
+                </div>
+
+                <div class="row">
+                    <label for="recipients">Recipients:</label>
+                    <div class="row" ng-repeat="member in teamMembers">
+                        <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="recipients" checklist-model="conversation.recipients" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
+                    </div>
+                    
+                </div>
+                
+                <div class="row">
+                    <input type="submit" class="submit" value="Send">
+                </div>
+                
+                
+            </form>
+            
+        </div>
+    </div>
+</div>

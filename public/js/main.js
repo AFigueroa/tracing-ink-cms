@@ -142,10 +142,16 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "calendarController"
     })
     
-    // Messages
-    .when('/messages', {
-      templateUrl:"views/messages.html",
-      controller: "messagesController"
+    // Conversations
+    .when('/conversations', {
+      templateUrl:"views/conversations.html",
+      controller: "conversationsController"
+    })
+    
+    // Conversations
+    .when('/newConversation', {
+      templateUrl:"views/newConversation.html",
+      controller: "conversationsController"
     })
   
     // Logout

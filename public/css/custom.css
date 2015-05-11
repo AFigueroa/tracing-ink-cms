@@ -21,8 +21,14 @@ body{
 }
 /*Top Nav*/
 #top-nav, #btm-nav{
+    position: fixed;
+    top: 0;
     height: 65px;
     background-color: #F2F0F0;
+}
+
+.views-section{
+    margin-top: 100px;
 }
 
 #sidenav_btn, #btm-bar-toggle{
@@ -63,7 +69,7 @@ body{
 
 #side-nav{
     position: fixed;
-    top: 500;
+    top: 65px;
     left: -467px;
     max-width: 350pt;
     width: 100%;
