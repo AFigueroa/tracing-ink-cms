@@ -1116,14 +1116,70 @@ app.post('/api/addProject', function (req, res) {
     
 
         // Store the form submission values
+        var projectId = uid.v4(); // Project Id
         var name=req.param('name');
         var description=req.param('description');
         var cName=req.param('cName');
         var members=req.param('members');
         var manager=req.param('manager');
         var dueDate=req.param('dueDate');
-        var projectId = uid.v4(); // Project Id
+        var dueTime=req.param('dueTime');
+        
+        if(dueDate){
+            
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
+            
+            var date = {};
+            date.year = dueDate[0];
+            date.month = dueDate[1];
+            date.day = getDay[0];
+            
+            if(dueTime){
+            
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
 
+                date.hour = dueTime[0]; 
+                date.minute = dueTime[1]; 
+                
+                if(date.hour == 00){ date.hour = 07; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.hourFormat = "PM" }
+                
+                console.log(date);
+                
+            }
+            
+            dueDate = date;
+
+        }else{
+        
+            dueTime = null;
+            
+        }
+        
         // Check if either field was left empty
         if( name == "" || description == "" || cName == ""){
 
@@ -1174,9 +1230,10 @@ app.post('/api/addTask', function (req, res) {
         var cName=req.param('cName');
         var members=req.param('members');
         var creator=req.param('creator');
-        var dueDate=req.param('dueDate');
         var projectId=req.param('projectId');
         var taskId = uid.v4(); // Task Id
+        var dueTime=req.param('dueTime');
+        var dueDate=req.param('dueDate');
 
         // Check if either field was left empty
         if( name == "" || description == "" || cName == ""){
@@ -1186,8 +1243,63 @@ app.post('/api/addTask', function (req, res) {
 
         }
         
+         if(dueDate){
+            
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
+            
+            var date = {};
+            date.year = dueDate[0];
+            date.month = dueDate[1];
+            date.day = getDay[0];
+            
+            if(dueTime){
+            
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
+
+                date.hour = dueTime[0]; 
+                date.minute = dueTime[1]; 
+                
+                if(date.hour == 00){ date.hour = 07; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.hourFormat = "PM" }
+                
+                console.log(date);
+                
+            }
+            
+            dueDate = date;
+
+        }else{
+        
+            dueTime = null;
+            
+        }
+        
         // For each member add the task Id to myTasks
-        for(var i = 0; i < members.length - 1; i++){
+        for(var i = 0; i <= members.length - 1; i++){
         
             db.users.update({_id : members[i]}, {$push : {myTasks: taskId}} ,function(task, err){
                 
@@ -1195,6 +1307,8 @@ app.post('/api/addTask', function (req, res) {
                     
                     res.send(false);
                 }
+                
+                console.log("Finished setting for: ", members[i], "from: ", members);
             
             });
             

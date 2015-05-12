@@ -37,8 +37,10 @@
     <div class="panel panel-dropdown" ng-repeat="task in tasks | filter: {completed: false}" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main cluttered">{{task.name}}</p>
-            <p class="panel-main cluttered secondary">{{task.members.length}} Members</p>
+            <p class="panel-main halved cluttered">{{task.name}}</p>
+            <p class="panel-main halved right">{{task.dueDate.month}} / {{task.dueDate.day}} / {{task.dueDate.year}}</p>
+            <p class="panel-main cluttered secondary left">{{task.members.length}} Members</p>
+            <p class="panel-main cluttered secondary right">{{task.dueDate.hour}}:{{task.dueDate.minute}} {{task.dueDate.hourFormat}}</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">
@@ -54,6 +56,8 @@
                     Complete
                 </button>
             </div>
+            
+            <br>
             
             <div class="row">
                 <a ng-href="/#/editTask/{{project._id}}/{{task._id}}"><button type="submit" class="edit" >

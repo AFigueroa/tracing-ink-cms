@@ -31,6 +31,10 @@ body{
     margin-top: 100px;
 }
 
+.views-section-logged-off{
+    margin-top: 0;
+}
+
 #sidenav_btn, #btm-bar-toggle{
     z-index: 1;
     position: absolute;
@@ -232,6 +236,17 @@ body{
     width: 100%;
 }
 
+.panel-main.halved, .panel-main.cluttered.halved{
+    width: 45%;
+    padding-right: 0;
+}
+
+.panel-main.halved.right{
+    margin: 0;
+    padding-top: 5px;
+    padding-right: 5%;
+}
+
 .panel-main.cluttered{
     width: 90%;
     padding-top: 5px;
@@ -243,6 +258,7 @@ body{
     
 }
 
+
 .panel-main.cluttered.secondary{
     font-size: .90em;
     font-weight: 100;
@@ -251,6 +267,22 @@ body{
     height: 23px;
     
 }
+
+.panel-main.cluttered.right.secondary{
+    width: 45%;
+    text-align: right;
+    padding-left: 0;
+    padding-top: 5px;
+    padding-bottom: 0;
+    
+}
+.panel-main.cluttered.left{
+    width: 45%;
+    text-align: left;
+    padding-right: 0;
+    
+}
+
 .panel-main.cluttered:last-of-type{
     padding-bottom: 5px;
     padding-top: 0px;

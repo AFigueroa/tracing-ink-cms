@@ -16,6 +16,11 @@ function($scope, $rootScope, $location, $http){
 
     };
     
+    // Set the title of the page
+    $rootScope.title = "Tracing Ink | Dashboard";
+    $rootScope.pageTitle = "Dashboard";
+    $rootScope.pageTitleUrl = "#/dashboard";
+    
     // Check session authData
     var authData = $rootScope.authData;
     
@@ -48,7 +53,7 @@ function($scope, $rootScope, $location, $http){
             }
 
             var thisTask = {}
-            var myTasks = [];
+            var myTask = [];
             
             for (var i = 0; i <= $rootScope.user.myTasks.length - 1; i++){
                 
@@ -60,22 +65,21 @@ function($scope, $rootScope, $location, $http){
                 };
                 
                 // Request the Tasks based on the projectId selected
-                $http.post("/api/getMyTask", thisTask).then(function(task){
+                myTask = $http.post("/api/getMyTasks", thisTask).then(function(task){
 
                     task = task.data;
 
-                    console.log("One Task: ",task);
+                    //console.log("One Task: ",task);
 
-                    $scope.myTasks.push(task);
+                    return task;
+                    
+                    
                     
                 });
                 
-            }            
-                        
-            // Set the title of the page
-            $rootScope.title = "Tracing Ink | Dashboard";
-            $rootScope.pageTitle = "Dashboard";
-            $rootScope.pageTitleUrl = "#/dashboard";
+                console.log(myTask.$$state.value);
+                
+            } 
         
         });
          

@@ -15,24 +15,14 @@
     <div class="panel" ng-repeat="project in projects" >
         <a ng-href="#/project/{{project._id}}" class="project-link">
             <div class="panel-head">
-
-                <p class="panel-main left">{{project.name}}</p>
-                <p class="panel-main right">{{project.members.length}} Members</p>
+                
+                <p class="panel-main halved cluttered">{{project.name}}</p>
+                <p class="panel-main halved right">{{project.dueDate.month}} / {{project.dueDate.day}} / {{project.dueDate.year}}</p>
+                <p class="panel-main cluttered secondary left">{{project.members.length}} Members</p>
+                <p class="panel-main cluttered secondary right">{{project.dueDate.hour}}:{{project.dueDate.minute}} {{project.dueDate.hourFormat}}</p>
 
             </div>
         </a>
-        
-<!--
-        <div class="panel-body" ng-class="{open:panelOpen}">
-       
-            <div class="row">
-                <button type="submit" class="submit"  ng-click="message(member)">
-                    New Message
-                </button>
-            </div>
-        </div>
--->
-
 
     </div>
 

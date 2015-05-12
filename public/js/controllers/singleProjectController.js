@@ -155,6 +155,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
     
                 
                 if (task.data){
+                    console.log(task.data);
                     $scope.task = null;
                     $location.path("/project/"+$scope.project._id);
                     

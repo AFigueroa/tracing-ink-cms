@@ -101,7 +101,7 @@ function($scope, $rootScope, $location, $http){
                 
             }
             
-            $scope.project.members.push($scope.user._id);
+            $scope.project.members.push($scope.user._id);     
             
             // Send a request to the server to add a Client
             $http.post("/api/addProject", $scope.project).then(function(project){
@@ -109,6 +109,7 @@ function($scope, $rootScope, $location, $http){
                 
                 if (project.data){
                     
+                    console.log(project.data);
                     $scope.project = null;
                     $location.path("/projects");
                     

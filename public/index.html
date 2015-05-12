@@ -87,7 +87,7 @@
             </div>
 
             <!-- Side Navigation -->
-            <div class="row side-nav" id="side-nav" ng-show="authData" ng-controller="navController">
+            <div class="row side-nav" id="side-nav"  ng-controller="navController">
 
                 <div class="row">
                     <h3>{{user.cName}}</h3>
@@ -116,7 +116,7 @@
 
             </div>
             
-            <div class="views-section">
+            <div ng-class="{true: 'views-section', false: 'views-section-logged-off'}[authData]">
                 
                 <!-- Views load here... -->
                 <ng-view>

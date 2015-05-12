@@ -15,7 +15,7 @@
     
     <div class="panel secured">
         
-        <div class="panel-head">Add New Project </div> 
+        <div class="panel-head">Add New Project</div> 
         
         <div class="panel-body">
             
@@ -32,12 +32,17 @@
                 </div>
                 
                 <div class="row">
+                    <label for="dueTime">Time (Optional):</label>
+                    <input type="time" name="dueTime" ng-model="project.dueTime">
+                </div>
+                
+                <div class="row">
                     <label for="description">Description:</label>
                     <textarea name="description" ng-model="project.description"></textarea>
                 </div>
 
                 <div class="row">
-                    <label for="team">Assign Members:</label>
+                    <label for="team" ng-show="teamMembers.length > 1">Assign Members:</label>
                     <div class="row" ng-repeat="member in teamMembers">
                         <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="team" checklist-model="project.members" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
                     </div>
