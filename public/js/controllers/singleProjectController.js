@@ -47,6 +47,15 @@ function($scope, $rootScope, $location, $http, $routeParams){
                 $http.post("/api/getTask", task).then(function(task){
 
                     task = task.data;
+                    task.due = new Date(task.dueDate.year, task.dueDate.month - 1, task.dueDate.day);
+                    console.log(task.dueDate);
+                    
+                    if(task.dueDate.hour && task.dueDate.minute){
+                        
+                        task.dueTime = new Date(task.dueDate.year, task.dueDate.month - 1, task.dueDate.day, task.dueDate.militaryHour, task.dueDate.minute, 0);
+                    
+                    }
+                    
                     $rootScope.task = task;
 
                 });
@@ -175,6 +184,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
         // Check if the form was succesfully submitted
         if ($scope.task) {
                         
+            console.log($scope.task.dueTime);
             // Send a request to the server to update a Task
             $http.post("/api/updatetask", $scope.task).then(function(task){
     

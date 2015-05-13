@@ -65,7 +65,7 @@ function($scope, $rootScope, $location, $http){
                 };
                 
                 // Request the Tasks based on the projectId selected
-                myTask = $http.post("/api/getMyTasks", thisTask).then(function(task){
+                myTask = $http.post("/api/getMyTask", thisTask).then(function(task){
 
                     task = task.data;
 

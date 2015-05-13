@@ -1143,30 +1143,30 @@ app.post('/api/addProject', function (req, res) {
                 date.hour = dueTime[0]; 
                 date.minute = dueTime[1]; 
                 
-                if(date.hour == 00){ date.hour = 07; date.hourFormat = "PM" }
-                if(date.hour == 01){ date.hour = 08; date.hourFormat = "PM" }
-                if(date.hour == 02){ date.hour = 09; date.hourFormat = "PM" }
-                if(date.hour == 03){ date.hour = 10; date.hourFormat = "PM" }
-                if(date.hour == 04){ date.hour = 11; date.hourFormat = "PM" }
-                if(date.hour == 05){ date.hour = 12; date.hourFormat = "AM" }
-                if(date.hour == 06){ date.hour = 01; date.hourFormat = "AM" }
-                if(date.hour == 07){ date.hour = 02; date.hourFormat = "AM" }
-                if(date.hour == 08){ date.hour = 03; date.hourFormat = "AM" }
-                if(date.hour == 09){ date.hour = 04; date.hourFormat = "AM" }
-                if(date.hour == 10){ date.hour = 05; date.hourFormat = "AM" }
-                if(date.hour == 11){ date.hour = 06; date.hourFormat = "AM" }
-                if(date.hour == 12){ date.hour = 07; date.hourFormat = "AM" }
-                if(date.hour == 13){ date.hour = 08; date.hourFormat = "AM" }
-                if(date.hour == 14){ date.hour = 09; date.hourFormat = "AM" }
-                if(date.hour == 15){ date.hour = 10; date.hourFormat = "AM" }
-                if(date.hour == 16){ date.hour = 11; date.hourFormat = "AM" }
-                if(date.hour == 17){ date.hour = 12; date.hourFormat = "PM" }
-                if(date.hour == 18){ date.hour = 01; date.hourFormat = "PM" }
-                if(date.hour == 19){ date.hour = 02; date.hourFormat = "PM" }
-                if(date.hour == 20){ date.hour = 03; date.hourFormat = "PM" }
-                if(date.hour == 21){ date.hour = 04; date.hourFormat = "PM" }
-                if(date.hour == 22){ date.hour = 05; date.hourFormat = "PM" }
-                if(date.hour == 23){ date.hour = 06; date.hourFormat = "PM" }
+                if(date.hour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
                 
                 console.log(date);
                 
@@ -1233,7 +1233,7 @@ app.post('/api/addTask', function (req, res) {
         var projectId=req.param('projectId');
         var taskId = uid.v4(); // Task Id
         var dueTime=req.param('dueTime');
-        var dueDate=req.param('dueDate');
+        var dueDate=req.param('due');
 
         // Check if either field was left empty
         if( name == "" || description == "" || cName == ""){
@@ -1261,30 +1261,30 @@ app.post('/api/addTask', function (req, res) {
                 date.hour = dueTime[0]; 
                 date.minute = dueTime[1]; 
                 
-                if(date.hour == 00){ date.hour = 07; date.hourFormat = "PM" }
-                if(date.hour == 01){ date.hour = 08; date.hourFormat = "PM" }
-                if(date.hour == 02){ date.hour = 09; date.hourFormat = "PM" }
-                if(date.hour == 03){ date.hour = 10; date.hourFormat = "PM" }
-                if(date.hour == 04){ date.hour = 11; date.hourFormat = "PM" }
-                if(date.hour == 05){ date.hour = 12; date.hourFormat = "AM" }
-                if(date.hour == 06){ date.hour = 01; date.hourFormat = "AM" }
-                if(date.hour == 07){ date.hour = 02; date.hourFormat = "AM" }
-                if(date.hour == 08){ date.hour = 03; date.hourFormat = "AM" }
-                if(date.hour == 09){ date.hour = 04; date.hourFormat = "AM" }
-                if(date.hour == 10){ date.hour = 05; date.hourFormat = "AM" }
-                if(date.hour == 11){ date.hour = 06; date.hourFormat = "AM" }
-                if(date.hour == 12){ date.hour = 07; date.hourFormat = "AM" }
-                if(date.hour == 13){ date.hour = 08; date.hourFormat = "AM" }
-                if(date.hour == 14){ date.hour = 09; date.hourFormat = "AM" }
-                if(date.hour == 15){ date.hour = 10; date.hourFormat = "AM" }
-                if(date.hour == 16){ date.hour = 11; date.hourFormat = "AM" }
-                if(date.hour == 17){ date.hour = 12; date.hourFormat = "PM" }
-                if(date.hour == 18){ date.hour = 01; date.hourFormat = "PM" }
-                if(date.hour == 19){ date.hour = 02; date.hourFormat = "PM" }
-                if(date.hour == 20){ date.hour = 03; date.hourFormat = "PM" }
-                if(date.hour == 21){ date.hour = 04; date.hourFormat = "PM" }
-                if(date.hour == 22){ date.hour = 05; date.hourFormat = "PM" }
-                if(date.hour == 23){ date.hour = 06; date.hourFormat = "PM" }
+                if(date.hour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
                 
                 console.log(date);
                 
@@ -1358,7 +1358,8 @@ app.post('/api/updateTask', function (req, res) {
         var cName=req.param('cName');
         var members=req.param('members');
         var creator=req.param('creator');
-        var dueDate=req.param('dueDate');
+        var dueDate=req.param('due');
+        var dueTime=req.param('dueTime');
         var projectId=req.param('projectId');
         var taskId = req.param('_id'); // Task Id
 
@@ -1462,7 +1463,7 @@ app.post('/api/updateTask', function (req, res) {
                 // If toBeRemoved is not empty
                 if(toBeAdded.length != 0){
                     
-                    // For all users in the toBeRemoved list. Remove this taskId from myTasks.
+                    // For all users in the toBeAdded list. Remove this taskId from myTasks.
                     for (i = 0; i <= toBeAdded.length - 1; i++){
                         
                         db.users.update({_id : toBeAdded[i]}, {$push : {myTasks : taskId}} );
@@ -1470,10 +1471,7 @@ app.post('/api/updateTask', function (req, res) {
                     }
                     
                 }
-                
-                
-                // For all users in the toBeAdded list. Add this taskId from myTasks.
-            
+                            
             }else{
             
                 // Something went wrong
@@ -1494,25 +1492,71 @@ app.post('/api/updateTask', function (req, res) {
 
         }
         
-        var task = {
-            _id : taskId,
-            projectId: projectId,
-            name : name,
-            cName : cName,
-            description : description,
-            members : members,
-            creator : creator,
-            dueDate : dueDate,
-            completed : false,
-            active : 1
-        };
+        if(dueDate){
+            
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
+            
+            var date = {};
+            date.year = dueDate[0];
+            date.month = dueDate[1];
+            date.day = getDay[0];
+            
+            if(dueTime){
+            
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
+
+                var thisHour = dueTime[0]; 
+                date.minute = dueTime[1]; 
+                
+                console.log("This hours: ", thisHour);
+                
+                if(thisHour == 00){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(thisHour == 01){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(thisHour == 02){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(thisHour == 03){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(thisHour == 04){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(thisHour == 05){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(thisHour == 06){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(thisHour == 07){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(thisHour == 08){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(thisHour == 09){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(thisHour == 10){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(thisHour == 11){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(thisHour == 12){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(thisHour == 13){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(thisHour == 14){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(thisHour == 15){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(thisHour == 16){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(thisHour == 17){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(thisHour == 18){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(thisHour == 19){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(thisHour == 20){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(thisHour == 21){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(thisHour == 22){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
+                if(thisHour == 23){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                
+                console.log("Date hour: ", date.hour);
+                
+                
+            }
+            
+            dueDate = date;
+
+        }else{
+        
+            dueTime = null;
+            
+        }
+        
         
         db.tasks.update({_id:taskId}, { $set:{
                 name:name,
                 description:description,
                 members:members,
                 dueDate:dueDate
-            }}, function(task, err){
+        }}, function(task, err){
 
                 if(!err){
                     res.send(true);    
