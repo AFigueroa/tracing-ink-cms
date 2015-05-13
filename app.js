@@ -1856,6 +1856,6 @@ process.on('uncaughtException', function (err) {
           Activate Server
 =================================*/
 
-httpServer.listen(3000, function() {
+httpServer.listen(80, function() {
   console.log('Express server listening on port 3000');
 });
