@@ -435,8 +435,16 @@ app.post('/api/getMyTasks', function (req, res) {
         var cName = req.param("cName");
         var active = 1;
         
+        // Create an array of just the ids of every element in tasks
+        var taskIds = [];
+        
+        for (var i = 0; i <= tasks.length - 1; i++){
             
-        db.tasks.find({_id : {$in: tasks}, active : active, completed : false}, function(err, myTasks){
+            taskIds.push(tasks[i]._id);    
+        
+        }
+            
+        db.tasks.find({_id : {$in: taskIds}, active : active, completed : false}, function(err, myTasks){
 
             // Check if there was any errors
             if (!err && myTasks){
@@ -1296,14 +1304,16 @@ app.post('/api/addTask', function (req, res) {
         // For each member add the task Id to myTasks
         for(var i = 0; i <= members.length - 1; i++){
         
-            db.users.update({_id : members[i]}, {$push : {myTasks: taskId}} ,function(task, err){
+            task = {
+                _id: taskId
+            };
+            
+            db.users.update({_id : members[i]}, {$push : {myTasks: task}} ,function(task, err){
                 
                 if(err){
                     
                     res.send(false);
                 }
-                
-                console.log("Finished setting for: ", members[i], "from: ", members);
             
             });
             
@@ -1450,7 +1460,7 @@ app.post('/api/updateTask', function (req, res) {
                     // For all users in the toBeRemoved list. Remove this taskId from myTasks.
                     for (i = 0; i <= toBeRemoved.length - 1; i++){
                         
-                        db.users.update({_id : toBeRemoved[i]}, {$pull : {myTasks : taskId}} );
+                        db.users.update({_id : toBeRemoved[i]}, {$pull : {myTasks : {_id : taskId }}});
                         
                     }
                     
@@ -1458,11 +1468,13 @@ app.post('/api/updateTask', function (req, res) {
                 
                 // If toBeRemoved is not empty
                 if(toBeAdded.length != 0){
-                    
+                    var newMyTask = {
+                        _id : taskId
+                    };
                     // For all users in the toBeAdded list. Remove this taskId from myTasks.
                     for (i = 0; i <= toBeAdded.length - 1; i++){
                         
-                        db.users.update({_id : toBeAdded[i]}, {$push : {myTasks : taskId}} );
+                        db.users.update({_id : toBeAdded[i]}, {$push : {myTasks : newMyTask}});
                         
                     }
                     
@@ -1508,30 +1520,30 @@ app.post('/api/updateTask', function (req, res) {
                 
                 console.log("This hours: ", thisHour);
                 
-                if(thisHour == 00){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
-                if(thisHour == 01){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
-                if(thisHour == 02){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
-                if(thisHour == 03){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
-                if(thisHour == 04){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
-                if(thisHour == 05){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
-                if(thisHour == 06){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
-                if(thisHour == 07){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
-                if(thisHour == 08){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
-                if(thisHour == 09){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
-                if(thisHour == 10){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
-                if(thisHour == 11){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
-                if(thisHour == 12){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
-                if(thisHour == 13){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
-                if(thisHour == 14){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
-                if(thisHour == 15){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
-                if(thisHour == 16){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
-                if(thisHour == 17){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
-                if(thisHour == 18){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
-                if(thisHour == 19){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
-                if(thisHour == 20){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
-                if(thisHour == 21){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
-                if(thisHour == 22){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
-                if(thisHour == 23){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(thisHour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(thisHour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(thisHour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(thisHour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(thisHour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(thisHour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(thisHour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(thisHour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(thisHour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(thisHour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(thisHour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(thisHour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(thisHour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(thisHour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(thisHour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(thisHour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(thisHour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(thisHour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(thisHour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(thisHour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(thisHour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(thisHour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(thisHour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(thisHour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
                 
                 console.log("Date hour: ", date.hour);
                 
@@ -1589,22 +1601,24 @@ app.post('/api/deleteTask', function (req, res) {
 
         }
         
-        db.tasks.update({_id:taskId}, { $set:{
-                active:0
-            }}, function(task, err){
-
-                if(!err){
-                    res.send(true);    
-                }else{
-                    console.log(err);
-                }
-            }
-        );
-
-        // One form value was left empty
-        res.send(true);
-                
+        db.users.find( { }, { myTasks : { $elemMatch : { _id : taskId }}}, function(users){
             
+            console.log(users);
+            
+            res.send(true); 
+        });
+        
+//        db.tasks.update({_id:taskId}, { $set:{
+//                active:0
+//            }}, function(task, err){
+//
+//                if(!err){
+//                    res.send(true);    
+//                }else{
+//                    console.log(err);
+//                }
+//            }
+//        );            
         
     }
 });

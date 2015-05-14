@@ -52,7 +52,6 @@ function($scope, $rootScope, $location, $http){
 
             }
 
-            
             var myTasks = {};
             
             if($rootScope.user.myTasks){
@@ -75,7 +74,8 @@ function($scope, $rootScope, $location, $http){
 
                 });
                 
-            } 
+            }
+            
                            
         });
          

@@ -5,7 +5,7 @@
     
 </div>
 
-<div class="row">
+<div class="row pushDown">
         
         <div class="clear-panel ">
         
@@ -27,12 +27,12 @@
 <div class="row addButtonRow">
 
     
-    <a ng-href="/#/newTask/{{project._id}}" class="addButton right">+ NEW TASK</a>
-    <a class="addButton left">Active Tasks:</a>
+    <a ng-href="/#/newTask/{{project._id}}" class="addNew">New Task</a>
+    <a class="page-header">Active Tasks:</a>
 
 </div>
 
-<div class="row">
+<div class="row pushDown">
 
     <div class="panel panel-dropdown" ng-repeat="task in tasks | filter: {completed: false}" >
         
@@ -81,7 +81,7 @@
 <div class="row addButtonRow">
 
     
-    <a class="addButton left">Completed Tasks:</a>
+    <a class="page-header">Completed Tasks:</a>
 
 </div>
 

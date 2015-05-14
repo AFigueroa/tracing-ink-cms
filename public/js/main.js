@@ -26,7 +26,41 @@ app.run(function($http, $rootScope){
             // User is Master Admin
             $rootScope.admin = true;  
 
+        }else if(userType === 2){
+                    
+            // User is master admin
+            $rootScope.manager = true;
+
+        }else if(userType === 3){
+
+            // User is master admin
+            $rootScope.member = true;
+
         }
+        
+        var myTasks = {};
+            
+            if($rootScope.user.myTasks){
+                
+                console.log($rootScope.user.myTasks);
+                
+                // Get the tasks associated to this user.
+                myTasks = {
+                    tasks : $rootScope.user.myTasks,   
+                    cName : $rootScope.user.cName
+
+                };
+
+                // Request the Tasks based on the projectId selected
+                myTask = $http.post("/api/getMyTasks", myTasks).then(function(tasks){
+
+                    tasks = tasks.data;
+
+                    $rootScope.myTasks = tasks;
+
+                });
+                
+            }
         
     });
     

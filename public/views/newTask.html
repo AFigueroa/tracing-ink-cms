@@ -11,6 +11,12 @@
     
 </div>
 
+<div class="row addButtonRow">
+
+    <a href="/#/project/{{project._id}}" class="addNew close">X</a>
+
+</div>
+
 <div class="row">
     
     <div class="panel secured">
@@ -28,12 +34,12 @@
                 
                 <div class="row">
                     <label for="due">Due by (Optional):</label>
-                    <input type="date" name="due" ng-model="task.due">
+                    <input type="date" name="due" ng-model="task.due" placeholder="yyyy-MM-dd">
                 </div>
                 
                 <div class="row">
                     <label for="dueTime">Time (Optional):</label>
-                    <input type="time" name="dueTime" ng-model="task.dueTime">
+                    <input type="time" name="dueTime" ng-model="task.dueTime" placeholder="hh:mm:ss">
                 </div>
                 
                 <div class="row">

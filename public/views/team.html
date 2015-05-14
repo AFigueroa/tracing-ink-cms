@@ -1,4 +1,4 @@
-<div class="row" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
+<div class="row pushDown" ng-class="{true: 'pushDown', false: ''}[user.type == 3]">
     
     <h1 id="login-logo">{{user.cName}}'s Team</h1>
     
@@ -6,7 +6,7 @@
 
 <div class="row addButtonRow" ng-show="user.type==1 || user.type==2">
 
-    <a href="/#/inviteMember" class="addButton">+ NEW MEMBER</a>
+    <a href="/#/inviteMember" class="addButton addNew">Invite Member</a>
 
 </div>
 

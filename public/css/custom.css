@@ -19,6 +19,15 @@ body{
 #wrapper{
     z-index: 0;
 }
+
+.page-header{
+    display: block;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: 400;
+    padding-bottom: 20px;
+}
+
 /*Top Nav*/
 #top-nav, #btm-nav{
     position: fixed;
@@ -357,6 +366,11 @@ p.panel-secondary{
     line-height: 44px;
 }
 
+.clear-panel .panel-body p{
+    margin: 0;
+    font-weight: 200;
+}
+
 .panel-body{
     padding-top: 25px;
     padding-bottom: 25px;
@@ -425,6 +439,36 @@ textarea{
     border: none;
 }
 
+.addNew{
+    float: right;
+    display: inline-block;
+    min-width: 120px;
+    padding: 8px;
+    color: #50d050;
+    border: 2px solid #50d050;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    margin-bottom: 10px;
+
+}
+
+.addNew:hover{
+    color: #fff;
+    background-color: #50d050
+}
+
+.addNew.close{
+    color: #f87676;
+    border: 2px solid #f87676;
+}
+
+.addNew.close:hover{
+    color: #fff;
+    background-color: #f87676
+}
+
 .delete{ /* Submit button */
     background-color: #f87676;
 }
@@ -442,28 +486,6 @@ form .row:last-of-type{
     font-size: 12px;
     padding-bottom: 15px;
     padding-top: 15px;
-}
-
-.addButton{
-    text-decoration: none;
-    float: right;
-    color: #E5E5E5;
-    font-size: 24px;
-    padding-bottom: 15px;
-    padding-top: 25px;
-}
-
-.addButton.left{
-    
-    float: left;
-    padding-left: 0;
-
-}
-.addButton.right{
-    
-    float: right;
-    padding-right: 0;
-
 }
 
 @media (max-width: 554px) {
