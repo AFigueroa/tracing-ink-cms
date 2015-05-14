@@ -1,21 +1,21 @@
 .side-nav{
     -webkit-transition-property:webkit-transform;
-    -webkit-transition-duration: 1s;
+    -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function:ease;
     -webkit-transition-delay:0s;
     
     -moz-transition-property:moz-transform;
-    -moz-transition-duration:1s;
+    -moz-transition-duration:0.5s;
     -moz-transition-timing-function:ease;
     -moz-transition-delay:0s;
     
     -o-transition-property:o-transform;
-    -o-transition-duration:1s;
+    -o-transition-duration:0.5s;
     -o-transition-timing-function:ease;
     -o-transition-delay:0s;
     
     transition-property:transform;
-    transition-duration:1s;
+    transition-duration:0.5s;
     transition-timing-function:ease;
     transition-delay:0s;
 
@@ -32,22 +32,22 @@
 
 .views-section{
     -webkit-transition-property:webkit-transform;
-    -webkit-transition-duration: 1s;
+    -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function:ease;
     -webkit-transition-delay:0s;
     
     -moz-transition-property:moz-transform;
-    -moz-transition-duration:1s;
+    -moz-transition-duration:0.5s;
     -moz-transition-timing-function:ease;
     -moz-transition-delay:0s;
     
     -o-transition-property:o-transform;
-    -o-transition-duration:1s;
+    -o-transition-duration:0.5s;
     -o-transition-timing-function:ease;
     -o-transition-delay:0s;
     
     transition-property:transform;
-    transition-duration:1s;
+    transition-duration:0.5s;
     transition-timing-function:ease;
     transition-delay:0s;
 

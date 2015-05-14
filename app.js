@@ -426,33 +426,27 @@ app.post('/api/getTasks', function (req, res) {
 });
 
 // Get A Project's Tasks
-app.post('/api/getMyTask', function (req, res) {
-
-    var taskId = "";
-    
-    if (req.param("taskId")){
-        taskId = req.param("taskId");
-        
-    }
+app.post('/api/getMyTasks', function (req, res) {
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        
+        var tasks = req.param("tasks");
         var cName = req.param("cName");
         var active = 1;
         
-        db.tasks.findOne({_id : taskId, active : active, completed : false}, function(err, task){
             
-            // Check if there was any errors
-            if (!err && task){
+        db.tasks.find({_id : {$in: tasks}, active : active, completed : false}, function(err, myTasks){
 
-                res.send(task);
+            // Check if there was any errors
+            if (!err && myTasks){
+
+                res.send(myTasks);
 
             }
 
         });
-        
+              
     }else{
         
         // User is either not logged in or is not an admin
@@ -1231,6 +1225,7 @@ app.post('/api/addTask', function (req, res) {
         var members=req.param('members');
         var creator=req.param('creator');
         var projectId=req.param('projectId');
+        var projectName=req.param('projectName');
         var taskId = uid.v4(); // Task Id
         var dueTime=req.param('dueTime');
         var dueDate=req.param('due');
@@ -1317,6 +1312,7 @@ app.post('/api/addTask', function (req, res) {
         var task = {
             _id : taskId,
             projectId: projectId,
+            projectName: projectName,
             name : name,
             cName : cName,
             description : description,
@@ -1856,6 +1852,6 @@ process.on('uncaughtException', function (err) {
           Activate Server
 =================================*/
 
-httpServer.listen(80, function() {
+httpServer.listen(3000, function() {
   console.log('Express server listening on port 3000');
 });

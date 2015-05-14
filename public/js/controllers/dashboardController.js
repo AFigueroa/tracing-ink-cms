@@ -52,35 +52,31 @@ function($scope, $rootScope, $location, $http){
 
             }
 
-            var thisTask = {}
-            var myTask = [];
             
-            for (var i = 0; i <= $rootScope.user.myTasks.length - 1; i++){
+            var myTasks = {};
+            
+            if($rootScope.user.myTasks){
+                
+                console.log($rootScope.user.myTasks);
                 
                 // Get the tasks associated to this user.
-                thisTask = {
-                    cName : $rootScope.user.cName,   
-                    taskId : $rootScope.user.myTasks[i]
+                myTasks = {
+                    tasks : $rootScope.user.myTasks,   
+                    cName : $rootScope.user.cName
 
                 };
-                
+
                 // Request the Tasks based on the projectId selected
-                myTask = $http.post("/api/getMyTask", thisTask).then(function(task){
+                myTask = $http.post("/api/getMyTasks", myTasks).then(function(tasks){
 
-                    task = task.data;
+                    tasks = tasks.data;
 
-                    //console.log("One Task: ",task);
+                    $rootScope.myTasks = tasks;
 
-                    return task;
-                    
-                    
-                    
                 });
                 
-                console.log(myTask.$$state.value);
-                
             } 
-        
+                           
         });
          
     }else{

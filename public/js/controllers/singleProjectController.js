@@ -77,7 +77,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
                 
                 project = project.data;
                 $rootScope.project = project;
-                //$rootScope.tasks = project.tasks;
+
                 $rootScope.projectMembers = project.members;
                                 
             });
@@ -145,6 +145,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
             // Task object is within scope
             $scope.task.cName = $scope.user.cName;
             $scope.task.projectId = $scope.project._id;
+            $scope.task.projectName = $scope.project.name;
             
             $scope.task.creator = {
                 _id: $scope.user._id,

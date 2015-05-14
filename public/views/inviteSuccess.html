@@ -1,6 +1,6 @@
 <div class="row">
     
-    <h1 id="login-logo">{{user.cName}}'s Team</h1>
+    <h1 id="login-logo" class="pushDown">{{user.cName}}'s Team</h1>
     
 </div>
 
@@ -8,14 +8,14 @@
     
     <div class="panel">
         
-        <div class="panel-head">An invite has been sent.</div>
+        <div class="panel-head">Success!</div>
         
         <div class="panel-body">
             
-            <p>An email invite has been sent to {{member.email}}</p>
+            <p>An email invite has been sent to {{thisMember}}</p>
             
             
-            <a href="/#/team">Ok</a>
+            <a href="/#/team"><button class="submit">Ok</button></a>
             
         </div>
     </div>

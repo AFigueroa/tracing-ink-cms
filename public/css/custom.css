@@ -208,8 +208,9 @@ body{
 }
 
 .panel.completed .panel-body{
-    border: 1px rgba(242, 240, 240, .50);
-    background-color: transparent;
+    border: 1px rgba(253, 249, 249, 0.75);
+    background-color: rgba(253, 249, 249, 0.25);
+    color: #6d6d6d;
 }
 
 .clear-panel{

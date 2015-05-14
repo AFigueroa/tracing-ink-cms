@@ -5,10 +5,16 @@
 	=====================================
 -->	
 
-<div class="row">
+<div class="row pushDown">
     
     <h1 id="login-logo">Welcome {{user.fname}}</h1>
     
+</div>
+
+<div class="row addButtonRow">
+
+    <a class="addButton left">Active Tasks:</a>
+
 </div>
 
 <div class="row">
@@ -16,8 +22,10 @@
     <div class="panel panel-dropdown" ng-repeat="task in myTasks | filter: {completed: false}" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main cluttered">{{task.name}}</p>
-            <p class="panel-main cluttered secondary">{{task.members.length}} Members</p>
+            <p class="panel-main halved cluttered">{{task.name}}</p>
+            <p class="panel-main halved right">{{task.dueDate.month}} / {{task.dueDate.day}} / {{task.dueDate.year}}</p>
+            <p class="panel-main cluttered secondary left">{{task.projectName}}</p>
+            <p class="panel-main cluttered secondary right">{{task.dueDate.hour}}:{{task.dueDate.minute}} {{task.dueDate.hourFormat}}</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">
@@ -34,6 +42,8 @@
                 </button>
             </div>
             
+            <br>
+            
             <div class="row">
                 <a ng-href="/#/editTask/{{project._id}}/{{task._id}}"><button type="submit" class="edit" >
                     Edit
@@ -45,6 +55,34 @@
                     Delete
                 </button>
             </div>
+            
+        </div>
+
+
+    </div>
+    
+    
+    <div class="panel panel-dropdown" ng-if = "!myTasks.length" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main ">No tasks yet</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <p>
+                    Please visit projects section to add a proejct and tasks for your team.
+                </p>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="submit">
+                    New Project
+                </button>
+            </div>
+            
+            <br>
             
         </div>
 

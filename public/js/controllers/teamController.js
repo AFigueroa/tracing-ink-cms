@@ -119,6 +119,7 @@ function($scope, $rootScope, $location, $http){
                         }else{
                             
                             // Member was invited successfully
+                            $rootScope.thisMember = member.data.email;
 
                             // Redirect to the Invite Success
                             $location.path('/inviteSuccess');
