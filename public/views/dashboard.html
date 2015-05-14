@@ -37,23 +37,12 @@
             </div>
             
             <div class="row">
-                <button type="submit" class="submit"  ng-click="completeTask(task._id)">
-                    Complete
-                </button>
-            </div>
-            
-            <br>
-            
-            <div class="row">
-                <a ng-href="/#/editTask/{{project._id}}/{{task._id}}"><button type="submit" class="edit" >
-                    Edit
-                </button></a>
-            </div>
-            
-            <div class="row">
-                <button type="submit" class="delete"  ng-click="deleteTask(task._id)">
-                    Delete
-                </button>
+                
+                <a ng-href="#/project/{{task.projectId}}" class="project-link">
+                    <button type="submit" class="submit">
+                        Visit Project
+                    </button>
+                </a>
             </div>
             
         </div>
