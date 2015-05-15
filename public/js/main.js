@@ -42,7 +42,7 @@ app.run(function($http, $rootScope){
             
             if($rootScope.user.myTasks){
                 
-                console.log($rootScope.user.myTasks);
+                //console.log($rootScope.user.myTasks);
                 
                 // Get the tasks associated to this user.
                 myTasks = {

@@ -261,6 +261,59 @@ app.post('/api/getTeam', function (req, res) {
     }
 });
 
+// Get Project Members
+app.post('/api/getMembers', function (req, res) {
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("members")) {
+        
+        var members = req.param("members");
+        
+        
+        var active = 1;
+        
+        db.users.find({_id : {$in: members}}, function (err, members) {
+            
+            // Check if there was any errors
+            if (!err){
+                
+                var sanitizedMembers = [],
+                    thisMember = {};    
+                
+                // For each member, sanitize the data
+                for (var i = 0; i <= members.length - 1; i++) {
+                
+                    thisMember.fname = members[i].fname;
+                    thisMember.lname = members[i].lname;
+                    thisMember.type = members[i].type;
+                    thisMember._id = members[i]._id;
+                    thisMember.cName = members[i].cName;
+                    thisMember.phone = members[i].phone;
+                    thisMember.email = members[i].email;
+                    
+                    sanitizedMembers.push(thisMember);
+                }
+                
+                // Send the members data to the front-end
+                res.send(sanitizedMembers);
+
+            }else{
+                // Query errors found
+                
+                res.send(false);
+
+            }
+
+        });
+
+    }else{
+        
+        // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
 // Get Projects
 app.post('/api/getProjects', function (req, res) {
 // This route will get the clients data from the database IF the user is a master admin
@@ -1127,6 +1180,8 @@ app.post('/api/addProject', function (req, res) {
         var dueDate=req.param('dueDate');
         var dueTime=req.param('dueTime');
         
+        console.log(members);
+        
         if(dueDate){
             
             dueDate = dueDate.split("-").map(function (val) { return val; });
@@ -1169,8 +1224,7 @@ app.post('/api/addProject', function (req, res) {
                 if(date.hour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
                 if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
                 if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
-                
-                console.log(date);
+
                 
             }
             
@@ -1289,7 +1343,6 @@ app.post('/api/addTask', function (req, res) {
                 if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
                 if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
                 
-                console.log(date);
                 
             }
             
@@ -1377,9 +1430,6 @@ app.post('/api/updateTask', function (req, res) {
                 var oldMembers = thisTask.members;
 
                 // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
-                console.log("Old Members List: ", oldMembers);
-                console.log("New Members List: ", members);
-                console.log("");
                 
                 // Initiate an array of member that exist in both lists.
                 var toBeKept = [];
@@ -1451,9 +1501,6 @@ app.post('/api/updateTask', function (req, res) {
                 // Update the toBeAdded array with the clean array
                 toBeAdded = cleanedToBeAdded;
                 
-                console.log("To be Removed: ", toBeRemoved);
-                console.log("To be Added: ", toBeAdded);
-                
                 // If toBeRemoved is not empty
                 if(toBeRemoved.length != 0){
                     
@@ -1518,8 +1565,6 @@ app.post('/api/updateTask', function (req, res) {
                 var thisHour = dueTime[0]; 
                 date.minute = dueTime[1]; 
                 
-                console.log("This hours: ", thisHour);
-                
                 if(thisHour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
                 if(thisHour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
                 if(thisHour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
@@ -1544,9 +1589,6 @@ app.post('/api/updateTask', function (req, res) {
                 if(thisHour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
                 if(thisHour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
                 if(thisHour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
-                
-                console.log("Date hour: ", date.hour);
-                
                 
             }
             
@@ -1600,25 +1642,25 @@ app.post('/api/deleteTask', function (req, res) {
             res.send(false);
 
         }
+//        
+//        db.users.find( { }, { myTasks : { $elemMatch : { _id : taskId }}}, function(users){
+//            
+//            console.log(users);
+//            
+//            res.send(true); 
+//        });
         
-        db.users.find( { }, { myTasks : { $elemMatch : { _id : taskId }}}, function(users){
-            
-            console.log(users);
-            
-            res.send(true); 
-        });
-        
-//        db.tasks.update({_id:taskId}, { $set:{
-//                active:0
-//            }}, function(task, err){
-//
-//                if(!err){
-//                    res.send(true);    
-//                }else{
-//                    console.log(err);
-//                }
-//            }
-//        );            
+        db.tasks.update({_id:taskId}, { $set:{
+                active:0
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );            
         
     }
 });

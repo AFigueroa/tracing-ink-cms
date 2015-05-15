@@ -101,25 +101,36 @@ function($scope, $rootScope, $location, $http){
                 
             }
             
-            $scope.project.members.push($scope.user._id);     
+            $scope.project.members.push($scope.user._id);
             
-            // Send a request to the server to add a Client
-            $http.post("/api/addProject", $scope.project).then(function(project){
+            var members = {
+                members : $scope.project.members
+            };
+            
+            // Get the data for all the selected team members
+            $http.post("/api/getMembers", members).then(function(members){
+                
+                // Load the team members within the front-end scope
+                $scope.project.members = members.data;
+                    
+                // Send a request to the server to add a Client
+                $http.post("/api/addProject", $scope.project).then(function(project){
     
+                    if (project.data){
+
+                        $scope.project = null;
+                        $location.path("/projects");
+
+                    }else{
+
+                        console.log("Something went wrong");
+
+                    }
                 
-                if (project.data){
-                    
-                    console.log(project.data);
-                    $scope.project = null;
-                    $location.path("/projects");
-                    
-                }else{
-                
-                    console.log("Something went wrong");
-                    
-                }
-                
+                });
+                 
             });
+        
         }
     }
 }]);

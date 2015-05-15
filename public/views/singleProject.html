@@ -32,6 +32,33 @@
 
 </div>
 
+<div class="row" ng-if="!activeTask">
+
+    <div class="panel panel-dropdown" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main ">No active tasks</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+            
+            <div class="row">
+                
+                <a ng-href="/#/newTask/{{project._id}}"><button type="submit" class="submit">
+                    New Task
+                </button></a>
+            </div>
+            
+            <br>
+            
+        </div>
+
+
+    </div>
+    
+</div>
+
+
 <div class="row pushDown">
 
     <div class="panel panel-dropdown" ng-repeat="task in tasks | filter: {completed: false}" >
@@ -78,7 +105,7 @@
 
 </div>
 
-<div class="row addButtonRow">
+<div class="row addButtonRow" ng-if="completedTask">
 
     
     <a class="page-header">Completed Tasks:</a>

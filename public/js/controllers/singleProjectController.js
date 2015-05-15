@@ -43,12 +43,11 @@ function($scope, $rootScope, $location, $http, $routeParams){
                     taskId : taskId
                 };
                 
-                // Request the project based on the projectId selected
+                
                 $http.post("/api/getTask", task).then(function(task){
 
                     task = task.data;
                     task.due = new Date(task.dueDate.year, task.dueDate.month - 1, task.dueDate.day);
-                    console.log(task.dueDate);
                     
                     if(task.dueDate.hour && task.dueDate.minute){
                         
@@ -82,8 +81,8 @@ function($scope, $rootScope, $location, $http, $routeParams){
                                 
             });
             
-            // Create the Project object 
-            var project = {
+            // Re-create the Project object 
+            project = {
                 cName : cName,
                 projectId : projectId
             };
@@ -92,32 +91,32 @@ function($scope, $rootScope, $location, $http, $routeParams){
             $http.post("/api/getTasks", project).then(function(tasks){
                 
                 tasks = tasks.data;
+                
+                // Store the task's data within scope
                 $rootScope.tasks = tasks;
-                                
-            });
-            
-            // Reformat Company name to query for all team members
-            cName = {cName:user.data.cName};
-            
-            // Request the team data
-            $http.post("/api/getTeam", cName).then(function(members){
                 
-                if (members.data){
-                    // Members found
-                    
-                    // Load the team members within the front-end scope
-                    $rootScope.teamMembers = members.data;
+                // Set false as the deafult value for if there is a completed task
+                $rootScope.completedTask = false;
+                $rootScope.activeTask = false;
 
-                }else{
-                    // No members found
-                    
-                    // Set teamMembers as an empty array
-                    $rootScope.teamMembers = [];
-                    
-                };
+                // For each task count all that are completed. If there are completed stop and scope.completed is true
+                for (i = 0; i <= tasks.length - 1; i++) {
+
+                    if (tasks[i].completed === true && tasks[i].active === 1) {
+
+                        // A completed task has been found
+                        $rootScope.completedTask = true;
+
+                    }else if (tasks[i].completed === false && tasks[i].active === 1) {
+
+                        // An active task has been found
+                        $rootScope.activeTask = true;
+                    }
+
+                }
+                            
                 
-            });
-            
+            });         
             
             // Store the data within the $rootScope
             $rootScope.user = user.data;
@@ -165,7 +164,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
     
                 
                 if (task.data){
-                    console.log(task.data);
+
                     $scope.task = null;
                     $location.path("/project/"+$scope.project._id);
                     
@@ -185,11 +184,45 @@ function($scope, $rootScope, $location, $http, $routeParams){
         // Check if the form was succesfully submitted
         if ($scope.task) {
                         
-            console.log($scope.task.dueTime);
             // Send a request to the server to update a Task
             $http.post("/api/updatetask", $scope.task).then(function(task){
     
                 if (task.data){
+                    
+                    // Create the Project object 
+                    var project = {
+                        cName : $scope.user.cName,
+                        projectId : $scope.project._id
+                    };
+
+                    // Request the Tasks based on the projectId selected
+                    $http.post("/api/getTasks", project).then(function(tasks){
+
+                        tasks = tasks.data;
+                        $rootScope.tasks = tasks;
+
+                        // Set false as the deafult value for if there is a completed task
+                        $rootScope.completedTask = false;
+                        $rootScope.activeTask = false;
+
+                        // For each task count all that are completed. If there are completed stop and scope.completed is true
+                        for (i = 0; i <= tasks.length - 1; i++) {
+
+                            if (tasks[i].completed === true && tasks[i].active === 1) {
+
+                                // A completed task has been found
+                                $rootScope.completedTask = true;
+
+                            }else if (tasks[i].completed === false && tasks[i].active === 1) {
+
+                                // An active task has been found
+                                $rootScope.activeTask = true;
+                            }
+
+                        }
+
+                    });
+                    
                     $scope.task = null;
                     $location.path("/project/"+$scope.project._id);
                     
@@ -232,10 +265,29 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
                     tasks = tasks.data;
                     $rootScope.tasks = tasks;
+                    
+                    // Set false as the deafult value for if there is a completed task
+                    $rootScope.completedTask = false;
+                    $rootScope.activeTask = false;
+
+                    // For each task count all that are completed. If there are completed stop and scope.completed is true
+                    for (i = 0; i <= tasks.length - 1; i++) {
+
+                        if (tasks[i].completed === true && tasks[i].active === 1) {
+
+                            // A completed task has been found
+                            $rootScope.completedTask = true;
+
+                        }else if (tasks[i].completed === false && tasks[i].active === 1) {
+
+                            // An active task has been found
+                            $rootScope.activeTask = true;
+                        }
+
+                    }
 
                 });
                 
-                console.log(res.data);
                 $location.path("/project/"+$scope.project._id);
 
             }else{
@@ -277,6 +329,26 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
                     tasks = tasks.data;
                     $rootScope.tasks = tasks;
+                    
+                    // Set false as the deafult value for if there is a completed task
+                    $rootScope.completedTask = false;
+                    $rootScope.activeTask = false;
+
+                    // For each task count all that are completed. If there are completed stop and scope.completed is true
+                    for (i = 0; i <= tasks.length - 1; i++) {
+
+                        if (tasks[i].completed === true && tasks[i].active === 1) {
+
+                            // A completed task has been found
+                            $rootScope.completedTask = true;
+
+                        }else if (tasks[i].completed === false && tasks[i].active === 1) {
+
+                            // An active task has been found
+                            $rootScope.activeTask = true;
+                        }
+
+                    }
 
                 });
                 
@@ -321,6 +393,26 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
                     tasks = tasks.data;
                     $rootScope.tasks = tasks;
+                    
+                    // Set false as the deafult value for if there is a completed task
+                    $rootScope.completedTask = false;
+                    $rootScope.activeTask = false;
+
+                    // For each task count all that are completed. If there are completed stop and scope.completed is true
+                    for (i = 0; i <= tasks.length - 1; i++) {
+
+                        if (tasks[i].completed === true && tasks[i].active === 1) {
+
+                            // A completed task has been found
+                            $rootScope.completedTask = true;
+
+                        }else if (tasks[i].completed === false && tasks[i].active === 1) {
+
+                            // An active task has been found
+                            $rootScope.activeTask = true;
+                        }
+
+                    }
 
                 });
                 
