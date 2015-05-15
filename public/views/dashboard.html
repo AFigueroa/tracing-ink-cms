@@ -54,21 +54,21 @@
     <div class="panel panel-dropdown" ng-if = "!myTasks.length" >
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main ">No tasks yet</p>
+            <p class="panel-main ">No tasks have been created yet</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">
        
             <div class="row">
                 <p>
-                    Please visit projects section to add a proejct and tasks for your team.
+                    Please visit projects section to add a project and assign tasks for your team.
                 </p>
             </div>
             
             <div class="row">
-                <button type="submit" class="submit">
-                    New Project
-                </button>
+                <a href="#/projects"><button type="submit" class="submit">
+                    My Projects
+                </button></a>
             </div>
             
             <br>

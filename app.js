@@ -71,8 +71,8 @@ app.post('/api/login', function (req, res) {
 // This routes logs the user in using a email and password submission    
 
     // Gather the values of the submission
-    var email = req.param('email'),
-        pass = req.param('pass');
+    var email = req.param('email');
+    var pass = req.param('pass');
     
     // Look in the users collection for a match in email and get the users data.
     db.users.findOne({email: email}, function (err, user) {
@@ -87,8 +87,8 @@ app.post('/api/login', function (req, res) {
             // A user was found
             
             // Encrypt the passwords
-            pass = encrypt(pass);
-            pass = String(pass);
+            pass= encrypt(pass);
+            pass= String(pass);
 
             // Compare the encrypted passwords
             if (user.pass === pass) {
@@ -96,7 +96,7 @@ app.post('/api/login', function (req, res) {
                 // Passwords match
                 
                 // Create Session to know the system the user is logged in
-                req.session.logged = 1;
+                req.session.logged = 1; 
                 
                 // Create a session for the Users privilege level 
                 req.session.userType = user.type;
@@ -154,7 +154,7 @@ app.get('/api/authCheck', function (req, res) {
         // Logged On
         res.send(true);
 
-    } else {
+    }else{
         
         // Logged Off
         res.send(false);
@@ -170,12 +170,12 @@ app.get('/api/getUser', function (req, res) {
     if (req.session.user && req.session.logged === 1) {
         
         // Store the user session data in a local variable
-        var user = req.session.user;
+        user = req.session.user;
         
         // Send the user data to the front-end
         res.send(user);
 
-    } else {
+    }else{
         
         // The user is logged off or there is corrupted data
         res.send(false);
@@ -194,17 +194,17 @@ app.get('/api/getClients', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.clients.find({active : active}, function (err, clients) {
+        db.clients.find({active:active}, function(err, clients){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                 
                 // Send the clients data to the front-end
                 res.send(clients);
 
-            } else {
+            }else{
                 // Query errors found
                 
                 res.send(false);
@@ -213,7 +213,7 @@ app.get('/api/getClients', function (req, res) {
 
         });
 
-    } else {
+    }else{
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -223,39 +223,39 @@ app.get('/api/getClients', function (req, res) {
 
 // Get Team Members
 app.post('/api/getTeam', function (req, res) {
-// This route will get the team members associated to a given company name string
+// This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        // The user is logged on
+        var cName = req.param("cName");
         
-        var cName = req.param("cName"),
-            active = 1;
+        // The user is a master admin and is logged on
+        var active = 1;
         
-        // Find a client with the same company name
-        db.clients.findOne({active : active, cName : cName}, function (err, clients) {
+        // Look in the Database and find all Active clients
+        db.clients.findOne({active:active, cName:cName}, function(err, clients){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                 
-                // Send the team members data to the front-end
+                // Send the clients data to the front-end
                 res.send(clients.members);
 
-            } else {
-                
+            }else{
                 // Query errors found
+                
                 res.send(false);
 
             }
 
         });
 
-    } else {
+    }else{
         
-        // User is either not logged in or there is no cName
+        // User is either not logged in or is not an admin
         res.send(false);
         
     }
@@ -263,39 +263,39 @@ app.post('/api/getTeam', function (req, res) {
 
 // Get Projects
 app.post('/api/getProjects', function (req, res) {
-// This route will get all projects associated to a given company name string
+// This route will get the clients data from the database IF the user is a master admin
     
-    // Check if the user is logged on and a submission has been made
+    // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        // The user is logged on
+        var cName = req.param("cName");
         
-        var cName = req.param("cName"),
-            active = 1;
+        // The user is a master admin and is logged on
+        var active = 1;
         
-        // Look in the Database and find all active projects
-        db.projects.find({active : active, cName : cName}, function (err, projects) {
+        // Look in the Database and find all Active clients
+        db.projects.find({active:active, cName:cName}, function(err, projects){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                 
-                // Send the projects data to the front-end
+                // Send the clients data to the front-end
                 res.send(projects);
 
-            } else {
-                
+            }else{
                 // Query errors found
+                
                 res.send(false);
 
             }
 
         });
 
-    } else {
+    }else{
         
-        // User is either not logged in or no submission
+        // User is either not logged in or is not an admin
         res.send(false);
         
     }
@@ -304,32 +304,29 @@ app.post('/api/getProjects', function (req, res) {
 
 // Get Single Project
 app.post('/api/getProject', function (req, res) {
-// This route will get a single project given a company name string and a project id string
+// This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        // The user is logged on
+        var cName = req.param("cName");
+        var projectId = req.param("projectId");
         
-        var cName = req.param("cName"),
-            projectId = req.param("projectId"),
-            active = 1;
+        // The user is a master admin and is logged on
+        var active = 1;
         
-        
-        
-        // Look in the Database and find a project with this same id, company name and is active
-        db.projects.findOne({active : active, cName : cName, _id : projectId}, function (err, project) {
+        // Look in the Database and find all Active clients
+        db.projects.findOne({active:active, cName:cName, _id:projectId}, function(err, project){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                 
-                // Send the project's data to the front-end
+                // Send the clients data to the front-end
                 res.send(project);
 
-            } else {
-                
+            }else{
                 // Query errors found
                 res.send(false);
 
@@ -337,9 +334,9 @@ app.post('/api/getProject', function (req, res) {
 
         });
 
-    } else {
+    }else{
         
-        // User is either not logged in or no submission
+        // User is either not logged in or is not an admin
         res.send(false);
         
     }
@@ -349,23 +346,23 @@ app.post('/api/getProject', function (req, res) {
 
 // Get Single Task
 app.post('/api/getTask', function (req, res) {
-// This route will get a single task given a project id string, a task id string and a company name
+// This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName") && req.param("taskId") && req.param("projectId")) {
         
-        // The user is logged on
+        var cName = req.param("cName");
+        var taskId = req.param("taskId");
+        var projectId = req.param("projectId");
         
-        var cName = req.param("cName"),
-            taskId = req.param("taskId"),
-            projectId = req.param("projectId"),
-            active = 1;
+        // The user is a master admin and is logged on
+        var active = 1;
         
-        // Look in the Database and find a task that matches the criteria
-        db.tasks.findOne({active : active, cName : cName, projectId : projectId, _id : taskId}, function (err, task) {
+        // Look in the Database and find all Active clients
+        db.tasks.findOne({active:active, cName:cName, projectId:projectId, _id: taskId}, function(err, task){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                                 
@@ -373,8 +370,7 @@ app.post('/api/getTask', function (req, res) {
                 res.send(task);
                         
 
-            } else {
-                
+            }else{
                 // Query errors found
                 res.send(false);
 
@@ -382,7 +378,7 @@ app.post('/api/getTask', function (req, res) {
 
         });
 
-    } else {
+    }else{
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -392,30 +388,28 @@ app.post('/api/getTask', function (req, res) {
 
 // Get A Project's Tasks
 app.post('/api/getTasks', function (req, res) {
-// This route will get all tasks associated to a project given the company name's string and the project id string
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        // The user is logged on
+        var cName = req.param("cName");
+        var projectId = req.param("projectId");
         
-        var cName = req.param("cName"),
-            projectId = req.param("projectId"),
-            active = 1;
-    
-        // Look in the Database and find all Active tasks from a project with this id
-        db.tasks.find({active : active, cName : cName, projectId : projectId}, function (err, tasks) {
+        // The user is a master admin and is logged on
+        var active = 1;
+        
+        // Look in the Database and find all Active clients
+        db.tasks.find({active:active, cName:cName, projectId:projectId}, function(err, tasks){
             
             // Check if there was any errors
-            if (!err) {
+            if (!err){
                 
                 // No errors
                 
                 // Send the Tasks data to the front-end
                 res.send(tasks);
 
-            } else {
-                
+            }else{
                 // Query errors found
                 res.send(false);
 
@@ -423,9 +417,9 @@ app.post('/api/getTasks', function (req, res) {
 
         });
 
-    } else {
+    }else{
         
-        // User is either not logged in or no submission
+        // User is either not logged in or is not an admin
         res.send(false);
         
     }
@@ -433,40 +427,37 @@ app.post('/api/getTasks', function (req, res) {
 
 // Get A Project's Tasks
 app.post('/api/getMyTasks', function (req, res) {
-// This route gets all the task data associated to a single user
     
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        var tasks = req.param("tasks"),
-            cName = req.param("cName"),
-            active = 1,
-            i = 0,
-            taskIds = [];  // Create an array of just the ids of every element in tasks
+        var tasks = req.param("tasks");
+        var cName = req.param("cName");
+        var active = 1;
         
-        // For each task push it's id to an empty array
-        for (i = 0; i <= tasks.length - 1; i++) {
+        // Create an array of just the ids of every element in tasks
+        var taskIds = [];
+        
+        for (var i = 0; i <= tasks.length - 1; i++){
             
-            taskIds.push(tasks[i]._id);  
+            taskIds.push(tasks[i]._id);    
         
         }
             
-        // Find multiple tasks whose ids are in the taskIds array
-        db.tasks.find({_id : {$in: taskIds}, active : active, completed : false}, function (err, myTasks) {
+        db.tasks.find({_id : {$in: taskIds}, active : active, completed : false}, function(err, myTasks){
 
             // Check if there was any errors
-            if (!err && myTasks) {
+            if (!err && myTasks){
 
-                // Set the tasks data to the front-end
                 res.send(myTasks);
 
             }
 
         });
               
-    } else {
+    }else{
         
-        // User is either not logged in or bad submission
+        // User is either not logged in or is not an admin
         res.send(false);
         
     }
@@ -483,7 +474,7 @@ app.post('/api/getMessages', function (req, res) {
 
         res.send(contacts);
         
-    } else {
+    }else{
         res.send(false);
     }
     
@@ -498,33 +489,32 @@ app.post('/api/decryptManager', function (req, res) {
     // Clear all session variables
     req.session.logged = 0;
     req.session.userId = null;
+    
     req.session = null;
     
     // Verify if both keys are present
-    if (req.param('cName') && req.param('inviteId')) {
+    if(req.param('cName') && req.param('inviteId')){
         
         // Decrypt the submissions and store them in local variables
-        var cName = decrypt(req.param('cName')),
-            inviteId = decrypt(req.param('inviteId'));
+        var cName = decrypt(req.param('cName'));
+        var inviteId = decrypt(req.param('inviteId'));
         
         // Confirm invite Id is in the database.
-        db.invites.findOne({_id : inviteId}, function (err, invite) {
-                
-            if (!invite) {
+        db.invites.findOne({_id: inviteId}, function (err, invite) {
+                if(!invite){
                   
-                // No member invites
-                res.send(false);
-
-            } else {
-
-                // Send the invite's data to the front-end
-                res.send(invite);
-
-            }
+                        // No member invites
+                        res.send(false);
+                
+                }else{
+                    
+                    // Send the invite's data to the front-end
+                    res.send(invite);
+                
+                }
+          });
         
-        });
-        
-    } else {
+    }else{
         
         // Submission is missing a key
         res.send(false);
@@ -541,33 +531,32 @@ app.post('/api/decryptMember', function (req, res) {
     // Clear all session variables
     req.session.logged = 0;
     req.session.userId = null;
+    
     req.session = null;
     
     // Verify if both keys are present
-    if (req.param('cName') && req.param('inviteId')) {
+    if(req.param('cName') && req.param('inviteId')){
         
         // Decrypt the submissions and store them in local variables
-        var cName = decrypt(req.param('cName')),
-            inviteId = decrypt(req.param('inviteId'));
+        var cName = decrypt(req.param('cName'));
+        var inviteId = decrypt(req.param('inviteId'));
         
         // Confirm invite Id is in the database.
-        db.memberInvites.findOne({_id : inviteId}, function (err, invite) {
-                
-            if (!invite) {
+        db.memberInvites.findOne({_id: inviteId}, function (err, invite) {
+                if(!invite){
                     
-                // Submission is missing a key
-                res.send(false);
-
-            } else {
-
-                // Send the invite's data to the front-end
-                res.send(invite);
-
-            }
-            
-        });
+                    // Submission is missing a key
+                    res.send(false);
+                
+                }else{
+                    
+                    // Send the invite's data to the front-end
+                    res.send(invite);
+                
+                }
+          });
         
-    } else {
+    }else{
         
         // Submission is missing a key
         res.send(false);
@@ -577,29 +566,26 @@ app.post('/api/decryptMember', function (req, res) {
 
 // Add Manager Route
 app.post('/api/addManager', function (req, res) {
-// This route will add a user type manager to the users collection
     
     // Get all the values from the submission
-    var cName = req.param('cName'),
-        fname = req.param('fname'),
-        lname = req.param('lname'),
-        email = req.param('email'),
-        phone = req.param('phone'),
-        inviteId = req.param('inviteId'),
-        invitedBy = req.param('invitedBy'),
-        invitedByEmail = req.param('invitedByEmail'),
-        pass = req.param('pass'),
-        repass = req.param('repass'),
-        id = uid.v4(), // Create Manager Id
-        manager = {};
-    
+    var cName= req.param('cName');
+    var fname= req.param('fname');
+    var lname= req.param('lname');
+    var email= req.param('email');
+    var phone= req.param('phone');
+    var inviteId= req.param('inviteId');
+    var invitedBy= req.param('invitedBy');
+    var invitedByEmail= req.param('invitedByEmail');
+    var pass= req.param('pass');
+    var repass= req.param('repass');
+    var id = uid.v4(); // Create Manager Id
+
     // Check if any field is missing
-    if (cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone) {
+    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
         
         // Found all fields
        
-        // Check if passwords match
-        if (pass === repass) {
+        if(pass === repass){
                         
             // Passwords match
             
@@ -607,76 +593,74 @@ app.post('/api/addManager', function (req, res) {
             pass = encrypt(pass);
 
             // Create a Manager object with the data submitted
-            manager = {
-                _id : id,
-                type : 2,
-                fname : fname,
-                lname : lname,
-                cName : cName,
-                pass : pass,
-                email : email,
-                phone : phone,
-                invitedBy : invitedBy,
-                invitedByEmail : invitedByEmail
+            var manager = {
+                _id:id,
+                type:2,
+                fname:fname,
+                lname:lname,
+                cName:cName,
+                pass:pass,
+                email:email,
+                phone:phone,
+                invitedBy:invitedBy,
+                invitedByEmail:invitedByEmail
             };
 
             // Check if theres an active invite with the same Id
-            db.invites.find({_id : inviteId, active : 1}, function (err, invite) {
+            db.invites.find({_id:inviteId, active:1}, function(err, invite){
                 
-                if (!err) {
+                if(!err){
                     
-                    // Check if an active invite exists
-                    if (invite) {
+                    if(invite){
 
                         // An active invite has been found
                         
                         // Check if email is taken
-                        db.users.findOne({email : email}, function (err, user) {
+                        db.users.findOne({email:email}, function(err, user){
                         
-                            if (!err) {
-                                
+                            if (!err){
                                 // No Errors
-                                if(!user) {
+                                if(!user){
                                     
                                     // No user found with the same email
                                     
                                     // Add the manager data to the database
-                                    db.users.save(manager, function (err, user) {
+                                    db.users.save(manager, function(err, user){
 
-                                        if (!err) {
+                                        if(!err){
 
                                             // Check if theres an active invite with the same Id
-                                            db.invites.update({_id : inviteId, active : 1},{$set : {active : 0}}, function (err, invite) {
+                                            db.invites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
 
-                                                if (!err) {
+                                                if(!err){
 
-                                                    if (invite) {
+                                                    if(invite){
 
                                                         // Invite Successfully deleted
 
                                                         // Sanitize the manager data to send to the front-end
 
                                                         manager = {
-                                                            _id : id,
-                                                            type : 2,
-                                                            fname : fname,
-                                                            lname : lname,
-                                                            cName : cName,
-                                                            email : email,
-                                                            phone : phone
+                                                            _id:id,
+                                                            type:2,
+                                                            fname:fname,
+                                                            lname:lname,
+                                                            cName:cName,
+                                                            email:email,
+                                                            phone:phone
                                                         };
 
                                                         // Check if theres an active invite with the same Id
-                                                        db.clients.update({cName : cName, active : 1}, {$push : {members  : manager}}, function (err, member) {
+                                                        db.clients.update({cName:cName, active:1},{$push:{members:manager}}, function(err, member){
 
                                                             // Check if errors
-                                                            if (!err) {
+                                                            if(!err){
 
                                                                 // Check if succesfull
-                                                                if (member) {
+                                                                if(member){
 
                                                                     // Create Session to know the system the user is logged in
-                                                                    req.session.logged = 1;
+                                                                    req.session.logged = 1; 
 
                                                                     // Create a session for the Users privilege level 
                                                                     req.session.userType = manager.type;
@@ -685,15 +669,15 @@ app.post('/api/addManager', function (req, res) {
                                                                     // Send the manager data to the front-end
                                                                     res.send(manager);
 
-                                                                } else {
-                            
+                                                                }else{
+                                                                    console.log("Member not added");
                                                                     // Member not added
                                                                     res.send(false);
 
                                                                 }
 
-                                                            } else {
-                                                                
+                                                            }else{
+                                                                console.log("An error ocurred with the DB");
                                                                 // An error occurred
                                                                 res.send(false);
 
@@ -703,23 +687,23 @@ app.post('/api/addManager', function (req, res) {
 
 
 
-                                                    } else {
-
+                                                    }else{
+                                                        console.log("No active invite found");
                                                         // No active invite found
                                                         res.send(false);
 
-                                                    }
+                                                    }   
 
-                                                } else {
-
+                                                }else{
+                                                    console.log("An error ocurred with the DB");
                                                     // An error ocurred with the DB
                                                     res.send(false);
                                                 }
 
                                             });
 
-                                        } else {
-
+                                        }else{
+                                            console.log("An error ocurred with the DB");
                                             // An error ocurred with the DB
                                             res.send(false);
 
@@ -727,15 +711,15 @@ app.post('/api/addManager', function (req, res) {
 
                                     });
                             
-                                } else {
-
+                                }else{
+                                    console.log("An user has been found with that email");
                                     // An user has been found with that email
                                     res.send(false);
 
                                 }
                             
-                            } else {
-
+                            }else{
+                                console.log("An error ocurred with the DB");
                                 // An error ocurred with the DB
                                 res.send(false);
                                 
@@ -743,15 +727,15 @@ app.post('/api/addManager', function (req, res) {
                             
                         });
 
-                    } else {
-
+                    }else{
+                        console.log("No active invite found");
                         // No active invite found
                         res.send(false);
 
-                    }
+                    }   
                     
-                } else {
-
+                }else{
+                    console.log("An error ocurred with the DB");
                     // An error ocurred with the DB
                     res.send(false);
                 }
@@ -759,45 +743,42 @@ app.post('/api/addManager', function (req, res) {
                 
             });
             
-        } else {
+        }else{
             
             // Passwords don't match
             res.send(false);
         }
         
-    } else {
+    }else{
         
         // There where fields missing
-        res.send(false);
+        res.send(false);   
     
-    }
+    }  
 });
 
 // Add Member Route
 app.post('/api/addMember', function (req, res) {
-// This route will register a user type member to the user's collection if an active invite is found    
     
     // Get all the values from the submission
-    var cName = req.param('cName'),
-        fname = req.param('fname'),
-        lname = req.param('lname'),
-        email = req.param('email'),
-        phone = req.param('phone'),
-        inviteId = req.param('inviteId'),
-        invitedBy = req.param('invitedBy'),
-        invitedByEmail = req.param('invitedByEmail'),
-        pass = req.param('pass'),
-        repass = req.param('repass'),
-        id = uid.v4(), // Create Manager Id
-        manager = {};
-    
+    var cName= req.param('cName');
+    var fname= req.param('fname');
+    var lname= req.param('lname');
+    var email= req.param('email');
+    var phone= req.param('phone');
+    var inviteId= req.param('inviteId');
+    var invitedBy= req.param('invitedBy');
+    var invitedByEmail= req.param('invitedByEmail');
+    var pass= req.param('pass');
+    var repass= req.param('repass');
+    var id = uid.v4(); // Create Manager Id
+
     // Check if any field is missing
-    if (cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone) {
+    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
         
         // Found all fields
        
-        // Check if passwords match
-        if (pass === repass) {
+        if(pass === repass){
                         
             // Passwords match
             
@@ -805,74 +786,74 @@ app.post('/api/addMember', function (req, res) {
             pass = encrypt(pass);
 
             // Create a Manager object with the data submitted
-            manager = {
-                _id : id,
-                type : 3,
-                fname : fname,
-                lname : lname,
-                cName : cName,
-                pass : pass,
-                email : email,
-                phone : phone,
-                invitedBy : invitedBy,
-                invitedByEmail : invitedByEmail
+            var manager = {
+                _id:id,
+                type:3,
+                fname:fname,
+                lname:lname,
+                cName:cName,
+                pass:pass,
+                email:email,
+                phone:phone,
+                invitedBy:invitedBy,
+                invitedByEmail:invitedByEmail
             };
             
             // Check if theres an active invite with the same Id
-            db.memberInvites.find({_id : inviteId, active : 1}, function (err, invite) {
+            db.memberInvites.find({_id:inviteId, active:1}, function(err, invite){
                 
-                if (!err) {
+                if(!err){
                     
-                    if (invite) {
+                    if(invite){
                         
                         // An active invite has been found
                         
                         // Check if email is taken
-                        db.users.findOne({email : email}, function (err, user) {
+                        db.users.findOne({email:email}, function(err, user){
                         
-                            if (!err) {
+                            if (!err){
                                 // No Errors
-                                if (!user) {
+                                if(!user){
                                     
                                     // No user found with the same email
                                     
                                     // Add the manager data to the database
-                                    db.users.save(manager, function (err, user) {
+                                    db.users.save(manager, function(err, user){
 
-                                        if (!err) {
+                                        if(!err){
 
                                             // Check if theres an active invite with the same Id
-                                            db.memberInvites.update({_id : inviteId, active : 1}, {$set : {active : 0}}, function (err, invite) {
+                                            db.memberInvites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
 
-                                                if (!err) {
+                                                if(!err){
 
-                                                    if (invite) {
+                                                    if(invite){
 
                                                         // Invite Successfully deleted
 
                                                         // Sanitize the manager data to send to the front-end
 
                                                         manager = {
-                                                            _id : id,
-                                                            type : 3,
-                                                            fname : fname,
-                                                            lname : lname,
-                                                            cName : cName,
-                                                            email : email,
-                                                            phone : phone
+                                                            _id:id,
+                                                            type:3,
+                                                            fname:fname,
+                                                            lname:lname,
+                                                            cName:cName,
+                                                            email:email,
+                                                            phone:phone
                                                         };
 
                                                         // Check if theres an active invite with the same Id
-                                                        db.clients.update({cName : cName, active : 1}, {$push : {members : manager}}, function (err, member) {
+                                                        db.clients.update({cName:cName, active:1},{$push:{members:manager}}, function(err, member){
 
                                                             // Check if errors
-                                                            if (!err) {
+                                                            if(!err){
 
                                                                 // Check if succesfull
-                                                                if (member) {
- 
+                                                                if(member){
+
                                                                     // Create Session to know the system the user is logged in
-                                                                    req.session.logged = 1;
+                                                                    req.session.logged = 1; 
 
                                                                     // Create a session for the Users privilege level 
                                                                     req.session.userType = manager.type;
@@ -881,15 +862,15 @@ app.post('/api/addMember', function (req, res) {
                                                                     // Send the manager data to the front-end
                                                                     res.send(manager);
 
-                                                                } else {
-
+                                                                }else{
+                                                                    console.log("Member not added");
                                                                     // Member not added
                                                                     res.send(false);
 
                                                                 }
 
-                                                            } else {
-
+                                                            }else{
+                                                                console.log("An error ocurred with the DB");
                                                                 // An error occurred
                                                                 res.send(false);
 
@@ -899,23 +880,23 @@ app.post('/api/addMember', function (req, res) {
 
 
 
-                                                    } else {
-
+                                                    }else{
+                                                        console.log("No active invite found");
                                                         // No active invite found
                                                         res.send(false);
 
-                                                    }
+                                                    }   
 
-                                                } else {
-
+                                                }else{
+                                                    console.log("An error ocurred with the DB");
                                                     // An error ocurred with the DB
                                                     res.send(false);
                                                 }
 
                                             });
 
-                                        } else {
-
+                                        }else{
+                                            console.log("An error ocurred with the DB");
                                             // An error ocurred with the DB
                                             res.send(false);
 
@@ -923,15 +904,15 @@ app.post('/api/addMember', function (req, res) {
 
                                     });
                             
-                                } else {
-
+                                }else{
+                                    console.log("An error ocurred with the DB");
                                     // An user has been found with that email
                                     res.send(false);
 
                                 }
                             
-                            } else {
-
+                            }else{
+                                console.log("An error ocurred with the DB");
                                 // An error ocurred with the DB
                                 res.send(false);
                                 
@@ -939,36 +920,34 @@ app.post('/api/addMember', function (req, res) {
                             
                         });
 
-                    } else {
+                    }else{
 
                         // No active invite found
                         res.send(false);
 
-                    }
+                    }   
                     
-                } else {
-
+                }else{
+                    console.log("An error ocurred with the DB");
                     // An error ocurred with the DB
                     res.send(false);
-                    
                 }
                 
                 
             });
             
-        } else {
-
+        }else{
+            console.log("Passwords don't match");
             // Passwords don't match
             res.send(false);
-            
         }
         
-    } else {
-
+    }else{
+        console.log("There where fields missing");
         // There where fields missing
-        res.send(false);
+        res.send(false);   
     
-    }
+    }  
 });
 
 // Add Client Route
@@ -982,98 +961,98 @@ app.post('/api/addClient', function (req, res) {
         if (req.session.user) {
             
             // Store the user data
-            var user = req.session.user,
-                email = req.param('email'),
-                cName = req.param('cName');
+            user = req.session.user;
 
+            // Store the form submission values
+            var email=req.param('email');
+            var cName=req.param('cName');
+            
             // Check if either field was left empty
-            if (email === "" || cName === "") {
+            if( email == "" || cName == ""){
                 
                 // One form value was left empty
                 res.send(false);
                 
-            } else {
+            }else{
                 
                 // All fields were submitted
                 
                 // Query the database to see if there is already a Client if the name submitted
-                db.clients.findOne({cName : cName}, function (err, client) {
+                db.clients.findOne({cName: cName}, function(err, client){
                     
                     // Check if there were errors
-                    if (!err) {
+                    if (!err){
                         
                         // No errors
                         
                         // Check if a Client was found or not
-                        if (!client) {
+                        if (!client){
                             
                             // Query the database to see if there is already a Client if the name submitted
-                            db.users.findOne({email : email}, function (err, oldUser) {
+                            db.users.findOne({email: email}, function(err, oldUser){
 
                                 // Check if there were errors
-                                if (!err) {
+                                if (!err){
 
                                     // No errors
 
                                     // Check if a Client was found or not
-                                    if (!oldUser) {
+                                    if (!oldUser){
                                         
                                         // No client found nor was the email already in use
                             
                                         // Create the values for the new Client from the data available so far
-                                        var id = uid.v4(),
-                                            inviteId = uid.v4(),
-                                            invitedBy =  user.fname + " " + user.lname,
-                                            invitedByEmail =  user.email,
-                                            now = new time.Date(),
-                                            client = {},
-                                            invite = {},
-                                            
-                                            // Email's Body
-                                            emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://tracingink.com/#/addManager/' + encrypt(cName) + '/' + encrypt(inviteId),
-                                            
-                                            // Email Object
-                                            myMsg = new Email({
-                                                from : "afigueroa@tracingink.com",
-                                                to : email,
-                                                subject : "Tracing Ink: Registration Invite",
-                                                body : emailMsg
-                                            });
-                                        
-                                        // Timestamp 
+                                        var id = uid.v4(); // Client Id
+                                        var inviteId = uid.v4();  // Invite Id
+                                        var invitedBy =  user.fname+" "+user.lname; 
+                                        var invitedByEmail =  user.email;
+
+                                        // Timestamp
+                                        var now = new time.Date(); 
                                         now = now.setTimezone("America/New_York");
                                         now = now.toString();
 
+                                        // Email Body to be sent as Invite
+                                        var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:80/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
+
+                                        // Create the new Email Object
+                                        var myMsg = new Email({
+                                            from: "afigueroa@tracingink.com",
+                                            to:   email,
+                                            subject: "Tracing Ink: Registration Invite",
+                                            body: emailMsg
+                                        });
+
                                         // Create a Client object to store in the database
-                                        client = {
-                                            _id : id,
-                                            cName : cName,
-                                            dateCreated : now,
-                                            active : 1
+                                        var client = {        
+                                            _id: id,                     
+                                            cName: cName,
+                                            dateCreated: now,
+                                            active: 1
                                         };
 
                                         // Save the new Client data in to the database
                                         db.clients.save(client);
 
                                         // Create a Invite object to store in the database
-                                        invite = {
-                                            _id : inviteId,
-                                            cName : cName,
-                                            dateCreated : now,
-                                            active : 1,
-                                            email : email,
-                                            invitedBy : invitedBy,
-                                            invitedByEmail : invitedByEmail
+                                        var invite = {
+                                            _id: inviteId,
+                                            cName: cName,
+                                            dateCreated: now,
+                                            active: 1,
+                                            email: email,
+                                            invitedBy: invitedBy,
+                                            invitedByEmail: invitedByEmail
                                         };
 
                                         // Save the new Invite data in to the database  
                                         db.invites.save(invite);
 
                                         // Send the invite Email
-                                        myMsg.send(function (err) {
+                                        myMsg.send(function(err){
 
                                             // Check if there where any errors
-                                            if (err) {
+                                            if(err){
 
                                                 // Errors found
 
@@ -1087,14 +1066,13 @@ app.post('/api/addClient', function (req, res) {
                                         // Respond to the front-end with a Success message
                                         res.send(true);
                                         
-                                    } else {
+                                    }else{
                                         
                                         // A user was found cannot invite another
                                         res.send(false);
                                         
                                     }
-                                    
-                                } else {
+                                }else{
                                     
                                     // Query errors found
                                     res.send(false);
@@ -1102,30 +1080,28 @@ app.post('/api/addClient', function (req, res) {
                                 }
                             });
                             
-                        } else {
+                        }else {
                             
                             // Query errors found
                             res.send(false);
 
                         }
 
-                    } else {
+                    }else{
                         
                         // A Client was found. Client Name must be unique
                         res.send(false);
                         
-                    }
+                    } 
                 });
             }
-            
-        } else {
+        }else{
             
             // No user data was found
             res.send(false);
             
         }
-        
-    } else {
+    }else{
         
         // The user is either not logged on or is not an master admin
         res.send(false);
@@ -1135,107 +1111,86 @@ app.post('/api/addClient', function (req, res) {
 
 // Add Project Route
 app.post('/api/addProject', function (req, res) {
-// This route will add a project associated to a company name
+// This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
     
+
         // Store the form submission values
-        var projectId = uid.v4(),
-            name = req.param('name'),
-            description = req.param('description'),
-            cName = req.param('cName'),
-            members = req.param('members'),
-            manager = req.param('manager'),
-            dueDate = req.param('dueDate'),
-            dueTime = req.param('dueTime'),
-            date = {},
-            project = {},
-            getDay = 0;
+        var projectId = uid.v4(); // Project Id
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var manager=req.param('manager');
+        var dueDate=req.param('dueDate');
+        var dueTime=req.param('dueTime');
         
-        // Check if a dueDate was submitted
-        if (dueDate) {
+        if(dueDate){
             
-            // Format the date data
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
             
-            // Split on "-"
-            dueDate = dueDate.split("-").map(function (val) {return val; });
-            
-            // Split on "T"
-            getDay = dueDate[2].split("T").map(function (val) {return val; });
-        
-            // Store the remaining data
+            var date = {};
             date.year = dueDate[0];
             date.month = dueDate[1];
             date.day = getDay[0];
             
-            // Check if there's a time submission
-            if (dueTime) {
-                
-                // Split on "T"
-                dueTime = dueTime.split("T").map(function (val) {return val; });
-                
-                // Split on ":"
-                dueTime = dueTime[1].split(":").map(function (val) {return val; });
-
-                // Store the remaining data
-                date.hour = dueTime[0];
-                date.minute = dueTime[1];
-                
-                // Format the time data based on the submission
-                if (date.hour === 0) {date.hour = 7; date.militaryHour = 19; date.hourFormat = "PM"; }
-                if (date.hour === 1) {date.hour = 8; date.militaryHour = 20; date.hourFormat = "PM"; }
-                if (date.hour === 2) {date.hour = 9; date.militaryHour = 21; date.hourFormat = "PM"; }
-                if (date.hour === 3) {date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM"; }
-                if (date.hour === 4) {date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM"; }
-                if (date.hour === 5) {date.hour = 12; date.militaryHour = 0; date.hourFormat = "AM"; }
-                if (date.hour === 6) {date.hour = 1; date.militaryHour = 1; date.hourFormat = "AM"; }
-                if (date.hour === 7) {date.hour = 2; date.militaryHour = 2; date.hourFormat = "AM"; }
-                if (date.hour === 8) {date.hour = 3; date.militaryHour = 3; date.hourFormat = "AM"; }
-                if (date.hour === 9) {date.hour = 4; date.militaryHour = 4; date.hourFormat = "AM"; }
-                if (date.hour === 10) {date.hour = 5; date.militaryHour = 5; date.hourFormat = "AM"; }
-                if (date.hour === 11) {date.hour = 6; date.militaryHour = 6; date.hourFormat = "AM"; }
-                if (date.hour === 12) {date.hour = 7; date.militaryHour = 7; date.hourFormat = "AM"; }
-                if (date.hour === 13) {date.hour = 8; date.militaryHour = 8; date.hourFormat = "AM"; }
-                if (date.hour === 14) {date.hour = 9; date.militaryHour = 9; date.hourFormat = "AM"; }
-                if (date.hour === 15) {date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM"; }
-                if (date.hour === 16) {date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM"; }
-                if (date.hour === 17) {date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM"; }
-                if (date.hour === 18) {date.hour = 1; date.militaryHour = 13; date.hourFormat = "PM"; }
-                if (date.hour === 19) {date.hour = 2; date.militaryHour = 14; date.hourFormat = "PM"; }
-                if (date.hour === 20) {date.hour = 3; date.militaryHour = 15; date.hourFormat = "PM"; }
-                if (date.hour === 21) {date.hour = 4; date.militaryHour = 16; date.hourFormat = "PM"; }
-                if (date.hour === 22) {date.hour = 5; date.militaryHour = 17; date.hourFormat = "PM"; }
-                if (date.hour === 23) {date.hour = 6; date.militaryHour = 18; date.hourFormat = "PM"; }
-              
-            }else{
-                
-                // No due time submission
-                dueTime = null;
+            if(dueTime){
             
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
+
+                date.hour = dueTime[0]; 
+                date.minute = dueTime[1]; 
+                
+                if(date.hour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
+                
+                console.log(date);
+                
             }
             
-            // Store the formatted data as the new dueDate data
             dueDate = date;
 
-        } else {
+        }else{
         
-            // No due date submission
-            dueDate = null;
             dueTime = null;
             
         }
         
         // Check if either field was left empty
-        if (name === "" || description === "" || cName === "") {
+        if( name == "" || description == "" || cName == ""){
 
             // One form value was left empty
             res.send(false);
 
         }
         
-        // Prepare a final object for insert
-        project = {
+        var project = {
             _id : projectId,
             name : name,
             cName : cName,
@@ -1247,14 +1202,10 @@ app.post('/api/addProject', function (req, res) {
             completed : false
         };
         
-        // Insert into projects collection
-        db.projects.insert(project, function (project, err) {
+        db.projects.insert(project, function(project){
             
-            if (project && !err) {
-                
-                // Succesful insert
-                res.send(true);
-                
+            if(project){
+                res.send(true);    
             }
 
         });
@@ -1270,132 +1221,108 @@ app.post('/api/addProject', function (req, res) {
 
 // Add Project Route
 app.post('/api/addTask', function (req, res) {
-// This route will add a task associated to a project
+// This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
         
         // Store the form submission values
-        var name=req.param('name'),
-            description=req.param('description'),
-            cName=req.param('cName'),
-            members=req.param('members'),
-            creator=req.param('creator'),
-            projectId=req.param('projectId'),
-            projectName=req.param('projectName'),
-            taskId = uid.v4(),
-            dueTime=req.param('dueTime'),
-            dueDate=req.param('due'),
-            getDay = 0,
-            i = 0,
-            date = {},
-            task = {};
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var creator=req.param('creator');
+        var projectId=req.param('projectId');
+        var projectName=req.param('projectName');
+        var taskId = uid.v4(); // Task Id
+        var dueTime=req.param('dueTime');
+        var dueDate=req.param('due');
 
-        // Check if any field was left empty
-        if (name == "" || description == "" || cName == "") {
+        // Check if either field was left empty
+        if( name == "" || description == "" || cName == ""){
 
             // One form value was left empty
             res.send(false);
 
         }
         
-        // Check if there's a due date submission
-        if (dueDate) {
+         if(dueDate){
             
-            // Split on "-"
-            dueDate = dueDate.split("-").map(function (val) {return val;});
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
             
-            // Split on "T"
-            getDay = dueDate[2].split("T").map(function (val) {return val;});
-            
-            // Store the remaining data
+            var date = {};
             date.year = dueDate[0];
             date.month = dueDate[1];
             date.day = getDay[0];
             
-            // Check if there's a due time submission
-            if (dueTime) {
+            if(dueTime){
             
-                // Split on "T"
-                dueTime = dueTime.split("T").map(function (val) {return val;});
-                
-                // Split on ":"
-                dueTime = dueTime[1].split(":").map(function (val) {return val;});
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
 
-                // Get the remaining data
                 date.hour = dueTime[0]; 
-                date.minute = dueTime[1];
+                date.minute = dueTime[1]; 
                 
-                // Format the hour based on the value received 
-                if (date.hour === 0) {date.hour = 7; date.militaryHour = 19; date.hourFormat = "PM"; }
-                if (date.hour === 1) {date.hour = 8; date.militaryHour = 20; date.hourFormat = "PM"; }
-                if (date.hour === 2) {date.hour = 9; date.militaryHour = 21; date.hourFormat = "PM"; }
-                if (date.hour === 3) {date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM"; }
-                if (date.hour === 4) {date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM"; }
-                if (date.hour === 5) {date.hour = 12; date.militaryHour = 0; date.hourFormat = "AM"; }
-                if (date.hour === 6) {date.hour = 1; date.militaryHour = 1; date.hourFormat = "AM"; }
-                if (date.hour === 7) {date.hour = 2; date.militaryHour = 2; date.hourFormat = "AM"; }
-                if (date.hour === 8) {date.hour = 3; date.militaryHour = 3; date.hourFormat = "AM"; }
-                if (date.hour === 9) {date.hour = 4; date.militaryHour = 4; date.hourFormat = "AM"; }
-                if (date.hour === 10) {date.hour = 5; date.militaryHour = 5; date.hourFormat = "AM"; }
-                if (date.hour === 11) {date.hour = 6; date.militaryHour = 6; date.hourFormat = "AM"; }
-                if (date.hour === 12) {date.hour = 7; date.militaryHour = 7; date.hourFormat = "AM"; }
-                if (date.hour === 13) {date.hour = 8; date.militaryHour = 8; date.hourFormat = "AM"; }
-                if (date.hour === 14) {date.hour = 9; date.militaryHour = 9; date.hourFormat = "AM"; }
-                if (date.hour === 15) {date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM"; }
-                if (date.hour === 16) {date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM"; }
-                if (date.hour === 17) {date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM"; }
-                if (date.hour === 18) {date.hour = 1; date.militaryHour = 13; date.hourFormat = "PM"; }
-                if (date.hour === 19) {date.hour = 2; date.militaryHour = 14; date.hourFormat = "PM"; }
-                if (date.hour === 20) {date.hour = 3; date.militaryHour = 15; date.hourFormat = "PM"; }
-                if (date.hour === 21) {date.hour = 4; date.militaryHour = 16; date.hourFormat = "PM"; }
-                if (date.hour === 22) {date.hour = 5; date.militaryHour = 17; date.hourFormat = "PM"; }
-                if (date.hour === 23) {date.hour = 6; date.militaryHour = 18; date.hourFormat = "PM"; }
+                if(date.hour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(date.hour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(date.hour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(date.hour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(date.hour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(date.hour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(date.hour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(date.hour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(date.hour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(date.hour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(date.hour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(date.hour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(date.hour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(date.hour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(date.hour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(date.hour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(date.hour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(date.hour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(date.hour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(date.hour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(date.hour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(date.hour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(date.hour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(date.hour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
                 
-            }else{
-            
-                // No dueTime submission
-                dueTime = null;
+                console.log(date);
                 
             }
             
-            // Store the final data
             dueDate = date;
 
-        } else {
+        }else{
         
-            // No due date submission
-            dueDate = null;
             dueTime = null;
             
         }
         
-        // Prepare a taskId object to store on each selected member's myTask
-        task = {
-            _id : taskId
-        };
-        
         // For each member add the task Id to myTasks
-        for (i = 0; i <= members.length - 1; i++) {
+        for(var i = 0; i <= members.length - 1; i++){
+        
+            task = {
+                _id: taskId
+            };
             
-            // Update each user to add the new task to their myTask list
-            db.users.update({_id : members[i]}, {$push : {myTasks : task}}, function (task, err) {
+            db.users.update({_id : members[i]}, {$push : {myTasks: task}} ,function(task, err){
                 
-                if (err) {
+                if(err){
                     
-                    // An error occurred
                     res.send(false);
                 }
             
             });
-    
+            
         }
         
-        // Prepare a new task object to store in the database
-        task = {
+        var task = {
             _id : taskId,
-            projectId : projectId,
-            projectName : projectName,
+            projectId: projectId,
+            projectName: projectName,
             name : name,
             cName : cName,
             description : description,
@@ -1406,70 +1333,74 @@ app.post('/api/addTask', function (req, res) {
             active : 1
         };
         
-        // Insert the task data to tasks collection
-        db.tasks.insert(task, function (task, err) {
+        db.tasks.insert(task, function(task, err){
             
-            if (!err) {
-                
-                // No errors
-                res.send(true); 
-                
-            } else {
-                
-                // An error occurred
-                res.send(false); 
-                
+            if(!err){
+                res.send(true);    
+            }else{
+                console.log(err);
             }
 
-        });    
-    
+        });
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
     }
-    
 });
 
 // Update Task Route
 app.post('/api/updateTask', function (req, res) {
-// This route will update a specific task based on a given task id and new task data
+// This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
         
         // Store the form submission values
-        var name=req.param('name'),
-            description=req.param('description'),
-            cName=req.param('cName'),
-            members=req.param('members'),
-            creator=req.param('creator'),
-            dueDate=req.param('due'),
-            dueTime=req.param('dueTime'),
-            projectId=req.param('projectId'),
-            taskId = req.param('_id'),
-            i = 0,
-            n = 0,
-            thisHour = 0,
-            newMyTask = {},
-            date = {},
-            toBeAdded = members,
-            oldMembers = [],
-            toBeRemoved = [],
-            toBeKept = [],
-            cleanedToBeAdded = [];
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var creator=req.param('creator');
+        var dueDate=req.param('due');
+        var dueTime=req.param('dueTime');
+        var projectId=req.param('projectId');
+        var taskId = req.param('_id'); // Task Id
 
         // Get the values of the old members.
-        db.tasks.findOne({_id : taskId}, function (err, thisTask) {
-            if (!err && thisTask) {
+        db.tasks.findOne({_id : taskId}, function(err, thisTask){
+            if (!err && thisTask){
                 
                 // Get the old members
-                oldMembers = thisTask.members;
-                                
+                var oldMembers = thisTask.members;
+
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                console.log("Old Members List: ", oldMembers);
+                console.log("New Members List: ", members);
+                console.log("");
+                
+                // Initiate an array of member that exist in both lists.
+                var toBeKept = [];
+                
+                // Initiate a to be removed array of member Ids
+                var toBeRemoved = [];
+                
+                // Initiate for those members that didn't exists before in array. We will copy the new members and remove from it any that are to be kept or removed, leaving an array of only the new members to be added.
+                var toBeAdded = members;
+                
+                
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                
                 // For each old member, determine which members are to be removed
-                for (i = 0; i <= oldMembers.length - 1; i++) {
+                for (var i = 0; i <= oldMembers.length - 1; i++){
                     
                     // On this iteration of oldMembers loop over new members to verify if the values exist.
-                    for (n = 0; n <= members.length - 1; n++) {
+                    for (var n = 0; n <= members.length - 1; n++ ){
                     
                         // Check if values are identical
-                        if (oldMembers[i] == members[n]) {
+                        if(oldMembers[i] == members[n]){
                         
                             // Member exists in both arrays, no need to update this one
                             toBeKept.push(oldMembers[i]);
@@ -1480,12 +1411,12 @@ app.post('/api/updateTask', function (req, res) {
                             // No need to keep looping, we know that the value is to be kept.
                             break;
                             
-                        } else {
+                        }else{
                         
                             // Ids dont match
                             
                             // Check if it's the last value
-                            if (n == members.length - 1) {
+                            if(n == members.length - 1){
                                 
                                 // Value for oldMembers[i] not present in new array
                                 toBeRemoved.push(oldMembers[i]);
@@ -1501,14 +1432,17 @@ app.post('/api/updateTask', function (req, res) {
                 
                 }
                 
+                // Initiate an array to store the non-false values of the toBeAdded array
+                var cleanedToBeAdded = [];
+                
                 // Loop over the toBeAdded array
-                for (i = 0; i <= toBeAdded.length - 1; i++) {
+                for (var e = 0; e <= toBeAdded.length - 1; e++){
                     
                     // Verify if this value is false
-                    if (toBeAdded[i] != false) {
+                    if(toBeAdded[e] != false){
                         
                         // The value is not false, push it to the cleaned array
-                        cleanedToBeAdded.push(toBeAdded[i]);
+                        cleanedToBeAdded.push(toBeAdded[e]);
                     
                     }
                 
@@ -1517,11 +1451,14 @@ app.post('/api/updateTask', function (req, res) {
                 // Update the toBeAdded array with the clean array
                 toBeAdded = cleanedToBeAdded;
                 
+                console.log("To be Removed: ", toBeRemoved);
+                console.log("To be Added: ", toBeAdded);
+                
                 // If toBeRemoved is not empty
-                if (toBeRemoved.length != 0) {
+                if(toBeRemoved.length != 0){
                     
                     // For all users in the toBeRemoved list. Remove this taskId from myTasks.
-                    for (i = 0; i <= toBeRemoved.length - 1; i++) {
+                    for (i = 0; i <= toBeRemoved.length - 1; i++){
                         
                         db.users.update({_id : toBeRemoved[i]}, {$pull : {myTasks : {_id : taskId }}});
                         
@@ -1531,13 +1468,11 @@ app.post('/api/updateTask', function (req, res) {
                 
                 // If toBeRemoved is not empty
                 if(toBeAdded.length != 0){
-                    
-                    newMyTask = {
+                    var newMyTask = {
                         _id : taskId
                     };
-                    
                     // For all users in the toBeAdded list. Remove this taskId from myTasks.
-                    for (i = 0; i <= toBeAdded.length - 1; i++) {
+                    for (i = 0; i <= toBeAdded.length - 1; i++){
                         
                         db.users.update({_id : toBeAdded[i]}, {$push : {myTasks : newMyTask}});
                         
@@ -1545,7 +1480,7 @@ app.post('/api/updateTask', function (req, res) {
                     
                 }
                             
-            } else {
+            }else{
             
                 // Something went wrong
                 res.send(false);
@@ -1553,152 +1488,104 @@ app.post('/api/updateTask', function (req, res) {
             }
             
         });
-         
+        
+        
+        
+        
         // Check if either field was left empty
-        if (name == "" || description == "" || cName == "") {
+        if( name == "" || description == "" || cName == ""){
 
             // One form value was left empty
             res.send(false);
 
         }
         
-        // Check if a due date was submitted
-        if (dueDate) {
+        if(dueDate){
             
-            // Split on "-"
-            dueDate = dueDate.split("-").map(function (val) {return val;});
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
             
-            // Split on "T"
-            var getDay = dueDate[2].split("T").map(function (val) {return val;});
-            
-            // Store the remaining data
+            var date = {};
             date.year = dueDate[0];
             date.month = dueDate[1];
             date.day = getDay[0];
             
-            // Check if a due time was selected
-            if (dueTime) {
+            if(dueTime){
             
-                // Split on "T"
-                dueTime = dueTime.split("T").map(function (val) {return val;});
-                
-                // Split on ":"
-                dueTime = dueTime[1].split(":").map(function (val) {return val;});
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
 
-                // Get the remaining data
-                thisHour = dueTime[0]; 
+                var thisHour = dueTime[0]; 
                 date.minute = dueTime[1]; 
                 
-                // Format the hour based on the submission
-                if (thisHour === 0) {date.hour = 7; date.militaryHour = 19; date.hourFormat = "PM"; }
-                if (thisHour === 1) {date.hour = 8; date.militaryHour = 20; date.hourFormat = "PM"; }
-                if (thisHour === 2) {date.hour = 9; date.militaryHour = 21; date.hourFormat = "PM"; }
-                if (thisHour === 3) {date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM"; }
-                if (thisHour === 4) {date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM"; }
-                if (thisHour === 5) {date.hour = 12; date.militaryHour = 0; date.hourFormat = "AM"; }
-                if (thisHour === 6) {date.hour = 1; date.militaryHour = 1; date.hourFormat = "AM"; }
-                if (thisHour === 7) {date.hour = 2; date.militaryHour = 2; date.hourFormat = "AM"; }
-                if (thisHour === 8) {date.hour = 3; date.militaryHour = 3; date.hourFormat = "AM"; }
-                if (thisHour === 9) {date.hour = 4; date.militaryHour = 4; date.hourFormat = "AM"; }
-                if (thisHour === 10) {date.hour = 5; date.militaryHour = 5; date.hourFormat = "AM"; }
-                if (thisHour === 11) {date.hour = 6; date.militaryHour = 6; date.hourFormat = "AM"; }
-                if (thisHour === 12) {date.hour = 7; date.militaryHour = 7; date.hourFormat = "AM"; }
-                if (thisHour === 13) {date.hour = 8; date.militaryHour = 8; date.hourFormat = "AM"; }
-                if (thisHour === 14) {date.hour = 9; date.militaryHour = 9; date.hourFormat = "AM"; }
-                if (thisHour === 15) {date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM"; }
-                if (thisHour === 16) {date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM"; }
-                if (thisHour === 17) {date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM"; }
-                if (thisHour === 18) {date.hour = 1; date.militaryHour = 13; date.hourFormat = "PM"; }
-                if (thisHour === 19) {date.hour = 2; date.militaryHour = 14; date.hourFormat = "PM"; }
-                if (thisHour === 20) {date.hour = 3; date.militaryHour = 15; date.hourFormat = "PM"; }
-                if (thisHour === 21) {date.hour = 4; date.militaryHour = 16; date.hourFormat = "PM"; }
-                if (thisHour === 22) {date.hour = 5; date.militaryHour = 17; date.hourFormat = "PM"; }
-                if (thisHour === 23) {date.hour = 6; date.militaryHour = 18; date.hourFormat = "PM"; }
-
-            }else{
-            
-                // No due time submitted
-                dueTime = null;
+                console.log("This hours: ", thisHour);
+                
+                if(thisHour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(thisHour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(thisHour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(thisHour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(thisHour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(thisHour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(thisHour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(thisHour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(thisHour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(thisHour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(thisHour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(thisHour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(thisHour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(thisHour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(thisHour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(thisHour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(thisHour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(thisHour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(thisHour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(thisHour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(thisHour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(thisHour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(thisHour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(thisHour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
+                
+                console.log("Date hour: ", date.hour);
+                
                 
             }
             
-            // Store the final data
             dueDate = date;
 
-        } else {
+        }else{
         
-            // No due date submitted
             dueTime = null;
-            dueDate = null;
             
         }
         
         
-        // Update the existing task with the new data
-        db.tasks.update({_id : taskId}, { $set : {
-                name : name,
-                description : description,
-                members : members,
-                dueDate : dueDate
-        }}, function (task, err) {
+        db.tasks.update({_id:taskId}, { $set:{
+                name:name,
+                description:description,
+                members:members,
+                dueDate:dueDate
+        }}, function(task, err){
 
-            if (!err) {
-                
-                // No errors
-                res.send(true);
-                
-            } else {
-                
-                // An error occurred
-                res.send(false);
-                
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
             }
-        });
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
     }
 });
 
 
 // Update Task Route
 app.post('/api/deleteTask', function (req, res) {
-// This route will delete a task given a task's id
-    
-    // Check if the user is a master admin and is logged on
-    if (req.session.logged === 1) {
-        
-        // Store the form submission values
-        var taskId = req.param('taskId');
-
-        // Check if the task id was left empty
-        if (taskId == "") {
-
-            // One form value was left empty
-            res.send(false);
-
-        }
-        
-        // Update the new task to make active 0
-        db.tasks.update({_id : taskId}, { $set : { active : 0}}, function (task, err) {
-
-            if (!err) {
-                
-                // No errors
-                res.send(true);  
-                
-            } else {
-                
-                // A Mongo error occurred
-                res.send(false);
-                
-            }
-            
-        });            
-    }
-});
-
-
-// Complete Task Route
-app.post('/api/completeTask', function (req, res) {
-// This route will complete a task given a task's id
+// This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
@@ -1706,7 +1593,7 @@ app.post('/api/completeTask', function (req, res) {
         // Store the form submission values
         var taskId=req.param('taskId');
 
-        // Check if task id was left empty
+        // Check if either field was left empty
         if( taskId == ""){
 
             // One form value was left empty
@@ -1714,137 +1601,189 @@ app.post('/api/completeTask', function (req, res) {
 
         }
         
-        // Update the existing task to make completed true
-        db.tasks.update({_id : taskId}, { $set : {completed : true}}, function (task, err) {
-
-            if (!err) {
-
-                // No errors
-                res.send(true);
-
-            } else {
-
-                // A Mongo error occurred
-                res.send(false);
-
-            }
+        db.users.find( { }, { myTasks : { $elemMatch : { _id : taskId }}}, function(users){
             
-        });        
+            console.log(users);
+            
+            res.send(true); 
+        });
+        
+//        db.tasks.update({_id:taskId}, { $set:{
+//                active:0
+//            }}, function(task, err){
+//
+//                if(!err){
+//                    res.send(true);    
+//                }else{
+//                    console.log(err);
+//                }
+//            }
+//        );            
+        
     }
 });
 
-// Activate Completed Task Route
-app.post('/api/activateTask', function (req, res) {
-// This route will activate an existing task given a task's id
+
+// Complete Task Route
+app.post('/api/completeTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
         
         // Store the form submission values
-        var taskId = req.param('taskId');
+        var taskId=req.param('taskId');
 
         // Check if either field was left empty
-        if (taskId === "") {
+        if( taskId == ""){
 
             // One form value was left empty
             res.send(false);
 
         }
         
-        // Update an existing task, make completed false
-        db.tasks.update({_id  : taskId}, { $set : {completed : false}}, function (task, err) {
+        db.tasks.update({_id:taskId}, { $set:{
+                completed:true
+            }}, function(task, err){
 
-            if (!err) {
-                
-                // No errors
-                res.send(true);    
-
-            } else {
-
-                // A Mongo error occurred
-                res.send(false);
-
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
             }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
             
-        });    
+        
+    }
+});
+
+// Activate Completed Task Route
+app.post('/api/activateTask', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var taskId=req.param('taskId');
+
+        // Check if either field was left empty
+        if( taskId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.tasks.update({_id:taskId}, { $set:{
+                completed:false
+            }}, function(task, err){
+
+                if(!err){
+                    res.send(true);    
+                }else{
+                    console.log(err);
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
     }
 });
 
 
 // Invite Member
 app.post('/api/inviteMember', function (req, res) {
-// This route will create an active invite for a team member, associate it with a specific client and send an email with an invite link to the email provided
     
     // Gether the submission values
-    var email = req.param('email'),
-        invitedBy = req.param('invitedBy'),
-        invitedByEmail = req.param('invitedByEmail'),
-        cName = req.param('cName'),
-        inviteId = uid.v4(),
-        now = new time.Date(),
-        invite = {},
-        myMsg = {},
-        emailMsg = "";
+    var email = req.param('email');
+    var invitedBy = req.param('invitedBy');
+    var invitedByEmail = req.param('invitedByEmail');
+    var cName = req.param('cName');
+    var inviteId = uid.v4(); // Invite Id
     
-    // Create a time stamp
+    // Timestamp
+    var now = new time.Date(); 
     now = now.setTimezone("America/New_York");
     now = now.toString();
 
     // Verify if all fields are present
-    if (email && invitedBy && invitedByEmail && cName) {
+    if(email && invitedBy && invitedByEmail && cName){
 
         // Query the database to see if there is already a Client if the name submitted
-        db.users.findOne({email : email}, function (err, user) {
+        db.users.findOne({email: email}, function(err, user){
             
-            if (!err) {
+            if(!err){
                 
-                if (!user) {
+                if(!user){
                     
                     // Create a Invite object to store in the database
-                    invite = {
-                        _id : inviteId,
-                        cName : cName,
-                        dateCreated : now,
-                        active : 1,
-                        email : email,
-                        invitedBy : invitedBy,
-                        invitedByEmail : invitedByEmail
+                    var invite = {
+                        _id: inviteId,
+                        cName: cName,
+                        dateCreated: now,
+                        active: 1,
+                        email: email,
+                        invitedBy: invitedBy,
+                        invitedByEmail: invitedByEmail
                     };
 
                     // Confirm invite Id is in the database.
                     db.memberInvites.save(invite, function (err, invite) {
 
-                        if (!err && invite) {
+                        if(!err){
 
-                            // No errors and invite was saved succesfully
+                            // No errors
 
-                            // Email Body to be sent as Invite
-                            emailMsg = invitedBy + " has invited you to join " + cName + "'s Team at Tracing Ink. Click here to register:  http://tracingink.com/#/addMember/" + encrypt(cName) + "/" + encrypt(inviteId);
+                            if(invite){
 
-                            // Create the new Email Object
-                            myMsg = new Email({
-                                from : "donotreply@tracingink.com",
-                                to :   email,
-                                subject : "Tracing Ink: Registration Invite",
-                                body : emailMsg
-                            });
+                                // Invite saved succesfully
 
-                            // Send the invite Email
-                            myMsg.send(function (err) {
+                                // Email Body to be sent as Invite
+                                var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://localhost:80/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
 
-                                if (err) {
+                                // Create the new Email Object
+                                var myMsg = new Email({
+                                    from: "donotreply@tracingink.com",
+                                    to:   email,
+                                    subject: "Tracing Ink: Registration Invite",
+                                    body: emailMsg
+                                });
 
-                                    // Message not sent!
-                                    res.send(false);
+                                // Send the invite Email
+                                myMsg.send(function(err){
 
-                                }
+                                    // Check if there where any errors
+                                    if(err){
 
-                            });
+                                        // Errors found
 
-                            // Send the invite's data to the front-end
-                            res.send(invite);    
+                                        // Send error to the front-end
+                                        res.send(err);
 
-                        } else {
+                                    }
+
+                                });
+
+                                // Send the invite's data to the front-end
+                                res.send(invite);    
+
+                            }else{
+
+                                // Invite not sent
+                                res.send(false);
+
+                            }
+                        }else{
 
                             // Error happened
                             res.send(false);
@@ -1852,13 +1791,13 @@ app.post('/api/inviteMember', function (req, res) {
                         }
                     });
             
-                } else {
+                }else{
 
                     // An existing user has beend found
                     res.send(false);
                 }
             
-            } else {
+            }else{
                 
                 // Error happened
                 res.send(false);
@@ -1867,7 +1806,7 @@ app.post('/api/inviteMember', function (req, res) {
         
         });
         
-    } else {
+    }else{
         
         // Submission is missing a key
         res.send(false);
@@ -1880,12 +1819,14 @@ app.post('/api/inviteMember', function (req, res) {
 =================================*/
 
 // Server's Encrypt Method
-function encrypt(text) {
+function encrypt(text){
 // Uses Node JS's built-in encryption system, Crypto, to encrypt the data supplied
     
     // Cipher the data and use the secret key
-    var cipher = crypto.createCipher(algorithm,password),
-        crypted = cipher.update(text, 'utf8', 'hex');
+    var cipher = crypto.createCipher(algorithm,password);
+    
+    // Configure the Cipher
+    var crypted = cipher.update(text,'utf8','hex');
     
     // Finalize the encrypted string
     crypted += cipher.final('hex');
@@ -1896,16 +1837,19 @@ function encrypt(text) {
 }
  
 // Server's Decrypt Method
-function decrypt(text) {
+function decrypt(text){
 // Uses Node JS's built-in encryption system, Crypto, to decrypt the data supplied
     
     // Decipher the data using the secret key
-    var decipher = crypto.createDecipher(algorithm,password),
-        dec = decipher.update(text, 'hex', 'utf8');
+    var decipher = crypto.createDecipher(algorithm,password);
+    
+    // Configure the Cipher
+    var dec = decipher.update(text,'hex','utf8');
     
     // Finalize the decryption
     dec += decipher.final('utf8');
-
+    
+    // Return the decrypted data
     // Return the decrypted data
     return dec;
 }
@@ -1915,9 +1859,7 @@ function decrypt(text) {
 =================================*/
 
 process.on('uncaughtException', function (err) {
-    
   console.log('Caught exception: ' + err);
-    
 });
 
 /*=================================
@@ -1925,7 +1867,5 @@ process.on('uncaughtException', function (err) {
 =================================*/
 
 httpServer.listen(3000, function() {
-    
   console.log('Express server listening on port 3000');
-    
 });
