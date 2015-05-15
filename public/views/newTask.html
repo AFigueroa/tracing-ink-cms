@@ -49,7 +49,7 @@
 
                 <div class="row">
                     <label for="team">Assign Members:</label>
-                    <div class="row" ng-repeat="member in teamMembers">
+                    <div class="row" ng-repeat="member in projectMembers">
                         <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="team" checklist-model="task.members" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
                     </div>
                     

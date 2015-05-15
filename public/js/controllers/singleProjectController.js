@@ -78,6 +78,8 @@ function($scope, $rootScope, $location, $http, $routeParams){
                 $rootScope.project = project;
 
                 $rootScope.projectMembers = project.members;
+                
+                console.log($rootScope.projectMembers);
                                 
             });
             

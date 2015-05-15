@@ -87,8 +87,8 @@ app.post('/api/login', function (req, res) {
             // A user was found
             
             // Encrypt the passwords
-            pass= encrypt(pass);
-            pass= String(pass);
+            pass = encrypt(pass);
+            pass = String(pass);
 
             // Compare the encrypted passwords
             if (user.pass === pass) {
@@ -175,7 +175,7 @@ app.get('/api/getUser', function (req, res) {
         // Send the user data to the front-end
         res.send(user);
 
-    }else{
+    } else {
         
         // The user is logged off or there is corrupted data
         res.send(false);
@@ -194,17 +194,17 @@ app.get('/api/getClients', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.clients.find({active:active}, function(err, clients){
+        db.clients.find({active:active}, function (err, clients) {
             
             // Check if there was any errors
-            if (!err){
-                
+            if (!err) {
+            
                 // No errors
                 
                 // Send the clients data to the front-end
                 res.send(clients);
 
-            }else{
+            } else {
                 // Query errors found
                 
                 res.send(false);
@@ -213,7 +213,7 @@ app.get('/api/getClients', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -234,17 +234,17 @@ app.post('/api/getTeam', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.clients.findOne({active:active, cName:cName}, function(err, clients){
+        db.clients.findOne({active : active, cName : cName}, function (err, clients) {
             
             // Check if there was any errors
-            if (!err){
+            if (!err) {
                 
                 // No errors
                 
                 // Send the clients data to the front-end
                 res.send(clients.members);
 
-            }else{
+            } else {
                 // Query errors found
                 
                 res.send(false);
@@ -253,7 +253,7 @@ app.post('/api/getTeam', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -269,20 +269,21 @@ app.post('/api/getMembers', function (req, res) {
         
         var members = req.param("members");
         
-        
         var active = 1;
         
         db.users.find({_id : {$in: members}}, function (err, members) {
             
             // Check if there was any errors
-            if (!err){
-                
+            if (!err) {
+
                 var sanitizedMembers = [],
                     thisMember = {};    
                 
                 // For each member, sanitize the data
                 for (var i = 0; i <= members.length - 1; i++) {
                 
+                    thisMember = {};
+                    
                     thisMember.fname = members[i].fname;
                     thisMember.lname = members[i].lname;
                     thisMember.type = members[i].type;
@@ -293,11 +294,11 @@ app.post('/api/getMembers', function (req, res) {
                     
                     sanitizedMembers.push(thisMember);
                 }
-                
+
                 // Send the members data to the front-end
                 res.send(sanitizedMembers);
 
-            }else{
+            } else {
                 // Query errors found
                 
                 res.send(false);
@@ -306,7 +307,7 @@ app.post('/api/getMembers', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -327,17 +328,17 @@ app.post('/api/getProjects', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.projects.find({active:active, cName:cName}, function(err, projects){
+        db.projects.find({active : active, cName : cName}, function(err, projects) {
             
             // Check if there was any errors
-            if (!err){
+            if (!err) {
                 
                 // No errors
                 
                 // Send the clients data to the front-end
                 res.send(projects);
 
-            }else{
+            } else {
                 // Query errors found
                 
                 res.send(false);
@@ -346,7 +347,7 @@ app.post('/api/getProjects', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -369,17 +370,17 @@ app.post('/api/getProject', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.projects.findOne({active:active, cName:cName, _id:projectId}, function(err, project){
+        db.projects.findOne({active : active, cName : cName, _id : projectId}, function (err, project) {
             
             // Check if there was any errors
-            if (!err){
+            if (!err) {
                 
                 // No errors
                 
                 // Send the clients data to the front-end
                 res.send(project);
 
-            }else{
+            } else {
                 // Query errors found
                 res.send(false);
 
@@ -387,7 +388,7 @@ app.post('/api/getProject', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -412,10 +413,10 @@ app.post('/api/getTask', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.tasks.findOne({active:active, cName:cName, projectId:projectId, _id: taskId}, function(err, task){
+        db.tasks.findOne({active : active, cName : cName, projectId : projectId, _id : taskId}, function (err, task) {
             
             // Check if there was any errors
-            if (!err){
+            if (!err) {
                 
                 // No errors
                                 
@@ -423,7 +424,7 @@ app.post('/api/getTask', function (req, res) {
                 res.send(task);
                         
 
-            }else{
+            } else {
                 // Query errors found
                 res.send(false);
 
@@ -431,7 +432,7 @@ app.post('/api/getTask', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -452,17 +453,17 @@ app.post('/api/getTasks', function (req, res) {
         var active = 1;
         
         // Look in the Database and find all Active clients
-        db.tasks.find({active:active, cName:cName, projectId:projectId}, function(err, tasks){
+        db.tasks.find({active : active, cName : cName, projectId : projectId}, function (err, tasks) {
             
             // Check if there was any errors
-            if (!err){
+            if (!err) {
                 
                 // No errors
                 
                 // Send the Tasks data to the front-end
                 res.send(tasks);
 
-            }else{
+            } else {
                 // Query errors found
                 res.send(false);
 
@@ -470,7 +471,7 @@ app.post('/api/getTasks', function (req, res) {
 
         });
 
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -491,16 +492,16 @@ app.post('/api/getMyTasks', function (req, res) {
         // Create an array of just the ids of every element in tasks
         var taskIds = [];
         
-        for (var i = 0; i <= tasks.length - 1; i++){
+        for (var i = 0; i <= tasks.length - 1; i++) {
             
             taskIds.push(tasks[i]._id);    
         
         }
             
-        db.tasks.find({_id : {$in: taskIds}, active : active, completed : false}, function(err, myTasks){
+        db.tasks.find({_id : {$in : taskIds}, active : active, completed : false}, function (err, myTasks) {
 
             // Check if there was any errors
-            if (!err && myTasks){
+            if (!err && myTasks) {
 
                 res.send(myTasks);
 
@@ -508,7 +509,7 @@ app.post('/api/getMyTasks', function (req, res) {
 
         });
               
-    }else{
+    } else {
         
         // User is either not logged in or is not an admin
         res.send(false);
@@ -527,7 +528,7 @@ app.post('/api/getMessages', function (req, res) {
 
         res.send(contacts);
         
-    }else{
+    } else {
         res.send(false);
     }
     
@@ -546,28 +547,29 @@ app.post('/api/decryptManager', function (req, res) {
     req.session = null;
     
     // Verify if both keys are present
-    if(req.param('cName') && req.param('inviteId')){
+    if (req.param('cName') && req.param('inviteId')) {
         
         // Decrypt the submissions and store them in local variables
         var cName = decrypt(req.param('cName'));
         var inviteId = decrypt(req.param('inviteId'));
         
         // Confirm invite Id is in the database.
-        db.invites.findOne({_id: inviteId}, function (err, invite) {
-                if(!invite){
+        db.invites.findOne({_id : inviteId}, function (err, invite) {
+                
+            if (!invite) {
                   
-                        // No member invites
-                        res.send(false);
-                
-                }else{
-                    
-                    // Send the invite's data to the front-end
-                    res.send(invite);
-                
-                }
+                // No member invites
+                res.send(false);
+
+            } else {
+
+                // Send the invite's data to the front-end
+                res.send(invite);
+
+            }
           });
         
-    }else{
+    } else {
         
         // Submission is missing a key
         res.send(false);
@@ -588,28 +590,29 @@ app.post('/api/decryptMember', function (req, res) {
     req.session = null;
     
     // Verify if both keys are present
-    if(req.param('cName') && req.param('inviteId')){
+    if (req.param('cName') && req.param('inviteId')) {
         
         // Decrypt the submissions and store them in local variables
         var cName = decrypt(req.param('cName'));
         var inviteId = decrypt(req.param('inviteId'));
         
         // Confirm invite Id is in the database.
-        db.memberInvites.findOne({_id: inviteId}, function (err, invite) {
-                if(!invite){
-                    
-                    // Submission is missing a key
-                    res.send(false);
+        db.memberInvites.findOne({_id : inviteId}, function (err, invite) {
                 
-                }else{
+            if (!invite) {
                     
-                    // Send the invite's data to the front-end
-                    res.send(invite);
-                
-                }
-          });
+                // Submission is missing a key
+                res.send(false);
+
+            } else {
+
+                // Send the invite's data to the front-end
+                res.send(invite);
+
+            }
+        });
         
-    }else{
+    } else {
         
         // Submission is missing a key
         res.send(false);
@@ -621,24 +624,24 @@ app.post('/api/decryptMember', function (req, res) {
 app.post('/api/addManager', function (req, res) {
     
     // Get all the values from the submission
-    var cName= req.param('cName');
-    var fname= req.param('fname');
-    var lname= req.param('lname');
-    var email= req.param('email');
-    var phone= req.param('phone');
-    var inviteId= req.param('inviteId');
-    var invitedBy= req.param('invitedBy');
-    var invitedByEmail= req.param('invitedByEmail');
-    var pass= req.param('pass');
-    var repass= req.param('repass');
+    var cName = req.param('cName');
+    var fname = req.param('fname');
+    var lname = req.param('lname');
+    var email = req.param('email');
+    var phone = req.param('phone');
+    var inviteId = req.param('inviteId');
+    var invitedBy = req.param('invitedBy');
+    var invitedByEmail = req.param('invitedByEmail');
+    var pass = req.param('pass');
+    var repass = req.param('repass');
     var id = uid.v4(); // Create Manager Id
 
     // Check if any field is missing
-    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
+    if (cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone) {
         
         // Found all fields
        
-        if(pass === repass){
+        if (pass === repass) {
                         
             // Passwords match
             
@@ -655,39 +658,40 @@ app.post('/api/addManager', function (req, res) {
                 pass:pass,
                 email:email,
                 phone:phone,
+                active:1,
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
             };
 
             // Check if theres an active invite with the same Id
-            db.invites.find({_id:inviteId, active:1}, function(err, invite){
+            db.invites.find({_id : inviteId, active : 1}, function (err, invite) {
                 
-                if(!err){
+                if (!err) {
                     
-                    if(invite){
+                    if (invite) {
 
                         // An active invite has been found
                         
                         // Check if email is taken
-                        db.users.findOne({email:email}, function(err, user){
+                        db.users.findOne({email : email}, function (err, user) {
                         
-                            if (!err){
+                            if (!err) {
                                 // No Errors
-                                if(!user){
+                                if (!user) {
                                     
                                     // No user found with the same email
                                     
                                     // Add the manager data to the database
-                                    db.users.save(manager, function(err, user){
+                                    db.users.save(manager, function (err, user) {
 
-                                        if(!err){
+                                        if (!err) {
 
                                             // Check if theres an active invite with the same Id
-                                            db.invites.update({_id:inviteId, active:1},{$set:{active:0}}, function(err, invite){
+                                            db.invites.update({_id : inviteId, active : 1},{$set : {active : 0}}, function (err, invite) {
 
-                                                if(!err){
+                                                if (!err) {
 
-                                                    if(invite){
+                                                    if (invite) {
 
                                                         // Invite Successfully deleted
 
@@ -704,13 +708,13 @@ app.post('/api/addManager', function (req, res) {
                                                         };
 
                                                         // Check if theres an active invite with the same Id
-                                                        db.clients.update({cName:cName, active:1},{$push:{members:manager}}, function(err, member){
+                                                        db.clients.update({cName : cName, active : 1},{$push : {members : manager}}, function(err, member){
 
                                                             // Check if errors
-                                                            if(!err){
+                                                            if (!err) {
 
                                                                 // Check if succesfull
-                                                                if(member){
+                                                                if (member) {
 
                                                                     // Create Session to know the system the user is logged in
                                                                     req.session.logged = 1; 
@@ -722,15 +726,15 @@ app.post('/api/addManager', function (req, res) {
                                                                     // Send the manager data to the front-end
                                                                     res.send(manager);
 
-                                                                }else{
-                                                                    console.log("Member not added");
+                                                                } else {
+                                                                    
                                                                     // Member not added
                                                                     res.send(false);
 
                                                                 }
 
-                                                            }else{
-                                                                console.log("An error ocurred with the DB");
+                                                            } else {
+                                                                
                                                                 // An error occurred
                                                                 res.send(false);
 
@@ -740,23 +744,23 @@ app.post('/api/addManager', function (req, res) {
 
 
 
-                                                    }else{
-                                                        console.log("No active invite found");
+                                                    } else {
+                                                        
                                                         // No active invite found
                                                         res.send(false);
 
                                                     }   
 
-                                                }else{
-                                                    console.log("An error ocurred with the DB");
+                                                } else {
+                                                    
                                                     // An error ocurred with the DB
                                                     res.send(false);
                                                 }
 
                                             });
 
-                                        }else{
-                                            console.log("An error ocurred with the DB");
+                                        } else {
+
                                             // An error ocurred with the DB
                                             res.send(false);
 
@@ -764,15 +768,15 @@ app.post('/api/addManager', function (req, res) {
 
                                     });
                             
-                                }else{
-                                    console.log("An user has been found with that email");
+                                } else {
+
                                     // An user has been found with that email
                                     res.send(false);
 
                                 }
                             
-                            }else{
-                                console.log("An error ocurred with the DB");
+                            } else {
+
                                 // An error ocurred with the DB
                                 res.send(false);
                                 
@@ -780,15 +784,15 @@ app.post('/api/addManager', function (req, res) {
                             
                         });
 
-                    }else{
-                        console.log("No active invite found");
+                    } else {
+
                         // No active invite found
                         res.send(false);
 
                     }   
                     
-                }else{
-                    console.log("An error ocurred with the DB");
+                } else {
+
                     // An error ocurred with the DB
                     res.send(false);
                 }
@@ -796,13 +800,13 @@ app.post('/api/addManager', function (req, res) {
                 
             });
             
-        }else{
+        } else {
             
             // Passwords don't match
             res.send(false);
         }
         
-    }else{
+    } else {
         
         // There where fields missing
         res.send(false);   
@@ -814,24 +818,24 @@ app.post('/api/addManager', function (req, res) {
 app.post('/api/addMember', function (req, res) {
     
     // Get all the values from the submission
-    var cName= req.param('cName');
-    var fname= req.param('fname');
-    var lname= req.param('lname');
-    var email= req.param('email');
-    var phone= req.param('phone');
-    var inviteId= req.param('inviteId');
-    var invitedBy= req.param('invitedBy');
-    var invitedByEmail= req.param('invitedByEmail');
-    var pass= req.param('pass');
-    var repass= req.param('repass');
+    var cName = req.param('cName');
+    var fname = req.param('fname');
+    var lname = req.param('lname');
+    var email = req.param('email');
+    var phone = req.param('phone');
+    var inviteId = req.param('inviteId');
+    var invitedBy = req.param('invitedBy');
+    var invitedByEmail = req.param('invitedByEmail');
+    var pass = req.param('pass');
+    var repass = req.param('repass');
     var id = uid.v4(); // Create Manager Id
 
     // Check if any field is missing
-    if(cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone){
+    if (cName && email && inviteId && invitedBy && invitedByEmail && pass && repass && fname && lname && phone) {
         
         // Found all fields
        
-        if(pass === repass){
+        if (pass === repass) {
                         
             // Passwords match
             
@@ -848,12 +852,13 @@ app.post('/api/addMember', function (req, res) {
                 pass:pass,
                 email:email,
                 phone:phone,
+                active : 1,
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
             };
             
             // Check if theres an active invite with the same Id
-            db.memberInvites.find({_id:inviteId, active:1}, function(err, invite){
+            db.memberInvites.find({_id : inviteId, active : 1}, function (err, invite) {
                 
                 if(!err){
                     
