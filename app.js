@@ -1560,6 +1560,119 @@ app.post('/api/updateProject', function (req, res) {
     }
 });
 
+// Complete Task Route
+app.post('/api/completeProject', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var projectId=req.param('projectId');
+
+        // Check if either field was left empty
+        if( projectId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.projects.update({_id : projectId}, { $set : {
+                completed : true
+            }}, function (task, err) {
+
+                if (!err) {
+                    
+                    res.send(true); 
+                    
+                } else {
+                    
+                    console.log(err);
+                    
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+                
+            
+        
+    }
+});
+
+// Activate Completed Task Route
+app.post('/api/activateProject', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var projectId=req.param('projectId');
+
+        // Check if either field was left empty
+        if( projectId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.projects.update({_id : projectId}, { $set : {
+                completed : false
+            }}, function (task, err) {
+
+                if (!err) {
+                    
+                    res.send(true);    
+                    
+                } else {
+                    
+                    console.log(err);
+                    
+                }
+            }
+        );
+
+        // One form value was left empty
+        res.send(true);
+        
+    }
+});
+
+
+// Delete Task Route
+app.post('/api/deleteProject', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var projectId=req.param('projectId');
+
+        // Check if either field was left empty
+        if( projectId == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        db.projects.update({_id : projectId}, { $set : {
+                active : 0
+            }}, function (err, project) {
+
+                res.send(true);    
+                
+            }
+        );            
+        
+    }
+});
+
 
 // Add Project Route
 app.post('/api/addTask', function (req, res) {

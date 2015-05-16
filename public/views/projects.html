@@ -11,8 +11,34 @@
 
 </div>
 
+<div class="row pushDown" ng-if="!activeProject">
 
-<div class="row">
+    <div class="panel panel-dropdown" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main ">No active project</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+            
+            <div class="row">
+                
+                <a ng-href="/#/newProject"><button type="submit" class="submit">
+                    New Project
+                </button></a>
+            </div>
+            
+            <br>
+            
+        </div>
+
+
+    </div>
+    
+</div>
+
+
+<div class="row pushDown" ng-if="activeProject">
 
     <div class="panel panel-dropdown" ng-repeat="project in projects | filter: {completed: false}" >
         
@@ -27,7 +53,7 @@
        
             <div class="row">
                 <p>
-                    {{task.description}}
+                    {{project.description}}
                 </p>
             </div>
             
@@ -48,7 +74,7 @@
             </div>
             
             <div class="row">
-                <button type="submit" class="delete"  ng-click="completeProject(project._id)">
+                <button type="submit" class="submit"  ng-click="completeProject(project._id)">
                     Complete
                 </button>
             </div>
@@ -58,4 +84,44 @@
 
     </div>
 
+</div>
+
+<div class="row addButtonRow" ng-if="completedProject">
+
+    
+    <a class="page-header">Completed Projects:</a>
+
+</div>
+
+<div class="row">
+
+    <div class="panel panel-dropdown completed" ng-repeat="project in projects | filter: {completed: true, active:1}" >
+        
+        <div class="panel-head" ng-click="panelOpen = !panelOpen">
+            <p class="panel-main cluttered">{{project.name}}</p>
+            <p class="panel-main cluttered secondary">{{project.members.length}} Members</p>
+        </div>
+        
+        <div class="panel-body" ng-show="panelOpen">
+       
+            <div class="row">
+                <p>
+                    {{project.description}}
+                </p>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="submit"  ng-click="activateProject(project._id)">
+                    Activate
+                </button>
+            </div>
+            
+            <div class="row">
+                <button type="submit" class="delete"  ng-click="deleteProject(project._id)">
+                    Delete
+                </button>
+            </div>
+            
+        </div>
+    </div>
 </div>
