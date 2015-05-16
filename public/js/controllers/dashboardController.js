@@ -55,9 +55,7 @@ function($scope, $rootScope, $location, $http){
             var myTasks = {};
             
             if($rootScope.user.myTasks){
-                
-                console.log($rootScope.user.myTasks);
-                
+                                
                 // Get the tasks associated to this user.
                 myTasks = {
                     tasks : $rootScope.user.myTasks,   

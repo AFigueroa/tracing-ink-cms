@@ -450,7 +450,7 @@ textarea{
     outline: none;
     text-decoration: none;
     margin-bottom: 10px;
-    font-weight: 800;
+    font-weight: 700;
     background: #b6e026; /* Old browsers */
     background: -moz-linear-gradient(top,  #b6e026 0%, #1fb74a 82%, #1fba2f 90%, #abdc28 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b6e026), color-stop(82%,#1fb74a), color-stop(90%,#1fba2f), color-stop(100%,#abdc28)); /* Chrome,Safari4+ */

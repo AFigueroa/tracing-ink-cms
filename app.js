@@ -317,26 +317,48 @@ app.post('/api/getMembers', function (req, res) {
 
 // Get Projects
 app.post('/api/getProjects', function (req, res) {
-// This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is logged on
-    if (req.session.logged === 1 && req.param("cName")) {
+    if (req.session.logged === 1 && req.param("cName") && req.param("_id")) {
         
-        var cName = req.param("cName");
+        var cName = req.param("cName"),
+            userId = req.param("_id"),
+            myProjects = [],
+            i = 0,
+            active = 1;
         
-        // The user is a master admin and is logged on
-        var active = 1;
-        
-        // Look in the Database and find all Active clients
-        db.projects.find({active : active, cName : cName}, function(err, projects) {
+        // Search for all projects that have the id of this user as a member
+        db.projects.find({active : active, cName : cName}, {members : {$elemMatch : {_id : userId}}}, function(err, projects) {
             
             // Check if there was any errors
             if (!err) {
                 
-                // No errors
+                // For each project, check if there's a member which would mean that this user is assigned
+                for (i = 0; i <= projects.length - 1; i++) {
                 
-                // Send the clients data to the front-end
-                res.send(projects);
+                    // If members in this project
+                    if(projects[i].members){
+                        
+                        // Push the id to myProjects array
+                        myProjects.push(projects[i]._id);
+                    
+                    }
+                    
+                }
+                    
+                // Find all projects whose id's are in this the myProjects array
+                db.projects.find({_id : {$in : myProjects}}, function (err, myProjectsData) {
+                
+                    if(!err && myProjectsData){
+                    
+                        // Send the clients data to the front-end
+                        res.send(myProjectsData);
+                    
+                    }
+                    
+                });
+                
+                
 
             } else {
                 // Query errors found

@@ -34,18 +34,20 @@ function($scope, $rootScope, $location, $http){
         var user = $http.get("/api/getUser").then(function(user){
             
             // Check for team members for this company
-            cName = {cName:user.data.cName};
+            var thisUser = {
+                _id : user.data._id,
+                cName : user.data.cName
+            };
             
             // Send a request to the server to add a Client
-            $http.post("/api/getProjects", cName).then(function(projects){
+            $http.post("/api/getProjects", thisUser).then(function(projects){
                 
                 projects = projects.data;
-                
                 $rootScope.projects = projects;
                                 
             });
             
-            $http.post("/api/getTeam", cName).then(function(members){
+            $http.post("/api/getTeam", thisUser).then(function(members){
                 
                 if (members.data){
                     // Members found
