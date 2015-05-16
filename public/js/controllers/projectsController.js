@@ -1,6 +1,6 @@
 // Projects Controller
-app.controller("projectsController", [ "$scope", "$rootScope", "$location", "$http",
-function($scope, $rootScope, $location, $http){
+app.controller("projectsController", [ "$scope", "$rootScope", "$location", "$http", "$routeParams",
+function($scope, $rootScope, $location, $http, $routeParams){
     
     if($scope.project){
         
@@ -38,6 +38,51 @@ function($scope, $rootScope, $location, $http){
                 _id : user.data._id,
                 cName : user.data.cName
             };
+            
+            if ($routeParams.projectId) {
+            
+                var project = {
+                    cName : user.data.cName,
+                    projectId : $routeParams.projectId 
+                };
+                
+                // Request the project based on the projectId selected
+                $http.post("/api/getProject", project).then(function(project){
+
+                    project = project.data
+                    
+                    // Format the date and time data
+                    project.due = new Date(project.dueDate.year, project.dueDate.month - 1, project.dueDate.day);
+                    
+                    if(project.dueDate.hour && project.dueDate.minute){
+                        
+                        project.dueTime = new Date(project.dueDate.year, project.dueDate.month - 1, project.dueDate.day, project.dueDate.militaryHour, project.dueDate.minute, 0);
+                    
+                    }
+                    
+                    // For each member in this project store th _id in an array
+                    var thisProjectsMembers = [];
+                    
+                    for (var i = 0; i <= project.members.length - 1; i++){
+                    
+                        thisProjectsMembers.push(project.members[i]._id);
+                        
+                    }
+                    
+                    // This data is used by the edit form to know which users are already assigned to this project
+                    $rootScope.thisProjectsMembers = thisProjectsMembers;
+                    
+                    $rootScope.project = project;
+
+                    $rootScope.projectMembers = project.members;
+
+                });
+                
+            } else {
+                
+                $rootScope.project = null;
+                
+            }
             
             // Send a request to the server to add a Client
             $http.post("/api/getProjects", thisUser).then(function(projects){
@@ -135,4 +180,34 @@ function($scope, $rootScope, $location, $http){
         
         }
     }
+    
+    $scope.updateProject = function () {
+        
+        // Check if the form was succesfully submitted
+        if ($scope.project) {
+            
+            $scope.project.members = $scope.thisProjectsMembers;
+                        console.log("abotu to update: ", $scope.project);
+            // Send a request to the server to update a Task
+            $http.post("/api/updateProject", $scope.project).then( function (err, project) {
+    
+                console.log(project, err);
+                if (project.data){
+                    
+                    
+                    
+                    
+                }else{
+                
+                    console.log("Something went wrong");
+                    
+                }
+                
+            });
+            $scope.project = null;
+            $location.path("/projects");
+        }
+    
+    };
+    
 }]);

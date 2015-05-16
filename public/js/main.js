@@ -152,6 +152,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "projectsController"
     })
     
+    // Edit Project
+    .when('/editProject/:projectId', {
+      templateUrl:"views/updateProject.html",
+      controller: "projectsController"
+    })
+    
     // Individual Project
     .when('/project/:projectId', {
       templateUrl:"views/singleProject.html",
@@ -164,7 +170,7 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: "singleProjectController"
     })
     
-    // New Task
+    // Edit Task
     .when('/editTask/:projectId/:taskId', {
       templateUrl:"views/updateTask.html",
       controller: "singleProjectController"

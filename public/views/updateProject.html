@@ -1,13 +1,13 @@
 
 <!--		
 	====================================
-		 	New Project
+		 	Update Project
 	=====================================
 -->	
 
 <div class="row page-header">
     
-    <a ng-href="/#/projects"><h1 id="login-logo">{{user.cName}}'s Projects</h1></a>
+    <a href="/#/projects"><h1 id="login-logo">{{user.cName}}</h1></a>
     
 </div>
 
@@ -21,25 +21,25 @@
     
     <div class="panel secured">
         
-        <div class="panel-head">Add New Project</div> 
+        <div class="panel-head">Update Project</div> 
         
         <div class="panel-body">
             
-            <form method="post" ng-submit="addProject()" ng-controller="projectsController">
+            <form method="post" ng-submit="updateProject()">
                 
                 <div class="row">
-                    <label for="name">Project Name:</label>
+                    <label for="name">Task Name:</label>
                     <input type="text" name="name" ng-model="project.name">
                 </div>
                 
                 <div class="row">
-                    <label for="dueDate">Due by (Optional):</label>
-                    <input type="date" name="dueDate" ng-model="project.dueDate" placeholder="yyyy-MM-dd">
+                    <label for="due">Due by (Optional):</label>
+                    <input type="date" name="due"  ng-model="project.due">
                 </div>
                 
                 <div class="row">
                     <label for="dueTime">Time (Optional):</label>
-                    <input type="time" name="dueTime" ng-model="project.dueTime" placeholder="hh:mm:ss">
+                    <input type="time" name="dueTime" ng-model="project.dueTime">
                 </div>
                 
                 <div class="row">
@@ -48,15 +48,15 @@
                 </div>
 
                 <div class="row">
-                    <label for="team" ng-show="teamMembers.length > 1">Assign Members:</label>
+                    <label for="team">Assign Members:</label>
                     <div class="row" ng-repeat="member in teamMembers">
-                        <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="team" checklist-model="project.members" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
+                        <input type="checkbox" ng-hide="member._id == user._id" class="checkbox" name="team" checklist-model="thisProjectsMembers" checklist-value="member._id"> <p class="checkboxLabel" ng-hide="member._id == user._id">{{member.fname}} {{member.lname}}</p>
                     </div>
                     
                 </div>
                 
                 <div class="row">
-                    <input type="submit" class="submit" value="Create">
+                    <input type="submit" class="submit" value="Save">
                 </div>
                 
                 

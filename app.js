@@ -1299,6 +1299,267 @@ app.post('/api/addProject', function (req, res) {
     }
 });
 
+// Update Project Route
+app.post('/api/updateProject', function (req, res) {
+    
+    if (req.session.logged === 1) {
+        
+        // Store the form submission values
+        var name=req.param('name');
+        var description=req.param('description');
+        var cName=req.param('cName');
+        var members=req.param('members');
+        var creator=req.param('creator');
+        var dueDate=req.param('due');
+        var dueTime=req.param('dueTime');
+        var projectId = req.param('_id'); // Task Id
+
+        // Get the values of the old members.
+        db.projects.findOne({_id : projectId}, function(err, thisProject){
+            if (!err && thisProject){
+                
+                // Get the old members
+                var oldMembers = [];
+                
+                for(var i = 0; i <= thisProject.members.length - 1; i++){
+                    
+                    oldMembers.push(thisProject.members[i]._id);
+                
+                }
+                
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                
+                // Initiate an array of member that exist in both lists.
+                var toBeKept = [];
+                
+                // Initiate a to be removed array of member Ids
+                var toBeRemoved = [];
+                
+                // Initiate for those members that didn't exists before in array. We will copy the new members and remove from it any that are to be kept or removed, leaving an array of only the new members to be added.
+                var toBeAdded = members;
+                
+                
+                // Develop an algorithm to compare two arrays and determine which elements where removed and which where added.
+                
+                // For each old member, determine which members are to be removed
+                for (var i = 0; i <= oldMembers.length - 1; i++){
+                    
+                    // On this iteration of oldMembers loop over new members to verify if the values exist.
+                    for (var n = 0; n <= members.length - 1; n++ ){
+                    
+                        // Check if values are identical
+                        if(oldMembers[i] == members[n]){
+                        
+                            // Member exists in both arrays, no need to update this one
+                            toBeKept.push(oldMembers[i]);
+                            
+                            // Set the value from the array of added to false, that member doesnt need updating.
+                            toBeAdded[n] = false;
+                            
+                            // No need to keep looping, we know that the value is to be kept.
+                            break;
+                            
+                        }else{
+                        
+                            // Ids dont match
+                            
+                            // Check if it's the last value
+                            if(n == members.length - 1){
+                                
+                                // Value for oldMembers[i] not present in new array
+                                toBeRemoved.push(oldMembers[i]);
+                            
+                                // Set the value from the array of added to false, that member doesnt need updating.
+                                toBeAdded[n] = false;
+                            
+                            }
+                        }
+                    
+                        
+                    }
+                
+                }
+                
+                console.log("To be removed: ", toBeRemoved);
+                
+                console.log("To be kept: ", toBeKept);
+                
+                // Initiate an array to store the non-false values of the toBeAdded array
+                var cleanedToBeAdded = [];
+                
+                // Loop over the toBeAdded array
+                for (var e = 0; e <= toBeAdded.length - 1; e++){
+                    
+                    // Verify if this value is false
+                    if(toBeAdded[e] != false){
+                        
+                        // The value is not false, push it to the cleaned array
+                        cleanedToBeAdded.push(toBeAdded[e]);
+                    
+                    }
+                
+                }
+                
+                console.log("To be added (cleaned): ", cleanedToBeAdded);
+                
+                // Update the toBeAdded array with the clean array
+                toBeAdded = cleanedToBeAdded;
+                
+                // If toBeRemoved is not empty
+                if(toBeRemoved.length != 0){
+                    
+                    // For all users in the toBeRemoved list. Remove this taskId from myTasks.
+                    for (i = 0; i <= toBeRemoved.length - 1; i++){
+                        
+                        db.projects.update({_id : projectId}, {$pull : {members : {_id : toBeRemoved[i] }}});
+                        
+                    }
+                    
+                }
+                
+                // If toBeRemoved is not empty
+                if(toBeAdded.length != 0){
+                    
+                    // Find the data for each member to be added
+                    db.users.find({_id : {$in: toBeAdded}}, function (err, members) {
+            
+                        // Check if there was any errors
+                        if (!err) {
+
+                            var sanitizedMembers = [],
+                                thisMember = {};    
+
+                            // For each member, sanitize the data
+                            for (var i = 0; i <= members.length - 1; i++) {
+
+                                thisMember = {};
+
+                                thisMember.fname = members[i].fname;
+                                thisMember.lname = members[i].lname;
+                                thisMember.type = members[i].type;
+                                thisMember._id = members[i]._id;
+                                thisMember.cName = members[i].cName;
+                                thisMember.phone = members[i].phone;
+                                thisMember.email = members[i].email;
+
+                                sanitizedMembers.push(thisMember);
+                            }
+                            
+                            // For all users in the toBeAdded list. Remove this taskId from myTasks.
+                            for (i = 0; i <= sanitizedMembers.length - 1; i++){
+
+                                db.projects.update({_id : projectId}, {$push : {members : sanitizedMembers[i]}});
+
+                            }
+                            
+                        } else {
+                            // Query errors found
+
+                            res.send(false);
+
+                        }
+
+                    });
+                    
+                }
+                            
+            }else{
+            
+                // Something went wrong
+                res.send(false);
+                
+            }
+            
+        });
+        
+        
+        
+        
+        // Check if either field was left empty
+        if( name == "" || description == "" || cName == ""){
+
+            // One form value was left empty
+            res.send(false);
+
+        }
+        
+        if(dueDate){
+            
+            dueDate = dueDate.split("-").map(function (val) { return val; });
+            var getDay = dueDate[2].split("T").map(function (val) { return val; });
+            
+            var date = {};
+            date.year = dueDate[0];
+            date.month = dueDate[1];
+            date.day = getDay[0];
+            
+            if(dueTime){
+            
+                dueTime = dueTime.split("T").map(function (val) { return val; });
+                dueTime = dueTime[1].split(":").map(function (val) { return val; });
+
+                var thisHour = dueTime[0]; 
+                date.minute = dueTime[1]; 
+                
+                if(thisHour == 00){ date.hour = 07; date.militaryHour = 19; date.hourFormat = "PM" }
+                if(thisHour == 01){ date.hour = 08; date.militaryHour = 20; date.hourFormat = "PM" }
+                if(thisHour == 02){ date.hour = 09; date.militaryHour = 21; date.hourFormat = "PM" }
+                if(thisHour == 03){ date.hour = 10; date.militaryHour = 22; date.hourFormat = "PM" }
+                if(thisHour == 04){ date.hour = 11; date.militaryHour = 23; date.hourFormat = "PM" }
+                if(thisHour == 05){ date.hour = 12; date.militaryHour = 00; date.hourFormat = "AM" }
+                if(thisHour == 06){ date.hour = 01; date.militaryHour = 01; date.hourFormat = "AM" }
+                if(thisHour == 07){ date.hour = 02; date.militaryHour = 02; date.hourFormat = "AM" }
+                if(thisHour == 08){ date.hour = 03; date.militaryHour = 03; date.hourFormat = "AM" }
+                if(thisHour == 09){ date.hour = 04; date.militaryHour = 04; date.hourFormat = "AM" }
+                if(thisHour == 10){ date.hour = 05; date.militaryHour = 05; date.hourFormat = "AM" }
+                if(thisHour == 11){ date.hour = 06; date.militaryHour = 06; date.hourFormat = "AM" }
+                if(thisHour == 12){ date.hour = 07; date.militaryHour = 07; date.hourFormat = "AM" }
+                if(thisHour == 13){ date.hour = 08; date.militaryHour = 08; date.hourFormat = "AM" }
+                if(thisHour == 14){ date.hour = 09; date.militaryHour = 09; date.hourFormat = "AM" }
+                if(thisHour == 15){ date.hour = 10; date.militaryHour = 10; date.hourFormat = "AM" }
+                if(thisHour == 16){ date.hour = 11; date.militaryHour = 11; date.hourFormat = "AM" }
+                if(thisHour == 17){ date.hour = 12; date.militaryHour = 12; date.hourFormat = "PM" }
+                if(thisHour == 18){ date.hour = 01; date.militaryHour = 13; date.hourFormat = "PM" }
+                if(thisHour == 19){ date.hour = 02; date.militaryHour = 14; date.hourFormat = "PM" }
+                if(thisHour == 20){ date.hour = 03; date.militaryHour = 15; date.hourFormat = "PM" }
+                if(thisHour == 21){ date.hour = 04; date.militaryHour = 16; date.hourFormat = "PM" }
+                if(thisHour == 22){ date.hour = 05; date.militaryHour = 17; date.hourFormat = "PM" }
+                if(thisHour == 23){ date.hour = 06; date.militaryHour = 18; date.hourFormat = "PM" }
+                
+            }
+            
+            dueDate = date;
+
+        }else{
+        
+            dueTime = null;
+            
+        }
+        console.log(dueDate);
+        
+        db.projects.update({_id : projectId}, { $set:{
+            
+                name:name,
+                description:description,
+                dueDate:dueDate
+            
+        }}, function(task, err){
+
+                if(!err){
+                    
+                    res.send(true);    
+                    
+                }else{
+                    
+                    console.log(err);
+                    
+                }
+            }
+        );
+        
+    }
+});
+
 
 // Add Project Route
 app.post('/api/addTask', function (req, res) {
@@ -1388,7 +1649,7 @@ app.post('/api/addTask', function (req, res) {
                 _id: taskId
             };
             
-            db.users.update({_id : members[i]}, {$push : {myTasks: task}} ,function(task, err){
+            db.users.update({_id : members[i]}, {$push : {myTasks: task}}, function (task, err) {
                 
                 if(err){
                     
@@ -1433,9 +1694,7 @@ app.post('/api/addTask', function (req, res) {
 
 // Update Task Route
 app.post('/api/updateTask', function (req, res) {
-// This route will add a client when an admin sends a post submission
     
-    // Check if the user is a master admin and is logged on
     if (req.session.logged === 1) {
         
         // Store the form submission values
@@ -1652,7 +1911,7 @@ app.post('/api/updateTask', function (req, res) {
 });
 
 
-// Update Task Route
+// Delete Task Route
 app.post('/api/deleteTask', function (req, res) {
 // This route will add a client when an admin sends a post submission
     
