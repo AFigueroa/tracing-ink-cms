@@ -103,7 +103,7 @@ function($scope, $rootScope, $location, $http){
                     cName: cName,
                     invitedBy: invitedBy,
                     invitedByEmail: invitedByEmail,
-                    email: $scope.member.email
+                    email: angular.lowercase($scope.member.email)
                 };
                 
                 // Send a request to the server to invite a member

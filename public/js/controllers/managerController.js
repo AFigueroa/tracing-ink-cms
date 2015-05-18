@@ -107,7 +107,7 @@ function($scope, $rootScope, $location, $http, $routeParams){
             var fname = $scope.manager.fname;
             var cName = $scope.manager.cName;
             var lname = $scope.manager.lname;
-            var email = $scope.manager.email;
+            var email = angular.lowercase($scope.manager.email);
             var phone = $scope.manager.phone;
             var pass = $scope.manager.pass;
             var repass = $scope.manager.repass;

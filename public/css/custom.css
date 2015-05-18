@@ -7,10 +7,12 @@ body{
     background-image: url("/img/pattern.png");
     background-repeat: repeat;
     font-size: 16px;
+    letter-spacing: 1px;
 }
 
 .row{
     width: 100%;
+    min-width: 320px;
     clear: both;
     padding: 0;
     margin: 0;
@@ -205,6 +207,7 @@ body{
 .panel{
     width: 90%;
     max-width: 500px;
+    min-width: 318px;
     background-color: #F2F0F0;
     margin-left: auto;
     margin-right: auto;
@@ -227,8 +230,6 @@ body{
     max-width: 500px;
     color: #F2F0F0;
     background-color: transparent;
-    margin-left: auto;
-    margin-right: auto;
     overflow: hidden;
 }
 
@@ -268,9 +269,28 @@ body{
     
 }
 
+.panel-main.date, .panel-main.time.cluttered.right.secondary{
+    width: auto;
+    float: right;
+}
+
+.panel-main.members.cluttered.left{
+    padding-right: 0;
+    width: 61%;
+}
+
+.panel-main.date.halved.right{
+    font-size: .85em;
+}
+
+.panel-main.projectName{
+    width: 70%;
+    padding-right: 0;
+    font-size: .85em;
+}
 
 .panel-main.cluttered.secondary{
-    font-size: .90em;
+    font-size: .75em;
     font-weight: 100;
     position: relative;
     top: -20px;
@@ -469,6 +489,7 @@ textarea{
 }
 
 .addNew.close{
+    z-index: 2;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-top-left-radius: 0;
@@ -547,9 +568,10 @@ form .row:last-of-type{
 }
 
 .addButtonRow{
-    max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    width: 90%;
+    max-width: 500px;
 }
 
 /*------------------Columns------------------*/

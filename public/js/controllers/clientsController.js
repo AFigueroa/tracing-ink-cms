@@ -75,6 +75,9 @@ function($scope, $rootScope, $location, $http){
             
             // Client object is within scope
             
+            // Make the email submission lower case
+            $scope.client.email = angular.lowercase($scope.client.email);
+            
             // Send a request to the server to add a Client
             $http.post("/api/addClient", $scope.client).then(function(client){
                 
