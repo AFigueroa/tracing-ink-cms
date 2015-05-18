@@ -29,22 +29,22 @@
                 
                 <div class="row">
                     <label for="name">Task Name:</label>
-                    <input type="text" name="name" ng-model="task.name">
+                    <input type="text" name="name" maxlength="24" ng-model="task.name">
                 </div>
                 
                 <div class="row">
                     <label for="due">Due by (Optional):</label>
-                    <input type="date" name="due"  ng-model="task.due">
+                    <input type="date" name="due"  ng-model="task.due" maxlength="10"  placeholder="yyyy-MM-dd">
                 </div>
                 
                 <div class="row">
                     <label for="dueTime">Time (Optional):</label>
-                    <input type="time" name="dueTime" ng-model="task.dueTime">
+                    <input type="time" name="dueTime" ng-model="task.dueTime" maxlength="8" placeholder="hh:mm:ss">
                 </div>
                 
                 <div class="row">
                     <label for="description">Description:</label>
-                    <textarea name="description" ng-model="task.description"></textarea>
+                    <textarea name="description" maxlength="250" ng-model="task.description"></textarea>
                 </div>
 
                 <div class="row">

@@ -29,32 +29,32 @@
                 
                 <div class="row">
                     <label for="fname">First Name:</label>
-                    <input type="text" name="fname" ng-model="manager.fname">
+                    <input type="text" name="fname" maxlength="12" ng-model="manager.fname">
                 </div>
                 
                 <div class="row">
                     <label for="lname">Last Name:</label>
-                    <input type="text" name="lname" ng-model="manager.lname">
+                    <input type="text" name="lname" maxlength="12" ng-model="manager.lname">
                 </div>
                 
                 <div class="row">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" ng-model="manager.email">
+                    <input type="email" name="email" maxlength="254" ng-model="manager.email">
                 </div>
                 
                 <div class="row">
                     <label for="phone">Phone:</label>
-                    <input type="text" name="phone" ng-model="manager.phone">
+                    <input type="phone" name="phone" ng-model="manager.phone" maxlength="8" placeholder="###-####">
                 </div>
                 
                 <div class="row">
                     <label for="pass">Password:</label>
-                    <input type="password" name="pass" ng-model="manager.pass">
+                    <input type="password" name="pass" maxlength="42" ng-model="manager.pass">
                 </div>
                 
                 <div class="row">
                     <label for="repass">Confirm Password:</label>
-                    <input type="password" name="repass" ng-model="manager.repass">
+                    <input type="password" name="repass" maxlength="42" ng-model="manager.repass">
                 </div>
                 
                 <div class="row">
