@@ -63,4 +63,32 @@ function($scope, $rootScope, $location, $http){
         $location.path('/');
         
     }
+    
+    // This Function is activated on a form submission in Add task route
+    $scope.addConversation = function() {
+
+        // Check if the form was succesfully submitted
+        if ($scope.conversation) {
+            
+            $scope.conversation.recipients.push($scope.user._id);
+                        
+            // Send a request to the server to add a Task
+            $http.post("/api/addConversation", $scope.conversation).then(function(conversation){
+    
+                
+                if (conversation.data){
+
+                    console.log(conversation.data);
+//                    $scope.conversation = null;
+//                    $location.path("/conversations");
+                    
+                }else{
+                
+                    console.log("Something went wrong");
+                    
+                }
+                
+            });
+        }
+    }
 }]);

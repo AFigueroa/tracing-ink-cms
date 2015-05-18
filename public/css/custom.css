@@ -25,7 +25,7 @@ body{
 .page-header{
     display: block;
     color: #fff;
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: 400;
     padding-bottom: 20px;
 }
@@ -471,6 +471,7 @@ textarea{
     text-decoration: none;
     margin-bottom: 10px;
     font-weight: 700;
+    font-size: .75em;
     background: #b6e026; /* Old browsers */
     background: -moz-linear-gradient(top,  #b6e026 0%, #1fb74a 82%, #1fba2f 90%, #abdc28 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b6e026), color-stop(82%,#1fb74a), color-stop(90%,#1fba2f), color-stop(100%,#abdc28)); /* Chrome,Safari4+ */
@@ -493,10 +494,11 @@ textarea{
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-top-left-radius: 0;
-    padding-bottom: 13px;
-    padding-top: 13px;
+    padding-bottom: 15px;
+    padding-top: 15px;
     position: relative;
-    top: 54px;
+    top: 25px;
+    margin-bottom: -54px;
     color: #fff;
     min-width: 30px;
     background: #ed3828; /* Old browsers */

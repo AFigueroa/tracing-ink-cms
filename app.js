@@ -540,22 +540,6 @@ app.post('/api/getMyTasks', function (req, res) {
 });
 
 
-// Get Messages
-app.post('/api/getMessages', function (req, res) {
-    
-    // Check if the user is logged on
-    if (req.session.logged === 1 && req.param("teamMembers")) {
-    
-        var contacts = req.param("teamMembers");
-
-        res.send(contacts);
-        
-    } else {
-        res.send(false);
-    }
-    
-});
-
 // Decrypt Manager Data
 app.post('/api/decryptManager', function (req, res) {
 // This route triggers when a user accepts a Tracing Ink Client invite.
@@ -1189,6 +1173,31 @@ app.post('/api/addClient', function (req, res) {
     }
 });
 
+
+/*=================================
+        CONVERSATIONS CRUD
+=================================*/
+
+// Add Converation Route
+app.post('/api/addConversations', function (req, res) {
+// This route will add a client when an admin sends a post submission
+    
+    // Check if the user is a master admin and is logged on
+    if (req.session.logged === 1) {
+        
+        var subject=req.param('subject'),
+            message=req.param('message'),
+            recipients=req.param('recipients');
+        
+    }
+    
+});
+
+
+/*=================================
+           PROJECTS CRUD
+=================================*/
+
 // Add Project Route
 app.post('/api/addProject', function (req, res) {
 // This route will add a client when an admin sends a post submission
@@ -1673,6 +1682,10 @@ app.post('/api/deleteProject', function (req, res) {
     }
 });
 
+
+/*=================================
+           TASKS CRUD
+=================================*/
 
 // Add Project Route
 app.post('/api/addTask', function (req, res) {

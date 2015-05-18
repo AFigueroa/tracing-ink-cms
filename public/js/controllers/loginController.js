@@ -40,7 +40,6 @@ function($scope, $rootScope, $location, $http){
             
             // Make the email submission lowercase
             $scope.user.email = angular.lowercase($scope.user.email);
-            console.log($scope.user.email);
             
             // Post the form submissions to the server
             $http.post("/api/login", $scope.user).then(function(user){
