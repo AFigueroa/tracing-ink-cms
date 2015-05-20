@@ -1179,17 +1179,35 @@ app.post('/api/addClient', function (req, res) {
 =================================*/
 
 // Add Converation Route
-app.post('/api/addConversations', function (req, res) {
-// This route will add a client when an admin sends a post submission
+app.post('/api/addConversation', function (req, res) {
     
-    // Check if the user is a master admin and is logged on
+    // Check if the user is logged on
     if (req.session.logged === 1) {
         
-        var subject=req.param('subject'),
-            message=req.param('message'),
-            recipients=req.param('recipients');
+        var subject = req.param('subject'),
+            message = req.param('message'),
+            recipients = req.param('recipients'),
+            conversation = {},
+            messages = [];
+        
+        
+        // Store the subject and recipients of the conversation
+        conversation.subject = subject;
+        conversation.recipients = recipients;
+        
+        // Create the messages array in the conversation object
+        conversation.messages = messages;
+        
+        // Push the message object into the messages array
+        conversation.messages.push(message);
+        
+        
+        
+        res.send(true);
         
     }
+    
+    
     
 });
 

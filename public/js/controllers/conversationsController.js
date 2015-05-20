@@ -70,8 +70,31 @@ function($scope, $rootScope, $location, $http){
         // Check if the form was succesfully submitted
         if ($scope.conversation) {
             
+            // Initiate a message object to turn the string submission of message into an object with the data from the user that submitted it
+            var message = {};
+            
+            
+            // If no recipients where selected initiate an empty array as the submission
+            if(!$scope.conversation.recipients){
+
+                $scope.conversation.recipients = [];
+            
+            }
+            
+            
+            // Push the current user's id to the recipients object
             $scope.conversation.recipients.push($scope.user._id);
-                        
+            
+            // Configure the data of the message submitted
+            message.body = $scope.conversation.message;
+            message.userId = $scope.user._id;
+            message.fname = $scope.user.fname;
+            message.lname = $scope.user.lname;
+            message.email = $scope.user.email;
+            
+            // Replace the old data of message with the new one
+            $scope.conversation.message = message;
+                                
             // Send a request to the server to add a Task
             $http.post("/api/addConversation", $scope.conversation).then(function(conversation){
     
