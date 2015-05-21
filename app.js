@@ -108,6 +108,7 @@ app.post('/api/login', function (req, res) {
                     "cName" : user.cName,
                     "lname" : user.lname,
                     "email" : user.email,
+                    "gravatarUrl" : user.gravatarUrl,
                     "phone" : user.phone,
                     "myTasks" : user.myTasks,
                     "type" : user.type
@@ -651,6 +652,13 @@ app.post('/api/addManager', function (req, res) {
                         
             // Passwords match
             
+            // Prepare the gravatar url for this user
+                var gravatarUrl = crypto.createHash('md5')
+                    .update(email)
+                    .digest('hex');
+                
+            gravatarUrl = "http://www.gravatar.com/avatar/" + gravatarUrl + "?d=retro";
+                        
             // Encrypt the password
             pass = encrypt(pass);
 
@@ -664,6 +672,7 @@ app.post('/api/addManager', function (req, res) {
                 pass:pass,
                 email:email,
                 phone:phone,
+                gravatarUrl:gravatarUrl,
                 active:1,
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
@@ -709,6 +718,7 @@ app.post('/api/addManager', function (req, res) {
                                                             fname:fname,
                                                             lname:lname,
                                                             cName:cName,
+                                                            gravatarUrl:gravatarUrl,
                                                             email:email,
                                                             phone:phone
                                                         };
@@ -845,6 +855,13 @@ app.post('/api/addMember', function (req, res) {
                         
             // Passwords match
             
+            // Prepare the gravatar url for this user
+            var gravatarUrl = crypto.createHash('md5')
+                .update(email)
+                .digest('hex');
+
+            gravatarUrl = "http://www.gravatar.com/avatar/" + gravatarUrl + "?d=retro";
+                        
             // Encrypt the password
             pass = encrypt(pass);
 
@@ -858,6 +875,7 @@ app.post('/api/addMember', function (req, res) {
                 pass:pass,
                 email:email,
                 phone:phone,
+                gravatarUrl:gravatarUrl,
                 active : 1,
                 invitedBy:invitedBy,
                 invitedByEmail:invitedByEmail
@@ -902,6 +920,7 @@ app.post('/api/addMember', function (req, res) {
                                                             type:3,
                                                             fname:fname,
                                                             lname:lname,
+                                                            gravatarUrl:gravatarUrl,
                                                             cName:cName,
                                                             email:email,
                                                             phone:phone
@@ -1077,7 +1096,7 @@ app.post('/api/addClient', function (req, res) {
                                         now = now.toString();
 
                                         // Email Body to be sent as Invite
-                                        var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://localhost:80/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
+                                        var emailMsg = 'Thank you for choosing Tracing Ink. Register here:  http://tracingink.com/#/addManager/'+encrypt(cName)+'/'+encrypt(inviteId);
 
                                         // Create the new Email Object
                                         var myMsg = new Email({
@@ -2221,7 +2240,7 @@ app.post('/api/inviteMember', function (req, res) {
                                 // Invite saved succesfully
 
                                 // Email Body to be sent as Invite
-                                var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://localhost:80/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
+                                var emailMsg = invitedBy+" has invited you to join "+cName+"'s Team at Tracing Ink. Click here to register:  http://tracingink.com/#/addMember/"+encrypt(cName)+"/"+encrypt(inviteId);
 
                                 // Create the new Email Object
                                 var myMsg = new Email({
