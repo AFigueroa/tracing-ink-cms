@@ -54,6 +54,37 @@ function($scope, $rootScope, $location, $http){
                 };
                 
             });
+            
+            if(!$rootScope.user.myConversations){
+                $rootScope.user.myConversations = [];
+            }
+            
+            // Get the tasks associated to this user.
+            myConversations = {
+                
+                myConversations : $rootScope.user.myConversations,   
+                cName : $rootScope.user.cName
+
+            };
+            
+            $http.post("/api/getMyConversations", myConversations).then(function(conversations){
+                
+                console.log("Conversations",conversations);
+//                if (conversations.data){
+//                    // Members found
+//                    
+//                    // Load the team members within the front-end scope
+//                    $rootScope.conversations = conversations.data;
+//
+//                }else{
+//                    // No members found
+//                    
+//                    // Set teamMembers as an empty array
+//                    $rootScope.conversations = [];
+//                    
+//                };
+                
+            });
         
         });
         
@@ -88,30 +119,19 @@ function($scope, $rootScope, $location, $http){
             // Configure the data of the message submitted
             message.body = $scope.conversation.message;
             message.userId = $scope.user._id;
+            message.gravatarUrl = $scope.user.gravatarUrl;
             message.fname = $scope.user.fname;
             message.lname = $scope.user.lname;
             message.email = $scope.user.email;
             
             // Replace the old data of message with the new one
             $scope.conversation.message = message;
-                                
-            // Send a request to the server to add a Task
-            $http.post("/api/addConversation", $scope.conversation).then(function(conversation){
-    
-                
-                if (conversation.data){
 
-                    console.log(conversation.data);
-//                    $scope.conversation = null;
-//                    $location.path("/conversations");
-                    
-                }else{
-                
-                    console.log("Something went wrong");
-                    
-                }
-                
-            });
+            // Send a request to the server to add a Task
+            $http.post("/api/addConversation", $scope.conversation);
+            
+            $scope.conversation = null;
+            $location.path("/conversations");
         }
     }
 }]);

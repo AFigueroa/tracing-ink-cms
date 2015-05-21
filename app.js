@@ -27,7 +27,7 @@ var crypto = require("crypto"),
 =================================*/
 
 // Mongo DB
-var collections = ["users", "projects", "clients", "invites", "memberInvites", "tasks"];
+var collections = ["users", "projects", "clients", "invites", "memberInvites", "tasks", "conversations"];
 var db = require("mongojs").connect("mongodb://127.0.0.1/tracing-ink", collections);
 
 // Express JS
@@ -111,6 +111,7 @@ app.post('/api/login', function (req, res) {
                     "gravatarUrl" : user.gravatarUrl,
                     "phone" : user.phone,
                     "myTasks" : user.myTasks,
+                    "myConversations" : user.myConversations,
                     "type" : user.type
                 };
                 
@@ -535,6 +536,46 @@ app.post('/api/getMyTasks', function (req, res) {
     } else {
         
         // User is either not logged in or is not an admin
+        res.send(false);
+        
+    }
+});
+
+// Get this user's Conversations
+app.post('/api/getMyConversations', function (req, res) {
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1 && req.param("cName")) {
+        
+        var myConversations = req.param("myConversations");
+        var cName = req.param("cName");
+        var active = 1;
+          
+        // Create an array of just the ids of every element in tasks
+        var conversationIds = [];
+        
+        for (var i = 0; i <= myConversations.length - 1; i++) {
+            
+            conversationIds.push(myConversations[i]._id);    
+        
+        }
+        
+        db.conversations.find({_id : {$in: conversationIds}, active : active}, function (err, myConversations) {
+
+            // Check if there was any errors
+            if (!err && myConversations) {
+
+                res.send(myConversations);
+
+            } else {
+            
+                res.send(err);
+            }
+
+        });
+              
+    } else {
+        
         res.send(false);
         
     }
@@ -1212,6 +1253,8 @@ app.post('/api/addConversation', function (req, res) {
         
         // Store the subject and recipients of the conversation
         conversation.subject = subject;
+        conversation._id = uid.v4();
+        conversation.active = 1;
         conversation.recipients = recipients;
         
         // Create the messages array in the conversation object
@@ -1220,7 +1263,25 @@ app.post('/api/addConversation', function (req, res) {
         // Push the message object into the messages array
         conversation.messages.push(message);
         
+        // For each recipient add the conversation id to myConversations
+        for(var i = 0; i <= recipients.length - 1; i++){
         
+            var myConversation = {
+                _id: conversation._id
+            };
+            
+            db.users.update({_id : recipients[i]}, {$push : {myConversations: myConversation}}, function (data, err) {
+                
+                if(err){
+                    
+                    res.send(false);
+                }
+            
+            });
+            
+        }
+        
+        db.conversations.insert(conversation);
         
         res.send(true);
         
