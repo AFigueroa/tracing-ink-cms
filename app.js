@@ -552,7 +552,6 @@ app.post('/api/getMyConversations', function (req, res) {
         
         db.conversations.find({recipients : {$elemMatch: {_id : req.session.user._id} }, active : active}, function (err, myConversations) {
 
-            console.log(err);
             // Check if there was any errors
             if (!err && myConversations) {
                 

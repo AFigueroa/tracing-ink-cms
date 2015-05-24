@@ -587,16 +587,22 @@ form .row:last-of-type{
 
 }
 
+
 .chatBox img{
     width: 12%;
-    padding: 2%; 
-
+    min-width: 40px;
+    max-width: 50px;
+    padding-left: 2%; 
+    padding-top: 13px;
+    position: absolute;
 }
 
 .chatBox div{
-
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    margin-left: 20%;
     display: inline-block;
-    width: 80%; 
+    width: 75%; 
     padding-right: 2%;
 
 }
@@ -605,15 +611,12 @@ form .row:last-of-type{
 
     margin: 0;
     
-    position: relative;
-    top:-30px;
     font-size: .85em;
     font-weight: 200;
 }
 
 .chatBox div p:first-of-type{
 
-    margin-top: 5px;
     font-size: .85em;
     font-weight: 700;
 }
@@ -621,6 +624,7 @@ form .row:last-of-type{
 .chatBox div p:last-of-type{
 
     padding-top: 7px;
+    margin-bottom: 10px;
 }
 
 

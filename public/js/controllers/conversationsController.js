@@ -69,8 +69,6 @@ function($scope, $rootScope, $location, $http){
                 
             });
             
-            
-            
             // Get the tasks associated to this user.
             myConversations = {
                 
@@ -140,12 +138,8 @@ function($scope, $rootScope, $location, $http){
             // Send a request to the server to add a Task
             $http.post("/api/addConversation", $scope.conversation).then(function (conversation) {
                 
-                var conversationId = conversation.data._id;
-                $rootScope.newConversation = {
-                    _id : conversation.data._id
-                };
-                                
                 $scope.conversation = null;
+                              
                 
                 $location.path("/conversations");
             
