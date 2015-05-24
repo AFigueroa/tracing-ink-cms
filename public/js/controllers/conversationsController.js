@@ -2,6 +2,8 @@
 app.controller("conversationsController", [ "$scope", "$rootScope", "$location", "$http",
 function($scope, $rootScope, $location, $http){
     
+    
+    
     // Check if the Side Nav is open or not
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
     
@@ -29,6 +31,18 @@ function($scope, $rootScope, $location, $http){
             // Store the data within the $rootScope
             $rootScope.user = user.data;
             
+            if(!$rootScope.user.myConversations){
+            
+                $rootScope.user.myConversations = [];
+                
+            }
+            
+            if($rootScope.newConversation){
+            
+                $rootScope.user.myConversations.push($rootScope.newConversation);
+            
+            }
+            
             // Set the title of the page
             $rootScope.title = "Tracing Ink | Conversations ";
             $rootScope.pageTitle = "Conversations";
@@ -55,9 +69,7 @@ function($scope, $rootScope, $location, $http){
                 
             });
             
-            if(!$rootScope.user.myConversations){
-                $rootScope.user.myConversations = [];
-            }
+            
             
             // Get the tasks associated to this user.
             myConversations = {
@@ -69,20 +81,18 @@ function($scope, $rootScope, $location, $http){
             
             $http.post("/api/getMyConversations", myConversations).then(function(conversations){
                 
-                console.log("Conversations",conversations);
-//                if (conversations.data){
-//                    // Members found
-//                    
-//                    // Load the team members within the front-end scope
-//                    $rootScope.conversations = conversations.data;
-//
-//                }else{
-//                    // No members found
-//                    
-//                    // Set teamMembers as an empty array
-//                    $rootScope.conversations = [];
-//                    
-//                };
+                if (conversations.data){
+                    
+                    $rootScope.conversations = conversations.data;
+                    console.log("My conversations: ",$rootScope.user.myConversations);
+
+                }else{
+                    // No members found
+                    
+                    // Set teamMembers as an empty array
+                    $rootScope.conversations = [];
+                    
+                };
                 
             });
         
@@ -128,10 +138,20 @@ function($scope, $rootScope, $location, $http){
             $scope.conversation.message = message;
 
             // Send a request to the server to add a Task
-            $http.post("/api/addConversation", $scope.conversation);
+            $http.post("/api/addConversation", $scope.conversation).then(function (conversation) {
+                
+                var conversationId = conversation.data._id;
+                $rootScope.newConversation = {
+                    _id : conversation.data._id
+                };
+                                
+                $scope.conversation = null;
+                
+                $location.path("/conversations");
             
-            $scope.conversation = null;
-            $location.path("/conversations");
+            });
+            
+            
         }
     }
 }]);

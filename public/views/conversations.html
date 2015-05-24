@@ -13,19 +13,29 @@
 
 <div class="row">
 
-    <div class="panel panel-dropdown" >
+    <div class="panel panel-dropdown" ng-repeat="conversation in conversations">
         
         <div class="panel-head" ng-click="panelOpen = !panelOpen">
-            <p class="panel-main cluttered">Conversation Subject</p>
-            <p class="panel-main cluttered secondary">Member's Emails</p>
+            <p class="panel-main cluttered">{{conversation.subject}}</p>
+            <p class="panel-main cluttered secondary">{{conversation.recipients.length}} Members</p>
         </div>
         
         <div class="panel-body" ng-show="panelOpen">
        
-            <div class="row">
-                <p>
-                    Chat Panel
-                </p>
+            <div class="row chatBox" ng-repeat="message in conversation.messages">
+                
+                <img ng-src="{{message.gravatarUrl}}">
+                
+                <div>
+                    <p class="messageSender">
+                        {{message.fname}} {{message.lname}}
+                    </p>
+                    
+                    <p class="messageBody">
+                        {{message.body}}
+                    </p>
+                </div>
+                
             </div>
             
             <div class="row">

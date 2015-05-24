@@ -12,7 +12,6 @@ body{
 
 .row{
     width: 100%;
-    min-width: 320px;
     clear: both;
     padding: 0;
     margin: 0;
@@ -575,6 +574,55 @@ form .row:last-of-type{
     width: 90%;
     max-width: 500px;
 }
+
+
+/*------------------Chat------------------*/
+/*-------------------------------------------*/
+
+.chatBox{
+
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 5px;
+
+}
+
+.chatBox img{
+    width: 12%;
+    padding: 2%; 
+
+}
+
+.chatBox div{
+
+    display: inline-block;
+    width: 80%; 
+    padding-right: 2%;
+
+}
+
+.chatBox div p{
+
+    margin: 0;
+    
+    position: relative;
+    top:-30px;
+    font-size: .85em;
+    font-weight: 200;
+}
+
+.chatBox div p:first-of-type{
+
+    margin-top: 5px;
+    font-size: .85em;
+    font-weight: 700;
+}
+
+.chatBox div p:last-of-type{
+
+    padding-top: 7px;
+}
+
 
 /*------------------Columns------------------*/
 /*-------------------------------------------*/

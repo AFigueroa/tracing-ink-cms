@@ -112,6 +112,7 @@ app.post('/api/login', function (req, res) {
                     "phone" : user.phone,
                     "myTasks" : user.myTasks,
                     "myConversations" : user.myConversations,
+                    "myConversations" : user.myConversations,
                     "type" : user.type
                 };
                 
@@ -547,25 +548,27 @@ app.post('/api/getMyConversations', function (req, res) {
     // Check if the user is logged on
     if (req.session.logged === 1 && req.param("cName")) {
         
-        var myConversations = req.param("myConversations");
-        var cName = req.param("cName");
         var active = 1;
-          
-        // Create an array of just the ids of every element in tasks
-        var conversationIds = [];
         
-        for (var i = 0; i <= myConversations.length - 1; i++) {
-            
-            conversationIds.push(myConversations[i]._id);    
-        
-        }
-        
-        db.conversations.find({_id : {$in: conversationIds}, active : active}, function (err, myConversations) {
+        db.conversations.find({recipients : {$elemMatch: {_id : req.session.user._id} }, active : active}, function (err, myConversations) {
 
+            console.log(err);
             // Check if there was any errors
             if (!err && myConversations) {
+                
+                var myConversationsIds = [];
+                
+                for(var i = 0; i <= myConversations.length - 1; i++){
+                
+                    myConversationsIds.push(myConversations[i]._id);
+                    
+                }
+                
+                db.conversations.find({_id : {$in : myConversationsIds}}, function (err, myFinalConversations) {
+                    
+                    res.send(myFinalConversations);
 
-                res.send(myConversations);
+                });
 
             } else {
             
@@ -1263,12 +1266,20 @@ app.post('/api/addConversation', function (req, res) {
         // Push the message object into the messages array
         conversation.messages.push(message);
         
+        var newRecipients = [];
+        
         // For each recipient add the conversation id to myConversations
         for(var i = 0; i <= recipients.length - 1; i++){
         
             var myConversation = {
                 _id: conversation._id
             };
+            
+            var newRecipient = {
+                _id : recipients[i]
+            };
+            
+            newRecipients.push(newRecipient);
             
             db.users.update({_id : recipients[i]}, {$push : {myConversations: myConversation}}, function (data, err) {
                 
@@ -1281,9 +1292,51 @@ app.post('/api/addConversation', function (req, res) {
             
         }
         
+        conversation.recipients = newRecipients;
+        
+        // Look in the users collection for a match in email and get the users data.
+        db.users.findOne({email: req.session.user.email}, function (err, user) {
+
+            //Check if a user was found 
+            if (!user) {
+
+                // User was not found redirect...
+                res.send(false);
+
+            } else {
+                
+                // Create Session to know the system the user is logged in
+                req.session.logged = 1; 
+
+                // Create a session for the Users privilege level 
+                req.session.userType = user.type;
+
+                // Create a session with the found user's data
+                req.session.user = {
+                    "_id" : user._id,
+                    "fname" : user.fname,
+                    "cName" : user.cName,
+                    "lname" : user.lname,
+                    "email" : user.email,
+                    "gravatarUrl" : user.gravatarUrl,
+                    "phone" : user.phone,
+                    "myTasks" : user.myTasks,
+                    "myConversations" : user.myConversations,
+                    "type" : user.type
+                };
+
+                // Sanitize the user data
+                user = req.session.user;
+
+                // Send the sanitized user data to the front-end
+                res.send(user);
+               
+            }
+        });
+        
         db.conversations.insert(conversation);
         
-        res.send(true);
+        res.send(conversation);
         
     }
     

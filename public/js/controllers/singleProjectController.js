@@ -24,10 +24,10 @@ function($scope, $rootScope, $location, $http, $routeParams){
         // User is logged ON
         
         // Get the user data from the server
-        var user = $http.get("/api/getUser").then(function(user){
+        $http.get("/api/getUser").then(function(user){
             
             // The Project Id
-            var projectId=  $routeParams.projectId;
+            var projectId = $routeParams.projectId;
             
             // Store the Company name
             cName = user.data.cName;
