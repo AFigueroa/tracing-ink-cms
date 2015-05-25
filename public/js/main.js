@@ -189,6 +189,12 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
     })
     
     // Conversations
+    .when('/conversation/:conversationId', {
+      templateUrl:"views/singleConversation.html",
+      controller: "conversationsController"
+    })
+    
+    // Conversations
     .when('/newConversation', {
       templateUrl:"views/newConversation.html",
       controller: "conversationsController"

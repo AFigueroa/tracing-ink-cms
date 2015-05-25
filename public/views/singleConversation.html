@@ -1,0 +1,67 @@
+<div class="row">
+    
+    <h1 id="login-logo">{{thisConversation.subject}}</h1>
+    <h1 id="login-logo-secondary">{{thisConversation.recipients.length}} Members</h1>
+    
+</div>
+
+<!--
+<div class="row addButtonRow">
+
+    <a href="/#/newConversation" class="addButton addNew">New Conversation</a>
+    <a class="page-header">Active Conversations</a>
+
+</div>
+-->
+
+<div class="row addButtonRow">
+
+    <a href="/#/conversations" class="addNew close">X</a>
+
+</div>
+
+<div class="row">
+
+    <div class="panel secured">
+        
+        <div class="panel-head">Messages</div> 
+        
+        <div class="panel-body">
+       
+            <div class="row chatBox" ng-repeat="message in thisConversation.messages">
+                
+                <img class="avatar" ng-src="{{message.gravatarUrl}}">
+                
+                <div>
+                    <p class="messageSender">
+                        {{message.fname}} {{message.lname}}
+                    </p>
+                    
+                    <p class="messageBody">
+                        {{message.body}}
+                    </p>
+                </div>
+                
+            </div>
+            
+            <div class="row">
+                
+                <form method="post" ng-submit="addPost(conversationId)">
+                
+                    <div class="row">
+                        <label for="body">New Post:</label>
+                        <textarea name="body" maxlength="155" ng-model="post.body"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <input type="submit" class="submit" value="Post">
+                    </div>
+
+                </form>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

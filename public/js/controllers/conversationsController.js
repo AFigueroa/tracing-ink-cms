@@ -1,6 +1,6 @@
 // Messages Controller
-app.controller("conversationsController", [ "$scope", "$rootScope", "$location", "$http",
-function($scope, $rootScope, $location, $http){
+app.controller("conversationsController", [ "$scope", "$rootScope", "$location", "$http", "$routeParams", "$route",
+function($scope, $rootScope, $location, $http, $routeParams, $route){
     
     
     
@@ -82,7 +82,6 @@ function($scope, $rootScope, $location, $http){
                 if (conversations.data){
                     
                     $rootScope.conversations = conversations.data;
-                    console.log("My conversations: ",$rootScope.user.myConversations);
 
                 }else{
                     // No members found
@@ -93,6 +92,33 @@ function($scope, $rootScope, $location, $http){
                 };
                 
             });
+            
+            if($routeParams.conversationId){
+
+                var conversationId = $routeParams.conversationId;
+                $scope.conversationId = conversationId;
+                
+                var thisConversation = {
+                    _id : conversationId
+                };
+                
+                $http.post("/api/getConversation", thisConversation).then(function(conversation){
+                
+                    if (conversation.data){
+
+                        $rootScope.thisConversation = conversation.data;
+
+                    }else{
+                        // No members found
+
+                        // Set teamMembers as an empty array
+                        $rootScope.thisConversation = {};
+                        $location.path('/conversations');
+
+                    };
+
+                });
+            }
         
         });
         
@@ -148,4 +174,56 @@ function($scope, $rootScope, $location, $http){
             
         }
     }
+    
+    // Add a post to the selected conversation
+    $scope.addPost = function(conversationId) {
+
+        // Check if the form was succesfully submitted
+        if ($scope.post) {
+            
+            // Initiate a message object to turn the string submission of message into an object with the data from the user that submitted it
+            var message = {};
+            
+            // Configure the data of the message submitted
+            message.body = $scope.post.body;
+            message.conversationId = conversationId;
+            message.userId = $scope.user._id;
+            message.gravatarUrl = $scope.user.gravatarUrl;
+            message.fname = $scope.user.fname;
+            message.lname = $scope.user.lname;
+            message.email = $scope.user.email;
+            
+            // Send a request to the server to add a Task
+            $http.post("/api/addPost", message).then(function (post) {
+                
+                $scope.post = null;
+                $route.reload();
+                
+            });
+            
+            
+        }
+    }
+    
+    // Add a post to the selected conversation
+    $scope.deleteConversation = function(conversationId) {
+
+        // Check if the form was succesfully submitted
+        if (conversationId) {
+          
+            var conversation = {
+                _id : conversationId
+            };
+            
+            // Send a request to the server to add a Task
+            $http.post("/api/deleteConversation", conversation).then(function (conversation) {
+                
+                console.log(conversation);
+                
+            });
+            
+            
+        }
+    }
+    
 }]);

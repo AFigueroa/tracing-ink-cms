@@ -1241,6 +1241,26 @@ app.post('/api/addClient', function (req, res) {
 =================================*/
 
 // Add Converation Route
+app.post('/api/getConversation', function (req, res) {
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1) {
+    
+        var conversationId = req.param('_id');
+        
+        db.conversations.findOne({_id : conversationId}, function(err, conversation){
+        
+            res.send(conversation);
+            
+        });
+        
+    }else{
+    
+    }
+    
+});
+
+// Add Converation Route
 app.post('/api/addConversation', function (req, res) {
     
     // Check if the user is logged on
@@ -1343,6 +1363,59 @@ app.post('/api/addConversation', function (req, res) {
     
 });
 
+
+// Add Converation Route
+app.post('/api/addPost', function (req, res) {
+    
+    console.log("Initiating request...");
+    // Check if the user is logged on
+    if (req.session.logged === 1) {
+        
+        var body = req.param('body'),
+            userId = req.param('userId'),
+            conversationId = req.param('conversationId'),
+            fname = req.param('fname'),
+            lname = req.param('lname'),
+            email = req.param('email'),
+            gravatarUrl = req.param('gravatarUrl'),
+            post = {};
+        
+        
+        if(body && userId && conversationId && fname && fname && lname && email && gravatarUrl){
+            
+            post.body = body;
+            post.userId = userId;
+            //post.conversationId = conversationId;
+            post.fname = fname;
+            post.lname = lname;
+            post.email = email;
+            post.gravatarUrl = gravatarUrl;
+            post._id = uid.v4();
+        
+            console.log(post);
+            db.conversations.update({_id : conversationId}, {$push : {messages : post}}, function(err, post){
+            
+                if(!err && post){
+                
+                    res.send(true);
+                    
+                }
+                
+            });
+            
+        }else{
+            
+            res.send(false);
+        
+        }
+        
+        
+        
+    }
+    
+    
+    
+});
 
 /*=================================
            PROJECTS CRUD
