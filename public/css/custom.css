@@ -53,6 +53,7 @@ body{
     padding: 14.5px;
 }
 
+
 #page-title, #btm-bar-title{
     text-align: center;
     height: 36px;
@@ -106,7 +107,8 @@ body{
     color: #E5E5E5;
     text-align: center;
 	font-family: 'Helvetica Neue';
-	font-size: 24px;
+	font-size: 2em;
+    font-kerning: 20pt;
 	font-style: normal;
 	font-variant: normal;
 	font-weight: 100;
@@ -133,7 +135,7 @@ body{
     padding-right: 10px;
 }
 .side-nav-anchors{
-    margin-top: 100px;
+    margin-top: 85px;
     width: 100%;
 }
 .side-nav-anchors a{

@@ -25,16 +25,26 @@
         
         <div class="panel-body">
             
-            <form method="post" ng-submit="addClient()" ng-controller="clientsController">
+            <form method="post" ng-submit="addClient()" ng-controller="clientsController" novalidate>
                 
                 <div class="row">
                     <label for="cName">Client Name:</label>
-                    <input type="text" name="cName" maxlength="25" ng-model="client.cName">
+                    <input type="text" name="cName" ng-maxlength="20" maxlength="20" ng-minlength="3" minlength="3" ng-model="client.cName" ng-required="true">
+<!--
+                    <p class="help-block" ng-if="addClient.cName.$invalid && addClient.cName.$touched">Company name is required.</p>
+                    <p class="help-block" ng-if="addClient.cName.$error.minlength">Company name is too short.</p>
+                    <p class="help-block" ng-if="addClient.cName.$error.maxlength">Company name is too long.</p>
+-->
                 </div>
                 
                 <div class="row">
                     <label for="email">Manager's Email:</label>
-                    <input type="email" name="email" maxlength="254" ng-model="client.email">
+                    <input type="email" name="email" ng-maxlength="35" maxlength="35" ng-minlength="6" minlength="6" ng-model="client.email" ng-required="true">
+<!--
+                    <p class="help-block" ng-if="addClient.email.$invalid && addClient.email.$touched">Email is in the wrong format</p>
+                    <p class="help-block" ng-if="addClient.email.$error.minlength">Email is too short.</p>
+                    <p class="help-block" ng-if="addClient.email.$error.maxlength">Email is too long.</p>
+-->
                 </div>
                 
 

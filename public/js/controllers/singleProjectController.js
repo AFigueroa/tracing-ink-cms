@@ -1,6 +1,6 @@
 // Single Project Controller
-app.controller("singleProjectController", [ "$scope", "$rootScope", "$location", "$http", "$routeParams",
-function($scope, $rootScope, $location, $http, $routeParams){
+app.controller("singleProjectController", [ "$scope", "$rootScope", "$location", "$http", "$routeParams", "$route",
+function($scope, $rootScope, $location, $http, $routeParams, $route){
     
     // Check if the Side Nav is open or not
     var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
@@ -164,9 +164,8 @@ function($scope, $rootScope, $location, $http, $routeParams){
     
                 
                 if (task.data){
-
+                    
                     $scope.task = null;
-                    $location.path("/project/"+$scope.project._id);
                     
                 }else{
                 
@@ -174,6 +173,24 @@ function($scope, $rootScope, $location, $http, $routeParams){
                     
                 }
                 
+            });
+            
+            // Send a request to the server to add a Task
+            $http.post("/api/refreshUser", $scope.user).then(function(user){
+
+
+                if (user.data){
+
+
+                    $rootScope.user = user.data;
+                    $location.path("/project/"+$scope.project._id);
+
+                }else{
+
+                    console.log("Something went wrong");
+
+                }
+
             });
         }
     }
@@ -288,7 +305,6 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
                 });
                 
-                $location.path("/project/"+$scope.project._id);
 
             }else{
 
@@ -296,6 +312,9 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
             }
 
+            $location.path("/project/"+$scope.project._id);
+
+            
         });
         
     }
@@ -352,6 +371,45 @@ function($scope, $rootScope, $location, $http, $routeParams){
 
                 });
                 
+                // Send a request to the server to add a Task
+                $http.post("/api/refreshUser", $scope.user).then(function(user){
+
+
+                    if (user.data){
+
+
+                        $rootScope.user = user.data;
+                        
+                        if($rootScope.user.myTasks){
+                                
+                            // Get the tasks associated to this user.
+                            myTasks = {
+                                tasks : $rootScope.user.myTasks,   
+                                cName : $rootScope.user.cName
+
+                            };
+
+                            // Request the Tasks based on the projectId selected
+                            myTask = $http.post("/api/getMyTasks", myTasks).then(function(tasks){
+
+                                tasks = tasks.data;
+
+                                $rootScope.myTasks = tasks;
+
+                            });
+
+                        }
+                        
+                        $location.path("/project/"+$scope.project._id);
+
+                    }else{
+
+                        console.log("Something went wrong");
+
+                    }
+
+                });
+
                 $location.path("/project/"+$scope.project._id);
 
             }else{
@@ -411,6 +469,45 @@ function($scope, $rootScope, $location, $http, $routeParams){
                             // An active task has been found
                             $rootScope.activeTask = true;
                         }
+
+                    }
+
+                });
+                
+                // Send a request to the server to add a Task
+                $http.post("/api/refreshUser", $scope.user).then(function(user){
+
+
+                    if (user.data){
+
+
+                        $rootScope.user = user.data;
+                        
+                        if($rootScope.user.myTasks){
+                                
+                            // Get the tasks associated to this user.
+                            myTasks = {
+                                tasks : $rootScope.user.myTasks,   
+                                cName : $rootScope.user.cName
+
+                            };
+
+                            // Request the Tasks based on the projectId selected
+                            myTask = $http.post("/api/getMyTasks", myTasks).then(function(tasks){
+
+                                tasks = tasks.data;
+
+                                $rootScope.myTasks = tasks;
+
+                            });
+
+                        }
+                        
+                        $location.path("/project/"+$scope.project._id);
+
+                    }else{
+
+                        console.log("Something went wrong");
 
                     }
 

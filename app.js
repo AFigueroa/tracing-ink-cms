@@ -191,7 +191,7 @@ app.get('/api/getClients', function (req, res) {
 // This route will get the clients data from the database IF the user is a master admin
     
     // Check if the user is a master admin and is logged on
-    if (req.session.userType === "1" && req.session.logged === 1) {
+    if (req.session.userType === 1 && req.session.logged === 1) {
         
         // The user is a master admin and is logged on
         var active = 1;
@@ -1081,7 +1081,7 @@ app.post('/api/addClient', function (req, res) {
 // This route will add a client when an admin sends a post submission
     
     // Check if the user is a master admin and is logged on
-    if (req.session.userType === "1" && req.session.logged === 1) {
+    if (req.session.userType === 1 && req.session.logged === 1) {
         
         // Check if there's user data within the session
         if (req.session.user) {
@@ -2035,8 +2035,6 @@ app.post('/api/addTask', function (req, res) {
 
         // One form value was left empty
         res.send(true);
-                
-            
         
     }
 });
@@ -2530,6 +2528,54 @@ function decrypt(text){
     // Return the decrypted data
     return dec;
 }
+
+// Refresh user's data
+app.post('/api/refreshUser', function (req, res) {
+    
+    // Check if the user is logged on
+    if (req.session.logged === 1) {
+        
+        var email = req.param('email');
+
+        // Look in the users collection for a match in email and get the users data.
+        db.users.findOne({email: email}, function (err, user) {
+
+            //Check if a user was found 
+            if (!user) {
+
+                // User was not found redirect...
+                res.send(false);
+
+            } else {
+
+                // Create a session for the Users privilege level 
+                req.session.userType = user.type;
+
+                // Create a session with the found user's data
+                req.session.user = {
+                    "_id" : user._id,
+                    "fname" : user.fname,
+                    "cName" : user.cName,
+                    "lname" : user.lname,
+                    "email" : user.email,
+                    "gravatarUrl" : user.gravatarUrl,
+                    "phone" : user.phone,
+                    "myTasks" : user.myTasks,
+                    "myConversations" : user.myConversations,
+                    "myConversations" : user.myConversations,
+                    "type" : user.type
+                };
+
+                // Sanitize the user data
+                user = req.session.user;
+
+                res.send(user);
+
+            }
+
+        });
+    }
+});
 
 /*=================================
            Server Processes

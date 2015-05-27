@@ -26,7 +26,7 @@ function($scope, $rootScope, $location, $http){
         var userType= $rootScope.user.type;
         
         // Check if user is Master Admin
-        if (userType === "1"){
+        if (userType === 1){
             
             // User is Master Admin
             $rootScope.admin = true;
@@ -46,6 +46,7 @@ function($scope, $rootScope, $location, $http){
                     
                     // Store the sanitized Client information within scope
                     $rootScope.clients = clients.data;
+                    console.log($rootScope.clients);
 
                 }else{
                     

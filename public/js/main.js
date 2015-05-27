@@ -21,7 +21,7 @@ app.run(function($http, $rootScope){
         // Verify User's Privilege level
         var userType= $rootScope.user.type;
         
-        if (userType === "1"){
+        if (userType === 1){
 
             // User is Master Admin
             $rootScope.admin = true;  
@@ -41,8 +41,6 @@ app.run(function($http, $rootScope){
         var myTasks = {};
             
             if($rootScope.user.myTasks){
-                
-                //console.log($rootScope.user.myTasks);
                 
                 // Get the tasks associated to this user.
                 myTasks = {
@@ -205,6 +203,8 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       templateUrl:"views/login.html",
       controller: "logoutController"
     })
+    
+    //$locationProvider.html5Mode(true);
   
   
 }]);

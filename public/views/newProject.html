@@ -28,13 +28,23 @@
             <form method="post" ng-submit="addProject()" ng-controller="projectsController">
                 
                 <div class="row">
+                    
                     <label for="name">Project Name:</label>
-                    <input type="text" name="name" maxlength="24" ng-model="project.name">
+                    
+                    <input type="text" name="name" ng-maxlength="24" maxlength="25" ng-minlength="3" minlength="3" ng-required="true" ng-model="project.name">
+                    
+<!--
+                    <p class="help-block" ng-show="addProject.name.$invalid && addClient.cName.$touched">Project name is required.</p>
+                    <p class="help-block" ng-show="addProject.name.$error.minlength">Project name is too short.</p>
+                    <p class="help-block" ng-show="addProject.name.$error.maxlength">Project name is too long.</p>
+-->
+                
                 </div>
                 
                 <div class="row">
                     <label for="dueDate">Due by (Optional):</label>
-                    <input type="date" name="dueDate" ng-model="project.dueDate"  maxlength="10" placeholder="yyyy-MM-dd">
+                    <input type="date" name="dueDate" ng-model="project.dueDate"  ng-maxlength="10" maxlength="10" ng-minlength="10" minlength="10" placeholder="yyyy-MM-dd">
+                    
                 </div>
                 
                 <div class="row">
@@ -44,7 +54,8 @@
                 
                 <div class="row">
                     <label for="description">Description:</label>
-                    <textarea name="description" ng-model="project.description" maxlength="250"></textarea>
+                    <textarea name="description" ng-model="project.description" ng-maxlength="200" maxlength="201"></textarea>
+<!--                    <p class="help-block" ng-show="addProject.description.$error.maxlength">Description is too long.</p>-->
                 </div>
 
                 <div class="row">

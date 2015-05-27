@@ -35,7 +35,7 @@ function($scope, $rootScope, $location, $http){
             var userType= $rootScope.user.type;
             
             // Check if user is master admin
-            if (userType === "1"){
+            if (userType === 1){
 
                 // User is Master Admin
                 $rootScope.admin = true;  

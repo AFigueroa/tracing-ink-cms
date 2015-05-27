@@ -98,8 +98,12 @@
                     <h3>{{user.cName}}</h3>
                 </div>
 
-                <div class="row" id="sidenav_alert">
-                    <p><img src="img/alert_icon.png"> 2 tasks due today</p>
+                <div class="row" id="sidenav_alert" ng-if="myTasks.length">
+                    <p><img src="img/alert_icon.png"> {{myTasks.length}} tasks due</p>
+                </div>
+                
+                <div class="row" id="sidenav_alert" ng-if="!myTasks.length">
+                    <p><img src="img/completed_icon-01.png"> No tasks due</p>
                 </div>
                 
                 <div class="row side-nav-anchors">
