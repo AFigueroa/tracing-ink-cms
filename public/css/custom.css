@@ -29,6 +29,13 @@ body{
     padding-bottom: 20px;
 }
 
+.hidden-anchor{
+    color: black;
+}
+.hidden-anchor:visited{
+    color: black;
+}
+
 /*Top Nav*/
 #top-nav, #btm-nav{
     position: fixed;

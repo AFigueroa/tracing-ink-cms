@@ -11,11 +11,23 @@
 
 </div>
 
-<div class="row">
+<div class="row" ng-if="!activeConversations">
+
+    <div class="panel" >
+        
+        <div class="panel-head">
+            <p class="panel-main ">No active Conversations</p>
+        </div>
+
+    </div>
+    
+</div>
+
+<div class="row" ng-if="activeConversations">
 
     <div class="panel" ng-repeat="conversation in conversations">
         
-        <a ng-href="/#/conversation/{{conversation._id}}"><div class="panel-head">
+        <a class="hidden-anchor" ng-href="/#/conversation/{{conversation._id}}"><div class="panel-head">
             <p class="panel-main cluttered">{{conversation.subject}}</p>
             <p class="panel-main cluttered secondary">{{conversation.recipients.length}} Members</p>
         </div></a>

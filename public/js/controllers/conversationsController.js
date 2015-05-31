@@ -77,9 +77,17 @@ function($scope, $rootScope, $location, $http, $routeParams, $route){
 
             };
             
+            $rootScope.activeConversations = false;
+            
             $http.post("/api/getMyConversations", myConversations).then(function(conversations){
                 
                 if (conversations.data){
+                    
+                    if(conversations.data.length != 0){
+                    
+                        $rootScope.activeConversations = true;
+                        
+                    }
                     
                     $rootScope.conversations = conversations.data;
 
