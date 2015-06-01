@@ -44,6 +44,12 @@ body{
     background-color: #F2F0F0;
 }
 
+.views-section-logged-off, .views-section{
+
+    margin-bottom: 75px;
+    
+}
+
 .views-section{
     margin-top: 100px;
 }
