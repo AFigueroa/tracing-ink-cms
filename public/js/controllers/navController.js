@@ -1,6 +1,6 @@
 // Navigation Controller (Side Navigation and Top Navigation)
-app.controller("navController", [ "$scope", "$rootScope", "$location", "$http",
-function($scope, $rootScope, $location, $http){
+app.controller("navController", [ "$scope", "$rootScope", "$location", "$http", "$route",
+function($scope, $rootScope, $location, $http, $route){
     
     // Request the user's data from the server
     var user = $http.get("/api/getUser").then(function(user){
@@ -37,6 +37,8 @@ function($scope, $rootScope, $location, $http){
     // Open and Close the Side nav
     $scope.toggleSideNav = function(){
     // This method removes or places the class open on the side navigation and the Angular views section.
+        
+        
         
         // Check if Side Navigation has class "open"
         var checkClass = $('.side-nav').hasClass('open'); // True if nav is open
